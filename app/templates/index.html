@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="it" class="dark">
+<html lang="en" class="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -24,9 +24,9 @@
           },
           colors: {
             lcc: {
-              bg: '#080907',          // Nero materico canonico LCC
+              bg: '#080907',          // Canonico Nero Materico LCC
               surface: '#11130F',     // Superficie scura LCC
-              elevated: '#171914',    // Superficie sopraelevata
+              elevated: '#171914',    // Superficie elevata
               text: '#F2EDE3',        // Avorio caldo LCC
               muted: '#C4BEB2',       // Avorio muted
               dim: '#7A7871',         // Grigio tenue
@@ -51,7 +51,7 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 
   <style>
-    /* Texture materica e imperfezione controllata LCC */
+    /* Controlled Texture & Imperfection LCC */
     body {
       background-color: #080907;
       color: #F2EDE3;
@@ -61,7 +61,6 @@
       background-size: 32px 32px, 100% 100%;
     }
 
-    /* Bordi con token LCC line */
     .border-lcc-line {
       border-color: rgba(242, 237, 227, 0.23);
     }
@@ -69,7 +68,7 @@
       border-color: rgba(242, 237, 227, 0.12);
     }
 
-    /* Rendering Markdown con palette LCC */
+    /* Markdown Rendering with LCC Tokens */
     .prose-lcc table {
       width: 100%;
       border-collapse: collapse;
@@ -122,13 +121,12 @@
 
 <body class="min-h-screen font-sans antialiased flex flex-col selection:bg-[#AEBA7F] selection:text-[#080907]">
 
-  <!-- Header Ufficiale LCC -->
+  <!-- Header LCC -->
   <header class="border-b border-lcc-line bg-[#080907]/95 backdrop-blur sticky top-0 z-50">
     <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
       
-      <!-- Brand & Code -->
+      <!-- Brand & Lab Identifier -->
       <div class="flex items-center space-x-3 sm:space-x-4">
-        <!-- Logo Ufficiale LCC -->
         <a href="/" class="flex items-center space-x-2 group">
           <img src="/static/lcc-logo.png" alt="LOW CONFIDENCE CLUB" class="h-8 w-8 object-contain rounded bg-[#11130F] p-0.5 border border-lcc-line group-hover:border-[#AEBA7F] transition" />
           <div class="flex flex-col">
@@ -140,20 +138,26 @@
         <span class="hidden md:inline-block text-[11px] font-mono text-[#C4BEB2] tracking-wide italic">"Low confidence. High output."</span>
       </div>
 
-      <!-- Live Engine Badge & Manifesto Button -->
+      <!-- Action Items & Language Selector -->
       <div class="flex items-center space-x-3">
+        <!-- Language Switcher -->
+        <div class="flex items-center border border-lcc-line bg-[#11130F] rounded text-[11px] font-mono p-0.5">
+          <button onclick="setLanguage('en')" id="langBtn-en" class="px-2 py-0.5 rounded font-bold bg-[#AEBA7F] text-[#080907] transition">EN</button>
+          <button onclick="setLanguage('it')" id="langBtn-it" class="px-2 py-0.5 rounded text-[#C4BEB2] hover:text-[#F2EDE3] transition">IT</button>
+        </div>
+
         <div class="hidden sm:flex items-center space-x-2 px-2.5 py-1 rounded bg-[#11130F] border border-lcc-subtle text-[11px] font-mono text-[#C4BEB2]">
           <span class="w-1.5 h-1.5 rounded-full bg-[#AEBA7F] animate-pulse"></span>
-          <span>PyMuPDF C-Engine // 100% Offline</span>
+          <span data-i18n="engine_badge">PyMuPDF C-Engine // 100% Offline</span>
         </div>
 
         <button id="btnOpenTips" class="text-xs font-mono text-[#F2EDE3] hover:text-[#AEBA7F] px-3 py-1.5 rounded bg-[#11130F] border border-lcc-line hover:border-[#AEBA7F] transition flex items-center space-x-1.5">
-          <span>[ ? // Dritte & Regole ]</span>
+          <span data-i18n="btn_manual">[ ? // Lab Notes ]</span>
         </button>
       </div>
     </div>
 
-    <!-- Segmented Control LCC Tabs -->
+    <!-- Segmented Tabs Bar -->
     <div class="border-t border-lcc-subtle bg-[#11130F]">
       <div class="max-w-6xl mx-auto px-4 sm:px-6 flex space-x-1 sm:space-x-2 overflow-x-auto py-1.5 scrollbar-none">
         
@@ -162,15 +166,15 @@
         </button>
 
         <button onclick="switchTab('compress')" id="tabNav-compress" class="tab-btn text-xs font-mono px-3 py-1.5 rounded transition text-[#C4BEB2] hover:text-[#F2EDE3] hover:bg-[#171914] flex items-center space-x-1.5 whitespace-nowrap">
-          <span>[ 02 // COMPRIMI ]</span>
+          <span data-i18n="tab_compress">[ 02 // COMPRESS ]</span>
         </button>
 
         <button onclick="switchTab('merge')" id="tabNav-merge" class="tab-btn text-xs font-mono px-3 py-1.5 rounded transition text-[#C4BEB2] hover:text-[#F2EDE3] hover:bg-[#171914] flex items-center space-x-1.5 whitespace-nowrap">
-          <span>[ 03 // UNISCI ]</span>
+          <span data-i18n="tab_merge">[ 03 // MERGE ]</span>
         </button>
 
         <button onclick="switchTab('split')" id="tabNav-split" class="tab-btn text-xs font-mono px-3 py-1.5 rounded transition text-[#C4BEB2] hover:text-[#F2EDE3] hover:bg-[#171914] flex items-center space-x-1.5 whitespace-nowrap">
-          <span>[ 04 // DIVIDI ]</span>
+          <span data-i18n="tab_split">[ 04 // SPLIT ]</span>
         </button>
 
         <button onclick="switchTab('images')" id="tabNav-images" class="tab-btn text-xs font-mono px-3 py-1.5 rounded transition text-[#C4BEB2] hover:text-[#F2EDE3] hover:bg-[#171914] flex items-center space-x-1.5 whitespace-nowrap">
@@ -191,12 +195,12 @@
       
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
         
-        <!-- Dropzone LCC -->
+        <!-- Dropzone -->
         <div class="lg:col-span-2 bg-[#11130F] border border-lcc-line rounded-xl p-6 relative">
           
           <div class="flex items-center justify-between mb-3 text-[11px] font-mono text-[#AEBA7F]">
-            <span>&gt;_ INGRESSO_DOCUMENTO</span>
-            <span>STATUS: PRONTO</span>
+            <span data-i18n="md_drop_title">&gt;_ DOCUMENT_INPUT</span>
+            <span data-i18n="md_status_ready">STATUS: READY</span>
           </div>
 
           <div id="dropZone" class="border border-dashed border-lcc-line hover:border-[#AEBA7F] rounded-lg p-10 flex flex-col items-center justify-center text-center cursor-pointer transition duration-150 bg-[#080907]/80 hover:bg-[#141712] group">
@@ -206,8 +210,8 @@
               <span class="font-mono text-sm font-bold">&gt;_</span>
             </div>
             
-            <p class="text-sm font-medium text-[#F2EDE3]">Trascina qui il file PDF o <span class="underline underline-offset-4 decoration-[#AEBA7F]">seleziona dal computer</span></p>
-            <p class="text-xs font-mono text-[#C4BEB2] mt-1.5">Estrazione testo vettoriale &bull; Tabelle GFM &bull; De-sillabazione a fine riga</p>
+            <p class="text-sm font-medium text-[#F2EDE3]" data-i18n="md_drop_main">Drop your PDF file here or <span class="underline underline-offset-4 decoration-[#AEBA7F]">browse from local disk</span></p>
+            <p class="text-xs font-mono text-[#C4BEB2] mt-1.5" data-i18n="md_drop_sub">Vector text extraction &bull; GFM Tables &bull; Line-break de-hyphenation</p>
           </div>
 
           <!-- Document Loaded Pill -->
@@ -218,7 +222,7 @@
               <span id="selectedFileSize" class="text-[#7A7871]"></span>
             </div>
             <button id="btnStartConvert" class="bg-[#AEBA7F] hover:bg-[#D9E6A3] text-[#080907] font-bold text-xs px-4 py-2 rounded transition flex items-center space-x-1.5 active:scale-[0.98]">
-              <span>[ ESEGUI TRASFORMAZIONE ]</span>
+              <span data-i18n="btn_run_md">[ RUN TRANSFORMATION ]</span>
             </button>
           </div>
 
@@ -226,7 +230,7 @@
           <div id="loadingIndicator" class="hidden mt-4 text-center py-4">
             <div class="inline-flex items-center space-x-2 text-[#AEBA7F] text-xs font-mono">
               <i data-lucide="loader" class="w-4 h-4 animate-spin"></i>
-              <span>Elaborazione pagine in RAM locale...</span>
+              <span data-i18n="md_loading">Processing pages in local RAM...</span>
             </div>
           </div>
 
@@ -235,31 +239,31 @@
         <!-- Options Box -->
         <div class="bg-[#11130F] border border-lcc-line rounded-xl p-5 space-y-4">
           <div class="border-b border-lcc-subtle pb-3">
-            <h3 class="text-xs font-mono text-[#AEBA7F] uppercase tracking-wider">[ PARAMETRI DI ESTRAZIONE ]</h3>
+            <h3 class="text-xs font-mono text-[#AEBA7F] uppercase tracking-wider" data-i18n="opts_title">[ EXTRACTION PARAMETERS ]</h3>
           </div>
 
           <div class="space-y-3.5 text-xs">
             <label class="flex items-start space-x-3 cursor-pointer select-none">
               <input type="checkbox" id="optFrontmatter" checked class="mt-0.5 rounded bg-[#080907] border-lcc-line text-[#AEBA7F] focus:ring-0">
               <div>
-                <span class="text-[#F2EDE3] font-medium">Frontmatter YAML</span>
-                <p class="text-[11px] text-[#C4BEB2] mt-0.5">Genera blocco con titolo, autore, pagine e timestamp</p>
+                <span class="text-[#F2EDE3] font-medium" data-i18n="opt_frontmatter">YAML Frontmatter</span>
+                <p class="text-[11px] text-[#C4BEB2] mt-0.5" data-i18n="opt_frontmatter_desc">Injects title, author, page count, and timestamp into document header</p>
               </div>
             </label>
 
             <label class="flex items-start space-x-3 cursor-pointer select-none">
               <input type="checkbox" id="optImages" class="mt-0.5 rounded bg-[#080907] border-lcc-line text-[#AEBA7F] focus:ring-0">
               <div>
-                <span class="text-[#F2EDE3] font-medium">Estrai Immagini Interne</span>
-                <p class="text-[11px] text-[#C4BEB2] mt-0.5">Salva figure in cartella dedicata e prepara ZIP</p>
+                <span class="text-[#F2EDE3] font-medium" data-i18n="opt_images">Extract Embedded Images</span>
+                <p class="text-[11px] text-[#C4BEB2] mt-0.5" data-i18n="opt_images_desc">Saves figures to a dedicated subfolder and prepares ZIP bundle</p>
               </div>
             </label>
 
             <label class="flex items-start space-x-3 cursor-pointer select-none">
               <input type="checkbox" id="optSeparators" class="mt-0.5 rounded bg-[#080907] border-lcc-line text-[#AEBA7F] focus:ring-0">
               <div>
-                <span class="text-[#F2EDE3] font-medium">Divisori di Pagina</span>
-                <p class="text-[11px] text-[#C4BEB2] mt-0.5">Inserisce delimitatori '---' con indice pagina</p>
+                <span class="text-[#F2EDE3] font-medium" data-i18n="opt_separators">Page Delimiters</span>
+                <p class="text-[11px] text-[#C4BEB2] mt-0.5" data-i18n="opt_separators_desc">Inserts '---' horizontal markers with page index numbers</p>
               </div>
             </label>
           </div>
@@ -276,7 +280,7 @@
       <div id="scanAlertBox" class="hidden border border-[#AEBA7F]/40 bg-[#171914] rounded-xl p-4 text-xs font-mono text-[#D9E6A3] flex items-start space-x-3">
         <i data-lucide="alert-triangle" class="w-4 h-4 shrink-0 text-[#AEBA7F] mt-0.5"></i>
         <div>
-          <span class="font-bold text-[#F2EDE3] block mb-1">[ RILEVATA SCANSIONE O IMMAGINE SENZA TESTO ]</span>
+          <span class="font-bold text-[#F2EDE3] block mb-1" data-i18n="alert_scan_title">[ SCANNED DOCUMENT / NON-VECTOR TEXT DETECTED ]</span>
           <span id="scanAlertMsg" class="text-[#C4BEB2] leading-relaxed"></span>
         </div>
       </div>
@@ -288,26 +292,26 @@
         <div class="border border-lcc-line bg-[#11130F] rounded-xl p-3 flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
           
           <div class="flex items-center space-x-4 text-[#C4BEB2]">
-            <span>Tempo: <strong id="statElapsed" class="text-[#AEBA7F] font-normal">0ms</strong></span>
-            <span>Pagine: <strong id="statPages" class="text-[#F2EDE3] font-normal">0</strong></span>
-            <span>Parole: <strong id="statWords" class="text-[#F2EDE3] font-normal">0</strong></span>
-            <span id="statImageBadge" class="hidden">Figure: <strong id="statImages" class="text-[#F2EDE3] font-normal">0</strong></span>
+            <span><span data-i18n="stat_time">Time:</span> <strong id="statElapsed" class="text-[#AEBA7F] font-normal">0ms</strong></span>
+            <span><span data-i18n="stat_pages">Pages:</span> <strong id="statPages" class="text-[#F2EDE3] font-normal">0</strong></span>
+            <span><span data-i18n="stat_words">Words:</span> <strong id="statWords" class="text-[#F2EDE3] font-normal">0</strong></span>
+            <span id="statImageBadge" class="hidden"><span data-i18n="stat_figures">Figures:</span> <strong id="statImages" class="text-[#F2EDE3] font-normal">0</strong></span>
           </div>
 
           <div class="flex items-center space-x-2">
             <button id="btnCopy" class="bg-[#171914] hover:bg-[#20241b] text-[#F2EDE3] border border-lcc-line px-3 py-1.5 rounded transition flex items-center space-x-1.5 active:scale-[0.98]">
               <i data-lucide="copy" class="w-3.5 h-3.5 text-[#AEBA7F]"></i>
-              <span id="copyText">[ Copia MD ]</span>
+              <span id="copyText">[ Copy MD ]</span>
             </button>
 
             <button id="btnDownloadMd" class="bg-[#AEBA7F] hover:bg-[#D9E6A3] text-[#080907] font-bold px-3.5 py-1.5 rounded transition flex items-center space-x-1.5 active:scale-[0.98]">
               <i data-lucide="download" class="w-3.5 h-3.5"></i>
-              <span>Scarica .md</span>
+              <span data-i18n="btn_dl_md">Download .md</span>
             </button>
 
             <button id="btnDownloadZip" class="hidden bg-[#171914] hover:bg-[#20241b] text-[#F2EDE3] border border-lcc-line px-3.5 py-1.5 rounded transition flex items-center space-x-1.5">
               <i data-lucide="archive" class="w-3.5 h-3.5 text-[#AEBA7F]"></i>
-              <span>Scarica ZIP</span>
+              <span data-i18n="btn_dl_zip">Download ZIP</span>
             </button>
           </div>
 
@@ -318,8 +322,8 @@
           
           <div class="flex items-center justify-between border-b border-lcc-line px-4 py-2 bg-[#11130F]">
             <div class="flex space-x-1">
-              <button id="tabPreview" class="px-3 py-1 text-xs font-mono rounded bg-[#AEBA7F] text-[#080907] font-bold">Anteprima Formattata</button>
-              <button id="tabRaw" class="px-3 py-1 text-xs font-mono rounded text-[#C4BEB2] hover:text-[#F2EDE3] hover:bg-[#171914]">Sorgente Raw</button>
+              <button id="tabPreview" class="px-3 py-1 text-xs font-mono rounded bg-[#AEBA7F] text-[#080907] font-bold" data-i18n="tab_rendered">Rendered Preview</button>
+              <button id="tabRaw" class="px-3 py-1 text-xs font-mono rounded text-[#C4BEB2] hover:text-[#F2EDE3] hover:bg-[#171914]" data-i18n="tab_raw">Raw Source</button>
             </div>
             <span class="text-xs font-mono text-[#7A7871]" id="previewFilename">output.md</span>
           </div>
@@ -338,23 +342,23 @@
       <div id="batchResultSection" class="hidden border border-lcc-line bg-[#11130F] rounded-xl p-6 space-y-4">
         <div class="flex items-center justify-between">
           <div>
-            <h3 class="text-sm font-semibold text-[#F2EDE3] uppercase">[ ELABORAZIONE BATCH TERMINATA ]</h3>
+            <h3 class="text-sm font-semibold text-[#F2EDE3] uppercase" data-i18n="batch_finished_title">[ BATCH PROCESSING COMPLETED ]</h3>
             <p class="text-xs font-mono text-[#C4BEB2] mt-0.5" id="batchSummaryText"></p>
           </div>
           <button id="btnDownloadBatchZip" class="bg-[#AEBA7F] hover:bg-[#D9E6A3] text-[#080907] font-bold text-xs px-4 py-2 rounded flex items-center space-x-1.5">
             <i data-lucide="archive" class="w-3.5 h-3.5"></i>
-            <span>Scarica Archivio ZIP</span>
+            <span data-i18n="btn_dl_batch_zip">Download Master ZIP</span>
           </button>
         </div>
         <div class="overflow-x-auto">
           <table class="w-full text-left text-xs font-mono text-[#C4BEB2]">
             <thead class="bg-[#080907] text-[#AEBA7F] uppercase text-[10px] tracking-wider border-b border-lcc-line">
               <tr>
-                <th class="py-2.5 px-4">Documento</th>
-                <th class="py-2.5 px-4">Pagine</th>
-                <th class="py-2.5 px-4">Parole</th>
-                <th class="py-2.5 px-4">Tempo</th>
-                <th class="py-2.5 px-4">Stato</th>
+                <th class="py-2.5 px-4" data-i18n="th_doc">Document</th>
+                <th class="py-2.5 px-4" data-i18n="th_pages">Pages</th>
+                <th class="py-2.5 px-4" data-i18n="th_words">Words</th>
+                <th class="py-2.5 px-4" data-i18n="th_time">Time</th>
+                <th class="py-2.5 px-4" data-i18n="th_status">Status</th>
               </tr>
             </thead>
             <tbody id="batchTableBody" class="divide-y border-lcc-subtle"></tbody>
@@ -365,30 +369,30 @@
     </section>
 
     <!-- ========================================================= -->
-    <!-- 2. TOOL: COMPRIMI PDF -->
+    <!-- 2. TOOL: COMPRESS PDF -->
     <!-- ========================================================= -->
     <section id="section-compress" class="tool-section hidden space-y-6">
       <div class="max-w-xl mx-auto border border-lcc-line bg-[#11130F] rounded-xl p-8 space-y-6">
         
         <div class="border-b border-lcc-subtle pb-4">
-          <span class="font-mono text-xs text-[#AEBA7F] uppercase tracking-widest">[ 02 // COMPRESSIONE ]</span>
-          <h2 class="text-lg font-bold text-[#F2EDE3] uppercase mt-1">Ottimizza e Riduci PDF</h2>
-          <p class="text-xs text-[#C4BEB2] font-mono mt-0.5">Pulizia stream, rimozione ridondanze e ricompressione grafica in RAM</p>
+          <span class="font-mono text-xs text-[#AEBA7F] uppercase tracking-widest">[ 02 // COMPRESSION ]</span>
+          <h2 class="text-lg font-bold text-[#F2EDE3] uppercase mt-1" data-i18n="compress_title">Optimize and Reduce PDF</h2>
+          <p class="text-xs text-[#C4BEB2] font-mono mt-0.5" data-i18n="compress_desc">Stream clean-up, resource deduplication, and in-RAM raster recompression</p>
         </div>
 
         <div id="dropZoneCompress" class="border border-dashed border-lcc-line hover:border-[#AEBA7F] rounded-lg p-8 flex flex-col items-center justify-center text-center cursor-pointer transition bg-[#080907]/80 hover:bg-[#171914]">
           <input type="file" id="fileCompressInput" accept=".pdf" class="hidden" />
           <i data-lucide="file-up" class="w-6 h-6 text-[#AEBA7F] mb-2"></i>
-          <p class="text-xs font-medium text-[#F2EDE3]">Trascina qui il file PDF da comprimere</p>
+          <p class="text-xs font-medium text-[#F2EDE3]" data-i18n="compress_drop_main">Drop the PDF file to compress here</p>
           <p id="compressFileLabel" class="text-[11px] text-[#C4BEB2] font-mono mt-1"></p>
         </div>
 
         <div class="space-y-2">
-          <label class="block text-[11px] font-mono uppercase text-[#AEBA7F]">[ MODALITÀ DI COMPRESSIONE ]</label>
+          <label class="block text-[11px] font-mono uppercase text-[#AEBA7F]" data-i18n="compress_lvl_label">[ COMPRESSION PROFILE ]</label>
           <div class="grid grid-cols-3 gap-2 text-xs font-mono">
             <button type="button" onclick="selectCompressLevel('light')" id="lvl-light" class="compress-lvl-btn border border-lcc-line bg-[#080907] p-3 rounded-lg text-center hover:border-[#AEBA7F] transition">
               <span class="block text-[#F2EDE3] font-medium">LIGHT</span>
-              <span class="text-[10px] text-[#7A7871] block mt-0.5">Qualità 100%</span>
+              <span class="text-[10px] text-[#7A7871] block mt-0.5" data-i18n="lvl_light_sub">100% Quality</span>
             </button>
             <button type="button" onclick="selectCompressLevel('medium')" id="lvl-medium" class="compress-lvl-btn border border-[#AEBA7F] bg-[#AEBA7F] text-[#080907] p-3 rounded-lg text-center font-bold transition">
               <span class="block font-bold">BALANCED</span>
@@ -396,31 +400,31 @@
             </button>
             <button type="button" onclick="selectCompressLevel('strong')" id="lvl-strong" class="compress-lvl-btn border border-lcc-line bg-[#080907] p-3 rounded-lg text-center hover:border-[#AEBA7F] transition">
               <span class="block text-[#F2EDE3] font-medium">STRONG</span>
-              <span class="text-[10px] text-[#7A7871] block mt-0.5">Per Email</span>
+              <span class="text-[10px] text-[#7A7871] block mt-0.5" data-i18n="lvl_strong_sub">Email Target</span>
             </button>
           </div>
         </div>
 
         <button id="btnExecuteCompress" disabled class="w-full bg-[#AEBA7F] hover:bg-[#D9E6A3] disabled:opacity-30 disabled:hover:bg-[#AEBA7F] text-[#080907] font-bold py-2.5 rounded-lg transition text-xs font-mono flex items-center justify-center space-x-2">
-          <span>[ ESEGUI COMPRESSIONE ]</span>
+          <span data-i18n="btn_run_compress">[ RUN COMPRESSION ]</span>
         </button>
 
         <!-- Result Box -->
         <div id="compressResultBox" class="hidden border border-lcc-line bg-[#080907] rounded-lg p-4 space-y-3 font-mono text-xs">
           <div class="flex items-center justify-between text-[#C4BEB2]">
-            <span>Dimensione Originale:</span>
+            <span data-i18n="res_orig_size">Original Size:</span>
             <span id="compOrigSize" class="text-[#F2EDE3]">0 KB</span>
           </div>
           <div class="flex items-center justify-between text-[#C4BEB2]">
-            <span>Dimensione Finale:</span>
+            <span data-i18n="res_new_size">Optimized Size:</span>
             <span id="compNewSize" class="text-[#AEBA7F] font-bold">0 KB</span>
           </div>
           <div class="flex items-center justify-between pt-2 border-t border-lcc-subtle">
-            <span class="text-[#F2EDE3] font-medium">Spazio Risparmiato:</span>
+            <span class="text-[#F2EDE3] font-medium" data-i18n="res_saved">Reduction:</span>
             <span id="compSavedPct" class="px-2 py-0.5 rounded bg-[#171914] border border-[#AEBA7F] text-[#AEBA7F] font-bold">0%</span>
           </div>
-          <a id="btnDownloadCompressed" href="#" download class="block w-full text-center bg-[#AEBA7F] hover:bg-[#D9E6A3] text-[#080907] font-bold py-2 rounded text-xs transition mt-3">
-            [ Scarica PDF Ottimizzato ]
+          <a id="btnDownloadCompressed" href="#" download class="block w-full text-center bg-[#AEBA7F] hover:bg-[#D9E6A3] text-[#080907] font-bold py-2 rounded text-xs transition mt-3" data-i18n="btn_dl_compressed">
+            [ Download Optimized PDF ]
           </a>
         </div>
 
@@ -428,94 +432,94 @@
     </section>
 
     <!-- ========================================================= -->
-    <!-- 3. TOOL: UNISCI PDF -->
+    <!-- 3. TOOL: MERGE PDF -->
     <!-- ========================================================= -->
     <section id="section-merge" class="tool-section hidden space-y-6">
       <div class="max-w-xl mx-auto border border-lcc-line bg-[#11130F] rounded-xl p-8 space-y-6">
         
         <div class="border-b border-lcc-subtle pb-4">
-          <span class="font-mono text-xs text-[#AEBA7F] uppercase tracking-widest">[ 03 // UNIONE DOCUMENTI ]</span>
-          <h2 class="text-lg font-bold text-[#F2EDE3] uppercase mt-1">Unisci Più PDF (Merge)</h2>
-          <p class="text-xs text-[#C4BEB2] font-mono mt-0.5">Concatenazione sequenziale di alberi vettoriali senza perdita di metadati</p>
+          <span class="font-mono text-xs text-[#AEBA7F] uppercase tracking-widest">[ 03 // MERGE DOCUMENTS ]</span>
+          <h2 class="text-lg font-bold text-[#F2EDE3] uppercase mt-1" data-i18n="merge_title">Merge Multiple PDFs</h2>
+          <p class="text-xs text-[#C4BEB2] font-mono mt-0.5" data-i18n="merge_desc">Sequential concatenation of vector trees without metadata degradation</p>
         </div>
 
         <div id="dropZoneMerge" class="border border-dashed border-lcc-line hover:border-[#AEBA7F] rounded-lg p-8 flex flex-col items-center justify-center text-center cursor-pointer transition bg-[#080907]/80 hover:bg-[#171914]">
           <input type="file" id="fileMergeInput" accept=".pdf" multiple class="hidden" />
           <i data-lucide="files" class="w-6 h-6 text-[#AEBA7F] mb-2"></i>
-          <p class="text-xs font-medium text-[#F2EDE3]">Trascina 2 o più file PDF da combinare</p>
-          <p class="text-[11px] text-[#C4BEB2] font-mono mt-1">L'ordine di selezione determinerà l'impaginazione finale</p>
+          <p class="text-xs font-medium text-[#F2EDE3]" data-i18n="merge_drop_main">Drop 2 or more PDF files to combine</p>
+          <p class="text-[11px] text-[#C4BEB2] font-mono mt-1" data-i18n="merge_drop_sub">Selection sequence determines final page order</p>
         </div>
 
         <ul id="mergeFileList" class="divide-y border-lcc-subtle border border-lcc-line bg-[#080907] rounded-lg text-xs font-mono max-h-44 overflow-y-auto"></ul>
 
         <button id="btnExecuteMerge" disabled class="w-full bg-[#AEBA7F] hover:bg-[#D9E6A3] disabled:opacity-30 disabled:hover:bg-[#AEBA7F] text-[#080907] font-bold py-2.5 rounded-lg transition text-xs font-mono flex items-center justify-center space-x-2">
-          <span>[ UNISCI FILE E SCARICA ]</span>
+          <span data-i18n="btn_run_merge">[ MERGE FILES AND DOWNLOAD ]</span>
         </button>
 
       </div>
     </section>
 
     <!-- ========================================================= -->
-    <!-- 4. TOOL: DIVIDI PDF -->
+    <!-- 4. TOOL: SPLIT PDF -->
     <!-- ========================================================= -->
     <section id="section-split" class="tool-section hidden space-y-6">
       <div class="max-w-xl mx-auto border border-lcc-line bg-[#11130F] rounded-xl p-8 space-y-6">
         
         <div class="border-b border-lcc-subtle pb-4">
-          <span class="font-mono text-xs text-[#AEBA7F] uppercase tracking-widest">[ 04 // DIVISIONE DOCUMENTO ]</span>
-          <h2 class="text-lg font-bold text-[#F2EDE3] uppercase mt-1">Dividi ed Estrai Pagine</h2>
-          <p class="text-xs text-[#C4BEB2] font-mono mt-0.5">Estrazione selettiva e generazione di un nuovo PDF circoscritto</p>
+          <span class="font-mono text-xs text-[#AEBA7F] uppercase tracking-widest">[ 04 // SPLIT DOCUMENT ]</span>
+          <h2 class="text-lg font-bold text-[#F2EDE3] uppercase mt-1" data-i18n="split_title">Split & Extract Pages</h2>
+          <p class="text-xs text-[#C4BEB2] font-mono mt-0.5" data-i18n="split_desc">Selective page sequence extraction into a self-contained PDF</p>
         </div>
 
         <div id="dropZoneSplit" class="border border-dashed border-lcc-line hover:border-[#AEBA7F] rounded-lg p-8 flex flex-col items-center justify-center text-center cursor-pointer transition bg-[#080907]/80 hover:bg-[#171914]">
           <input type="file" id="fileSplitInput" accept=".pdf" class="hidden" />
           <i data-lucide="scissors" class="w-6 h-6 text-[#AEBA7F] mb-2"></i>
-          <p class="text-xs font-medium text-[#F2EDE3]">Trascina qui il file PDF da dividere</p>
+          <p class="text-xs font-medium text-[#F2EDE3]" data-i18n="split_drop_main">Drop the PDF file to split here</p>
           <p id="splitFileLabel" class="text-[11px] text-[#C4BEB2] font-mono mt-1"></p>
         </div>
 
         <div>
-          <label class="block text-[11px] font-mono uppercase text-[#AEBA7F] mb-1.5">[ SEQUENZA PAGINE DA ESTRARRE ]</label>
-          <input type="text" id="splitPagesInput" placeholder="es. 1-3, 5, 8-12" class="w-full bg-[#080907] border border-lcc-line rounded-lg px-3.5 py-2 text-xs font-mono text-[#F2EDE3] focus:outline-none focus:border-[#AEBA7F] transition">
-          <p class="text-[10px] font-mono text-[#7A7871] mt-1">Esempio: "1-4" estrae le prime quattro pagine; "2, 5" estrae solo pagine 2 e 5.</p>
+          <label class="block text-[11px] font-mono uppercase text-[#AEBA7F] mb-1.5" data-i18n="split_range_label">[ PAGE SEQUENCE TO EXTRACT ]</label>
+          <input type="text" id="splitPagesInput" placeholder="e.g. 1-3, 5, 8-12" class="w-full bg-[#080907] border border-lcc-line rounded-lg px-3.5 py-2 text-xs font-mono text-[#F2EDE3] focus:outline-none focus:border-[#AEBA7F] transition">
+          <p class="text-[10px] font-mono text-[#7A7871] mt-1" data-i18n="split_range_hint">Example: "1-4" extracts the first four pages; "2, 5" extracts pages 2 and 5 only.</p>
         </div>
 
         <button id="btnExecuteSplit" disabled class="w-full bg-[#AEBA7F] hover:bg-[#D9E6A3] disabled:opacity-30 disabled:hover:bg-[#AEBA7F] text-[#080907] font-bold py-2.5 rounded-lg transition text-xs font-mono flex items-center justify-center space-x-2">
-          <span>[ ESTRAI PAGINE E SCARICA ]</span>
+          <span data-i18n="btn_run_split">[ EXTRACT PAGES AND DOWNLOAD ]</span>
         </button>
 
       </div>
     </section>
 
     <!-- ========================================================= -->
-    <!-- 5. TOOL: PDF TO IMMAGINI -->
+    <!-- 5. TOOL: PDF TO IMAGES -->
     <!-- ========================================================= -->
     <section id="section-images" class="tool-section hidden space-y-6">
       <div class="max-w-xl mx-auto border border-lcc-line bg-[#11130F] rounded-xl p-8 space-y-6">
         
         <div class="border-b border-lcc-subtle pb-4">
-          <span class="font-mono text-xs text-[#AEBA7F] uppercase tracking-widest">[ 05 // RENDERING GRAFICO ]</span>
-          <h2 class="text-lg font-bold text-[#F2EDE3] uppercase mt-1">PDF in Immagini PNG</h2>
-          <p class="text-xs text-[#C4BEB2] font-mono mt-0.5">Rasterizzazione delle singole pagine con densità di pixel configurabile</p>
+          <span class="font-mono text-xs text-[#AEBA7F] uppercase tracking-widest">[ 05 // RASTER EXPORT ]</span>
+          <h2 class="text-lg font-bold text-[#F2EDE3] uppercase mt-1" data-i18n="img_title">PDF to PNG Images</h2>
+          <p class="text-xs text-[#C4BEB2] font-mono mt-0.5" data-i18n="img_desc">Single-page rasterization with configurable pixel density</p>
         </div>
 
         <div id="dropZoneImg" class="border border-dashed border-lcc-line hover:border-[#AEBA7F] rounded-lg p-8 flex flex-col items-center justify-center text-center cursor-pointer transition bg-[#080907]/80 hover:bg-[#171914]">
           <input type="file" id="fileImgInput" accept=".pdf" class="hidden" />
           <i data-lucide="image" class="w-6 h-6 text-[#AEBA7F] mb-2"></i>
-          <p class="text-xs font-medium text-[#F2EDE3]">Trascina qui il file PDF da convertire</p>
+          <p class="text-xs font-medium text-[#F2EDE3]" data-i18n="img_drop_main">Drop the PDF file to convert here</p>
           <p id="imgFileLabel" class="text-[11px] text-[#C4BEB2] font-mono mt-1"></p>
         </div>
 
         <div>
-          <label class="block text-[11px] font-mono uppercase text-[#AEBA7F] mb-1.5">[ DENSITÀ PIXEL // DPI ]</label>
+          <label class="block text-[11px] font-mono uppercase text-[#AEBA7F] mb-1.5" data-i18n="img_dpi_label">[ PIXEL DENSITY // DPI ]</label>
           <select id="imgDpiSelect" class="w-full bg-[#080907] border border-lcc-line rounded-lg px-3.5 py-2 text-xs font-mono text-[#F2EDE3] focus:outline-none focus:border-[#AEBA7F]">
-            <option value="150" selected>150 DPI — Standard Web (Leggero & Veloce)</option>
-            <option value="300">300 DPI — Alta Risoluzione (Stampa & Archivio)</option>
+            <option value="150" selected data-i18n="dpi_150">150 DPI — Standard Web (Light & Fast)</option>
+            <option value="300" data-i18n="dpi_300">300 DPI — High Resolution (Print & Archive)</option>
           </select>
         </div>
 
         <button id="btnExecutePdfToImg" disabled class="w-full bg-[#AEBA7F] hover:bg-[#D9E6A3] disabled:opacity-30 disabled:hover:bg-[#AEBA7F] text-[#080907] font-bold py-2.5 rounded-lg transition text-xs font-mono flex items-center justify-center space-x-2">
-          <span>[ ESPORTA TUTTE LE PAGINE IN ZIP ]</span>
+          <span data-i18n="btn_run_img">[ EXPORT ALL PAGES AS ZIP ]</span>
         </button>
 
       </div>
@@ -523,14 +527,14 @@
 
   </main>
 
-  <!-- Modal Manuale & Dritte LCC -->
+  <!-- Modal Manual & Notes -->
   <div id="tipsModal" class="fixed inset-0 z-50 bg-[#080907]/90 backdrop-blur-sm hidden flex items-center justify-center p-4">
     <div class="bg-[#11130F] border border-lcc-line rounded-xl max-w-xl w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden font-mono text-xs">
       
       <div class="flex items-center justify-between px-5 py-3.5 border-b border-lcc-line bg-[#080907]">
         <div class="flex items-center space-x-2">
           <span class="text-[#AEBA7F]">&gt;_</span>
-          <span class="text-sm font-bold text-[#F2EDE3] uppercase">[ ARCHITETTURA & NOTE DI LABORATORIO ]</span>
+          <span class="text-sm font-bold text-[#F2EDE3] uppercase" data-i18n="modal_title">[ ARCHITECTURE & LAB NOTES ]</span>
         </div>
         <button id="btnCloseTips" class="text-[#C4BEB2] hover:text-[#F2EDE3] p-1 rounded hover:bg-[#171914]">
           <i data-lucide="x" class="w-4 h-4"></i>
@@ -539,29 +543,29 @@
 
       <div class="p-5 overflow-y-auto space-y-4 text-[#C4BEB2] leading-relaxed">
         <div class="border border-lcc-subtle bg-[#080907] p-3.5 rounded-lg">
-          <p class="font-bold text-[#AEBA7F]">[ 01 // DE-SILLABAZIONE A FINE RIGA ]</p>
-          <p class="text-[11px] text-[#C4BEB2] mt-1">I PDF tipografici spezzano le parole a capo con un trattino. Il motore applica un algoritmo di unione automatica per conservare la coerenza lessicale essenziale per RAG ed embedding.</p>
+          <p class="font-bold text-[#AEBA7F]" data-i18n="note_01_title">[ 01 // LINE-BREAK DE-HYPHENATION ]</p>
+          <p class="text-[11px] text-[#C4BEB2] mt-1" data-i18n="note_01_body">Typographic PDFs break words across line endings with hyphens. The engine automatically recombines fractured stems, preserving lexical continuity required for RAG embeddings and semantic search.</p>
         </div>
 
         <div class="border border-lcc-subtle bg-[#080907] p-3.5 rounded-lg">
-          <p class="font-bold text-[#AEBA7F]">[ 02 // COMPRESSIONE C-ENGINE ]</p>
-          <p class="text-[11px] text-[#C4BEB2] mt-1">PyMuPDF opera a livello di albero degli oggetti PDF in C, rimuovendo ridondanze di font, stream de-flated e ricomprimendo gli stream immagine senza degradare la leggibilità del testo vettoriale.</p>
+          <p class="font-bold text-[#AEBA7F]" data-i18n="note_02_title">[ 02 // C-ENGINE STREAM OPTIMIZATION ]</p>
+          <p class="text-[11px] text-[#C4BEB2] mt-1" data-i18n="note_02_body">PyMuPDF operates at the PDF object-tree level in C, eliminating duplicate font resources, deflating streams, and optimizing embedded imagery without compromising vector text sharpness.</p>
         </div>
 
         <div class="border border-lcc-subtle bg-[#080907] p-3.5 rounded-lg">
-          <p class="font-bold text-[#AEBA7F]">[ 03 // ISOLAMENTO E PRIVACY ASSOLUTA ]</p>
-          <p class="text-[11px] text-[#C4BEB2] mt-1">Nessun token viene inviato a server cloud terzi. Tutti i documenti transitano unicamente in RAM per il tempo strettamente necessario all'elaborazione richiesta.</p>
+          <p class="font-bold text-[#AEBA7F]" data-i18n="note_03_title">[ 03 // COMPLETE ISOLATION & PRIVACY ]</p>
+          <p class="text-[11px] text-[#C4BEB2] mt-1" data-i18n="note_03_body">Zero external calls. No tokens or byte-streams are transmitted to third-party cloud services. All operations execute strictly in local RAM for the time required to perform the task.</p>
         </div>
       </div>
 
       <div class="p-3.5 border-t border-lcc-line bg-[#080907] flex justify-end">
-        <button id="btnCloseTipsBtn" class="bg-[#AEBA7F] hover:bg-[#D9E6A3] text-[#080907] font-bold text-xs px-4 py-1.5 rounded">[ CHIUDI ]</button>
+        <button id="btnCloseTipsBtn" class="bg-[#AEBA7F] hover:bg-[#D9E6A3] text-[#080907] font-bold text-xs px-4 py-1.5 rounded" data-i18n="btn_close">[ CLOSE ]</button>
       </div>
 
     </div>
   </div>
 
-  <!-- Footer Ufficiale con Crediti Umberto Fiore // LOW CONFIDENCE CLUB -->
+  <!-- Footer with Credits Umberto Fiore // LOW CONFIDENCE CLUB -->
   <footer class="border-t border-lcc-line py-8 text-center text-xs font-mono text-[#C4BEB2] mt-auto bg-[#080907]">
     <div class="max-w-6xl mx-auto px-4 space-y-2">
       <p class="text-sm font-semibold tracking-wide text-[#F2EDE3]">
@@ -573,8 +577,194 @@
     </div>
   </footer>
 
-  <!-- Script Logica Suite -->
+  <!-- Bilingual Dictionary & Logic Script -->
   <script>
+    const translations = {
+      en: {
+        engine_badge: "PyMuPDF C-Engine // 100% Offline",
+        btn_manual: "[ ? // Lab Notes ]",
+        tab_compress: "[ 02 // COMPRESS ]",
+        tab_merge: "[ 03 // MERGE ]",
+        tab_split: "[ 04 // SPLIT ]",
+        md_drop_title: ">_ DOCUMENT_INPUT",
+        md_status_ready: "STATUS: READY",
+        md_drop_main: "Drop your PDF file here or <span class='underline underline-offset-4 decoration-[#AEBA7F]'>browse from local disk</span>",
+        md_drop_sub: "Vector text extraction • GFM Tables • Line-break de-hyphenation",
+        btn_run_md: "[ RUN TRANSFORMATION ]",
+        btn_run_md_batch: "[ RUN BATCH ]",
+        md_loading: "Processing pages in local RAM...",
+        opts_title: "[ EXTRACTION PARAMETERS ]",
+        opt_frontmatter: "YAML Frontmatter",
+        opt_frontmatter_desc: "Injects title, author, page count, and timestamp into document header",
+        opt_images: "Extract Embedded Images",
+        opt_images_desc: "Saves figures to a dedicated subfolder and prepares ZIP bundle",
+        opt_separators: "Page Delimiters",
+        opt_separators_desc: "Inserts '---' horizontal markers with page index numbers",
+        alert_scan_title: "[ SCANNED DOCUMENT / NON-VECTOR TEXT DETECTED ]",
+        stat_time: "Time:",
+        stat_pages: "Pages:",
+        stat_words: "Words:",
+        stat_figures: "Figures:",
+        copy_text: "[ Copy MD ]",
+        copied_text: "[ COPIED! ]",
+        btn_dl_md: "Download .md",
+        btn_dl_zip: "Download ZIP",
+        tab_rendered: "Rendered Preview",
+        tab_raw: "Raw Source",
+        batch_finished_title: "[ BATCH PROCESSING COMPLETED ]",
+        btn_dl_batch_zip: "Download Master ZIP",
+        th_doc: "Document",
+        th_pages: "Pages",
+        th_words: "Words",
+        th_time: "Time",
+        th_status: "Status",
+        compress_title: "Optimize and Reduce PDF",
+        compress_desc: "Stream clean-up, resource deduplication, and in-RAM raster recompression",
+        compress_drop_main: "Drop the PDF file to compress here",
+        compress_lvl_label: "[ COMPRESSION PROFILE ]",
+        lvl_light_sub: "100% Quality",
+        lvl_strong_sub: "Email Target",
+        btn_run_compress: "[ RUN COMPRESSION ]",
+        btn_running_compress: "[ COMPRESSING STREAM... ]",
+        res_orig_size: "Original Size:",
+        res_new_size: "Optimized Size:",
+        res_saved: "Reduction:",
+        btn_dl_compressed: "[ Download Optimized PDF ]",
+        merge_title: "Merge Multiple PDFs",
+        merge_desc: "Sequential concatenation of vector trees without metadata degradation",
+        merge_drop_main: "Drop 2 or more PDF files to combine",
+        merge_drop_sub: "Selection sequence determines final page order",
+        btn_run_merge: "[ MERGE FILES AND DOWNLOAD ]",
+        btn_running_merge: "[ MERGING STREAMS... ]",
+        split_title: "Split & Extract Pages",
+        split_desc: "Selective page sequence extraction into a self-contained PDF",
+        split_drop_main: "Drop the PDF file to split here",
+        split_range_label: "[ PAGE SEQUENCE TO EXTRACT ]",
+        split_range_hint: "Example: \"1-4\" extracts the first four pages; \"2, 5\" extracts pages 2 and 5 only.",
+        btn_run_split: "[ EXTRACT PAGES AND DOWNLOAD ]",
+        btn_running_split: "[ EXTRACTING SEQUENCE... ]",
+        img_title: "PDF to PNG Images",
+        img_desc: "Single-page rasterization with configurable pixel density",
+        img_drop_main: "Drop the PDF file to convert here",
+        img_dpi_label: "[ PIXEL DENSITY // DPI ]",
+        dpi_150: "150 DPI — Standard Web (Light & Fast)",
+        dpi_300: "300 DPI — High Resolution (Print & Archive)",
+        btn_run_img: "[ EXPORT ALL PAGES AS ZIP ]",
+        btn_running_img: "[ RENDERING PAGES... ]",
+        modal_title: "[ ARCHITECTURE & LAB NOTES ]",
+        note_01_title: "[ 01 // LINE-BREAK DE-HYPHENATION ]",
+        note_01_body: "Typographic PDFs break words across line endings with hyphens. The engine automatically recombines fractured stems, preserving lexical continuity required for RAG embeddings and semantic search.",
+        note_02_title: "[ 02 // C-ENGINE STREAM OPTIMIZATION ]",
+        note_02_body: "PyMuPDF operates at the PDF object-tree level in C, eliminating duplicate font resources, deflating streams, and optimizing embedded imagery without compromising vector text sharpness.",
+        note_03_title: "[ 03 // COMPLETE ISOLATION & PRIVACY ]",
+        note_03_body: "Zero external calls. No tokens or byte-streams are transmitted to third-party cloud services. All operations execute strictly in local RAM for the time required to perform the task.",
+        btn_close: "[ CLOSE ]"
+      },
+      it: {
+        engine_badge: "PyMuPDF C-Engine // 100% Offline",
+        btn_manual: "[ ? // Dritte & Regole ]",
+        tab_compress: "[ 02 // COMPRIMI ]",
+        tab_merge: "[ 03 // UNISCI ]",
+        tab_split: "[ 04 // DIVIDI ]",
+        md_drop_title: ">_ INGRESSO_DOCUMENTO",
+        md_status_ready: "STATUS: PRONTO",
+        md_drop_main: "Trascina qui il file PDF o <span class='underline underline-offset-4 decoration-[#AEBA7F]'>seleziona dal computer</span>",
+        md_drop_sub: "Estrazione testo vettoriale • Tabelle GFM • De-sillabazione a fine riga",
+        btn_run_md: "[ ESEGUI TRASFORMAZIONE ]",
+        btn_run_md_batch: "[ ESEGUI BATCH ]",
+        md_loading: "Elaborazione pagine in RAM locale...",
+        opts_title: "[ PARAMETRI DI ESTRAZIONE ]",
+        opt_frontmatter: "Frontmatter YAML",
+        opt_frontmatter_desc: "Genera blocco con titolo, autore, pagine e timestamp",
+        opt_images: "Estrai Immagini Interne",
+        opt_images_desc: "Salva figure in cartella dedicata e prepara ZIP",
+        opt_separators: "Divisori di Pagina",
+        opt_separators_desc: "Inserisce delimitatori '---' con indice pagina",
+        alert_scan_title: "[ RILEVATA SCANSIONE O IMMAGINE SENZA TESTO ]",
+        stat_time: "Tempo:",
+        stat_pages: "Pagine:",
+        stat_words: "Parole:",
+        stat_figures: "Figure:",
+        copy_text: "[ Copia MD ]",
+        copied_text: "[ COPIATO! ]",
+        btn_dl_md: "Scarica .md",
+        btn_dl_zip: "Scarica ZIP",
+        tab_rendered: "Anteprima Formattata",
+        tab_raw: "Sorgente Raw",
+        batch_finished_title: "[ ELABORAZIONE BATCH TERMINATA ]",
+        btn_dl_batch_zip: "Scarica Archivio ZIP",
+        th_doc: "Documento",
+        th_pages: "Pagine",
+        th_words: "Parole",
+        th_time: "Tempo",
+        th_status: "Stato",
+        compress_title: "Ottimizza e Riduci PDF",
+        compress_desc: "Pulizia stream, rimozione ridondanze e ricompressione grafica in RAM",
+        compress_drop_main: "Trascina qui il file PDF da comprimere",
+        compress_lvl_label: "[ MODALITÀ DI COMPRESSIONE ]",
+        lvl_light_sub: "Qualità 100%",
+        lvl_strong_sub: "Per Email",
+        btn_run_compress: "[ ESEGUI COMPRESSIONE ]",
+        btn_running_compress: "[ COMPRESSIONE IN CORSO... ]",
+        res_orig_size: "Dimensione Originale:",
+        res_new_size: "Dimensione Finale:",
+        res_saved: "Risparmio:",
+        btn_dl_compressed: "[ Scarica PDF Ottimizzato ]",
+        merge_title: "Unisci Più PDF (Merge)",
+        merge_desc: "Concatenazione sequenziale di alberi vettoriali senza perdita di metadati",
+        merge_drop_main: "Trascina 2 o più file PDF da combinare",
+        merge_drop_sub: "L'ordine di selezione determinerà l'impaginazione finale",
+        btn_run_merge: "[ UNISCI FILE E SCARICA ]",
+        btn_running_merge: "[ UNIONE IN CORSO... ]",
+        split_title: "Dividi ed Estrai Pagine",
+        split_desc: "Estrazione selettiva e generazione di un nuovo PDF circoscritto",
+        split_drop_main: "Trascina qui il file PDF da dividere",
+        split_range_label: "[ SEQUENZA PAGINE DA ESTRARRE ]",
+        split_range_hint: "Esempio: \"1-4\" estrae le prime quattro pagine; \"2, 5\" estrae solo pagine 2 e 5.",
+        btn_run_split: "[ ESTRAI PAGINE E SCARICA ]",
+        btn_running_split: "[ ESTRAZIONE IN CORSO... ]",
+        img_title: "PDF in Immagini PNG",
+        img_desc: "Rasterizzazione delle singole pagine con densità di pixel configurabile",
+        img_drop_main: "Trascina qui il file PDF da convertire",
+        img_dpi_label: "[ DENSITÀ PIXEL // DPI ]",
+        dpi_150: "150 DPI — Standard Web (Leggero & Veloce)",
+        dpi_300: "300 DPI — Alta Risoluzione (Stampa & Archivio)",
+        btn_run_img: "[ ESPORTA TUTTE LE PAGINE IN ZIP ]",
+        btn_running_img: "[ RENDERING IN CORSO... ]",
+        modal_title: "[ ARCHITETTURA & NOTE DI LABORATORIO ]",
+        note_01_title: "[ 01 // DE-SILLABAZIONE A FINE RIGA ]",
+        note_01_body: "I PDF tipografici spezzano le parole a capo con un trattino. Il motore applica un algoritmo di unione automatica per conservare la coerenza lessicale essenziale per RAG ed embedding.",
+        note_02_title: "[ 02 // COMPRESSIONE C-ENGINE ]",
+        note_02_body: "PyMuPDF opera a livello di albero degli oggetti PDF in C, rimuovendo ridondanze di font, stream de-flated e ricomprimendo gli stream immagine senza degradare la leggibilità del testo vettoriale.",
+        note_03_title: "[ 03 // ISOLAMENTO E PRIVACY ASSOLUTA ]",
+        note_03_body: "Nessun token viene inviato a server cloud terzi. Tutti i documenti transitano unicamente in RAM per il tempo strettamente necessario all'elaborazione richiesta.",
+        btn_close: "[ CHIUDI ]"
+      }
+    };
+
+    let currentLang = 'en';
+
+    function setLanguage(lang) {
+      currentLang = lang;
+      const dict = translations[lang];
+
+      document.querySelectorAll('[data-i18n]').forEach(el => {
+        const key = el.getAttribute('data-i18n');
+        if (dict[key]) el.innerHTML = dict[key];
+      });
+
+      // Aggiorna bottoni lingua
+      const btnEn = document.getElementById('langBtn-en');
+      const btnIt = document.getElementById('langBtn-it');
+      if (lang === 'en') {
+        btnEn.className = 'px-2 py-0.5 rounded font-bold bg-[#AEBA7F] text-[#080907] transition';
+        btnIt.className = 'px-2 py-0.5 rounded text-[#C4BEB2] hover:text-[#F2EDE3] transition';
+      } else {
+        btnIt.className = 'px-2 py-0.5 rounded font-bold bg-[#AEBA7F] text-[#080907] transition';
+        btnEn.className = 'px-2 py-0.5 rounded text-[#C4BEB2] hover:text-[#F2EDE3] transition';
+      }
+    }
+
     lucide.createIcons();
 
     function switchTab(tabName) {
@@ -633,17 +823,21 @@
     function handleFilesSelected(files) {
       if (!files || files.length === 0) return;
       currentFiles = Array.from(files).filter(f => f.name.toLowerCase().endsWith('.pdf'));
-      if (currentFiles.length === 0) { alert('Seleziona almeno un file valido (.pdf)'); return; }
+      if (currentFiles.length === 0) { 
+        alert(currentLang === 'en' ? 'Please select a valid PDF file (.pdf)' : 'Seleziona almeno un file valido (.pdf)'); 
+        return; 
+      }
 
+      const dict = translations[currentLang];
       if (currentFiles.length === 1) {
         selectedFileName.innerText = currentFiles[0].name;
         selectedFileSize.innerText = `(${formatBytes(currentFiles[0].size)})`;
-        btnStartConvert.innerHTML = '<span>[ ESEGUI TRASFORMAZIONE ]</span>';
+        btnStartConvert.innerHTML = `<span>${dict.btn_run_md}</span>`;
       } else {
-        selectedFileName.innerText = `${currentFiles.length} file PDF selezionati`;
+        selectedFileName.innerText = `${currentFiles.length} ${currentLang === 'en' ? 'PDF files selected' : 'file PDF selezionati'}`;
         const tot = currentFiles.reduce((acc, f) => acc + f.size, 0);
         selectedFileSize.innerText = `(${formatBytes(tot)})`;
-        btnStartConvert.innerHTML = '<span>[ ESEGUI BATCH ]</span>';
+        btnStartConvert.innerHTML = `<span>${dict.btn_run_md_batch}</span>`;
       }
       fileInfoBar.classList.remove('hidden');
     }
@@ -664,18 +858,18 @@
         if (currentFiles.length === 1) {
           formData.append('file', currentFiles[0]);
           const res = await fetch('/api/convert', { method: 'POST', body: formData });
-          if (!res.ok) throw new Error((await res.json()).detail || 'Errore');
+          if (!res.ok) throw new Error((await res.json()).detail || 'Error');
           const data = await res.json();
           renderSingleResult(data);
         } else {
           for (let f of currentFiles) formData.append('files', f);
           const res = await fetch('/api/convert-batch', { method: 'POST', body: formData });
-          if (!res.ok) throw new Error((await res.json()).detail || 'Errore');
+          if (!res.ok) throw new Error((await res.json()).detail || 'Error');
           const data = await res.json();
           renderBatchResult(data);
         }
       } catch (err) {
-        alert('Errore: ' + err.message);
+        alert(err.message);
       } finally {
         loadingIndicator.classList.add('hidden');
         fileInfoBar.classList.remove('hidden');
@@ -687,7 +881,7 @@
       currentRawMarkdown = data.markdown;
       document.getElementById('statElapsed').innerText = `${data.elapsed_ms}ms`;
       document.getElementById('statPages').innerText = data.page_count;
-      document.getElementById('statWords').innerText = data.word_count.toLocaleString('it-IT');
+      document.getElementById('statWords').innerText = data.word_count.toLocaleString(currentLang === 'en' ? 'en-US' : 'it-IT');
 
       if (data.image_count > 0) {
         document.getElementById('statImages').innerText = data.image_count;
@@ -717,7 +911,7 @@
       currentJobId = data.job_id;
       const tbody = document.getElementById('batchTableBody');
       tbody.innerHTML = '';
-      document.getElementById('batchSummaryText').innerText = `${data.processed_count} documenti elaborati con successo`;
+      document.getElementById('batchSummaryText').innerText = `${data.processed_count} ${currentLang === 'en' ? 'documents successfully processed' : 'documenti elaborati con successo'}`;
       data.results.forEach(item => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
@@ -749,9 +943,10 @@
     document.getElementById('btnCopy').addEventListener('click', async () => {
       if (!currentRawMarkdown) return;
       await navigator.clipboard.writeText(currentRawMarkdown);
+      const dict = translations[currentLang];
       const ct = document.getElementById('copyText');
-      ct.innerText = '[ COPIATO! ]';
-      setTimeout(() => ct.innerText = '[ Copia MD ]', 2000);
+      ct.innerText = dict.copied_text;
+      setTimeout(() => ct.innerText = dict.copy_text, 2000);
     });
 
     document.getElementById('btnDownloadMd').addEventListener('click', () => {
@@ -797,7 +992,8 @@
 
     btnExecuteCompress.addEventListener('click', async () => {
       if (!compressFile) return;
-      btnExecuteCompress.innerHTML = '<span>[ COMPRESSIONE IN CORSO... ]</span>';
+      const dict = translations[currentLang];
+      btnExecuteCompress.innerHTML = `<span>${dict.btn_running_compress}</span>`;
       btnExecuteCompress.disabled = true;
 
       const fd = new FormData();
@@ -806,7 +1002,7 @@
 
       try {
         const res = await fetch('/api/compress', { method: 'POST', body: fd });
-        if (!res.ok) throw new Error('Errore durante la compressione');
+        if (!res.ok) throw new Error(currentLang === 'en' ? 'Error during compression' : 'Errore durante la compressione');
 
         const origSize = res.headers.get('X-Original-Size');
         const newSize = res.headers.get('X-New-Size');
@@ -821,13 +1017,13 @@
 
         const btnDl = document.getElementById('btnDownloadCompressed');
         btnDl.href = downloadUrl;
-        btnDl.download = `${compressFile.name.replace(/\.pdf$/i, '')}_compresso.pdf`;
+        btnDl.download = `${compressFile.name.replace(/\.pdf$/i, '')}_compressed.pdf`;
 
         document.getElementById('compressResultBox').classList.remove('hidden');
       } catch (err) {
         alert(err.message);
       } finally {
-        btnExecuteCompress.innerHTML = '<span>[ ESEGUI COMPRESSIONE ]</span>';
+        btnExecuteCompress.innerHTML = `<span>${dict.btn_run_compress}</span>`;
         btnExecuteCompress.disabled = false;
       }
     });
@@ -856,7 +1052,8 @@
 
     btnExecuteMerge.addEventListener('click', async () => {
       if (mergeFiles.length < 2) return;
-      btnExecuteMerge.innerHTML = '<span>[ UNIONE IN CORSO... ]</span>';
+      const dict = translations[currentLang];
+      btnExecuteMerge.innerHTML = `<span>${dict.btn_running_merge}</span>`;
       btnExecuteMerge.disabled = true;
 
       const fd = new FormData();
@@ -864,16 +1061,16 @@
 
       try {
         const res = await fetch('/api/merge', { method: 'POST', body: fd });
-        if (!res.ok) throw new Error('Errore durante l\'unione');
+        if (!res.ok) throw new Error(currentLang === 'en' ? 'Error during merge' : 'Errore durante l\'unione');
         const blob = await res.blob();
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
-        a.download = 'documento_unito.pdf';
+        a.download = 'merged_document.pdf';
         a.click();
       } catch (err) {
         alert(err.message);
       } finally {
-        btnExecuteMerge.innerHTML = '<span>[ UNISCI FILE E SCARICA ]</span>';
+        btnExecuteMerge.innerHTML = `<span>${dict.btn_run_merge}</span>`;
         btnExecuteMerge.disabled = false;
       }
     });
@@ -903,7 +1100,8 @@
 
     btnExecuteSplit.addEventListener('click', async () => {
       if (!splitFile) return;
-      btnExecuteSplit.innerHTML = '<span>[ ESTRAZIONE IN CORSO... ]</span>';
+      const dict = translations[currentLang];
+      btnExecuteSplit.innerHTML = `<span>${dict.btn_running_split}</span>`;
       btnExecuteSplit.disabled = true;
 
       const fd = new FormData();
@@ -912,16 +1110,16 @@
 
       try {
         const res = await fetch('/api/split', { method: 'POST', body: fd });
-        if (!res.ok) throw new Error((await res.json()).detail || 'Errore divisione');
+        if (!res.ok) throw new Error((await res.json()).detail || 'Error');
         const blob = await res.blob();
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
-        a.download = `${splitFile.name.replace(/\.pdf$/i, '')}_estratto.pdf`;
+        a.download = `${splitFile.name.replace(/\.pdf$/i, '')}_extracted.pdf`;
         a.click();
       } catch (err) {
         alert(err.message);
       } finally {
-        btnExecuteSplit.innerHTML = '<span>[ ESTRAI PAGINE E SCARICA ]</span>';
+        btnExecuteSplit.innerHTML = `<span>${dict.btn_run_split}</span>`;
         checkSplitReady();
       }
     });
@@ -945,7 +1143,8 @@
 
     btnExecutePdfToImg.addEventListener('click', async () => {
       if (!imgFile) return;
-      btnExecutePdfToImg.innerHTML = '<span>[ RENDERING IN CORSO... ]</span>';
+      const dict = translations[currentLang];
+      btnExecutePdfToImg.innerHTML = `<span>${dict.btn_running_img}</span>`;
       btnExecutePdfToImg.disabled = true;
 
       const fd = new FormData();
@@ -954,16 +1153,16 @@
 
       try {
         const res = await fetch('/api/pdf-to-images', { method: 'POST', body: fd });
-        if (!res.ok) throw new Error('Errore esportazione immagini');
+        if (!res.ok) throw new Error(currentLang === 'en' ? 'Error during image export' : 'Errore esportazione immagini');
         const blob = await res.blob();
         const a = document.createElement('a');
         a.href = URL.createObjectURL(blob);
-        a.download = `${imgFile.name.replace(/\.pdf$/i, '')}_immagini.zip`;
+        a.download = `${imgFile.name.replace(/\.pdf$/i, '')}_images.zip`;
         a.click();
       } catch (err) {
         alert(err.message);
       } finally {
-        btnExecutePdfToImg.innerHTML = '<span>[ ESPORTA TUTTE LE PAGINE IN ZIP ]</span>';
+        btnExecutePdfToImg.innerHTML = `<span>${dict.btn_run_img}</span>`;
         btnExecutePdfToImg.disabled = false;
       }
     });
@@ -972,6 +1171,9 @@
     document.getElementById('btnOpenTips').addEventListener('click', () => document.getElementById('tipsModal').classList.remove('hidden'));
     document.getElementById('btnCloseTips').addEventListener('click', () => document.getElementById('tipsModal').classList.add('hidden'));
     document.getElementById('btnCloseTipsBtn').addEventListener('click', () => document.getElementById('tipsModal').classList.add('hidden'));
+
+    // Inizializza lingua di default (English)
+    setLanguage('en');
   </script>
 </body>
 </html>
