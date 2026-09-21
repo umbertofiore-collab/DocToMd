@@ -44,11 +44,16 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+from fastapi.staticfiles import StaticFiles
+
 BASE_DIR = Path(__file__).resolve().parent
+STATIC_DIR = BASE_DIR / "static"
+STATIC_DIR.mkdir(exist_ok=True)
 TEMPLATES_DIR = BASE_DIR / "templates"
 STORAGE_DIR = BASE_DIR.parent / ".temp_storage"
 STORAGE_DIR.mkdir(exist_ok=True)
 
+app.mount("/static", StaticFiles(directory=str(STATIC_DIR)), name="static")
 templates = Jinja2Templates(directory=str(TEMPLATES_DIR))
 
 

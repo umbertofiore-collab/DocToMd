@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DocToMD Studio — Document Engine</title>
+  <title>DocToMD [ DTM-01 ] — LOW CONFIDENCE CLUB</title>
   
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
   
-  <!-- Geist Fonts (Sans & Mono) di Vercel -->
+  <!-- Geist Sans & Mono Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600&family=Geist:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Geist+Mono:wght@400;500;600&family=Geist:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 
   <script>
     tailwind.config = {
@@ -19,22 +19,22 @@
       theme: {
         extend: {
           fontFamily: {
-            sans: ['Geist', '-apple-system', 'BlinkMacSystemFont', 'Segoe UI', 'Roboto', 'sans-serif'],
-            mono: ['Geist Mono', 'ui-monospace', 'SFMono-Regular', 'Menlo', 'monospace'],
+            sans: ['Geist', 'Arial Narrow', 'Aptos Narrow', 'sans-serif'],
+            mono: ['Geist Mono', 'SFMono-Regular', 'Consolas', 'monospace'],
           },
           colors: {
-            surface: {
-              0: '#000000',
-              50: '#050505',
-              100: '#0a0a0a',
-              200: '#121212',
-              300: '#1a1a1a',
-              400: '#262626',
-            },
-            border: {
-              subtle: '#222222',
-              strong: '#333333',
-              hover: '#444444',
+            lcc: {
+              bg: '#080907',          // Nero materico canonico LCC
+              surface: '#11130F',     // Superficie scura LCC
+              elevated: '#171914',    // Superficie sopraelevata
+              text: '#F2EDE3',        // Avorio caldo LCC
+              muted: '#C4BEB2',       // Avorio muted
+              dim: '#7A7871',         // Grigio tenue
+              olive: '#AEBA7F',       // Verde oliva canonico
+              oliveDeep: '#778454',   // Verde oliva profondo
+              focus: '#D9E6A3',       // Focus highlight
+              line: 'rgba(242, 237, 227, 0.23)',
+              lineSubtle: 'rgba(242, 237, 227, 0.12)',
             }
           }
         }
@@ -51,123 +51,138 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
 
   <style>
-    /* Background dot grid stile Vercel */
-    .bg-grid-pattern {
-      background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
-      background-size: 24px 24px;
+    /* Texture materica e imperfezione controllata LCC */
+    body {
+      background-color: #080907;
+      color: #F2EDE3;
+      background-image: 
+        radial-gradient(rgba(174, 186, 127, 0.04) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(8, 9, 7, 0.8), rgba(8, 9, 7, 1));
+      background-size: 32px 32px, 100% 100%;
     }
-    
-    /* Styling Markdown Professionale Monocromatico */
-    .prose-mono-doc table {
+
+    /* Bordi con token LCC line */
+    .border-lcc-line {
+      border-color: rgba(242, 237, 227, 0.23);
+    }
+    .border-lcc-subtle {
+      border-color: rgba(242, 237, 227, 0.12);
+    }
+
+    /* Rendering Markdown con palette LCC */
+    .prose-lcc table {
       width: 100%;
       border-collapse: collapse;
       margin: 1.5rem 0;
       font-size: 0.85rem;
+      font-family: 'Geist Mono', monospace;
     }
-    .prose-mono-doc th, .prose-mono-doc td {
-      border: 1px solid #262626;
+    .prose-lcc th, .prose-lcc td {
+      border: 1px solid rgba(242, 237, 227, 0.23);
       padding: 0.6rem 0.85rem;
       text-align: left;
     }
-    .prose-mono-doc th {
-      background-color: #0f0f0f;
+    .prose-lcc th {
+      background-color: #11130F;
+      color: #AEBA7F;
       font-weight: 600;
-      color: #ededed;
     }
-    .prose-mono-doc pre {
-      background-color: #050505;
-      border: 1px solid #262626;
-      border-radius: 6px;
+    .prose-lcc pre {
+      background-color: #080907;
+      border: 1px solid rgba(242, 237, 227, 0.23);
+      border-radius: 4px;
       padding: 1rem;
       overflow-x: auto;
       font-size: 0.85rem;
     }
-    .prose-mono-doc code {
+    .prose-lcc code {
       font-family: 'Geist Mono', monospace;
     }
-    .prose-mono-doc h1 { font-size: 1.6rem; font-weight: 600; margin-top: 1.75rem; margin-bottom: 0.75rem; letter-spacing: -0.02em; color: #ffffff; border-bottom: 1px solid #222; padding-bottom: 0.5rem; }
-    .prose-mono-doc h2 { font-size: 1.3rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.5rem; letter-spacing: -0.015em; color: #ededed; }
-    .prose-mono-doc h3 { font-size: 1.1rem; font-weight: 600; margin-top: 1.25rem; margin-bottom: 0.5rem; color: #d4d4d4; }
-    .prose-mono-doc p { margin-bottom: 1rem; line-height: 1.7; color: #a1a1a1; }
-    .prose-mono-doc ul { list-style-type: disc; margin-left: 1.25rem; margin-bottom: 1rem; color: #a1a1a1; }
-    .prose-mono-doc ol { list-style-type: decimal; margin-left: 1.25rem; margin-bottom: 1rem; color: #a1a1a1; }
-    .prose-mono-doc hr { border: 0; border-top: 1px solid #262626; margin: 2rem 0; }
-    .prose-mono-doc strong { color: #ffffff; font-weight: 600; }
-    .prose-mono-doc blockquote { border-left: 2px solid #525252; padding-left: 1rem; color: #737373; margin: 1.25rem 0; font-style: italic; }
-
-    /* Hairline borders */
-    .hairline-border {
-      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.08);
+    .prose-lcc h1 { 
+      font-size: 1.7rem; 
+      font-weight: 700; 
+      letter-spacing: -0.02em; 
+      text-transform: uppercase; 
+      margin-top: 1.75rem; 
+      margin-bottom: 0.75rem; 
+      color: #F2EDE3; 
+      border-bottom: 1px solid rgba(242, 237, 227, 0.23); 
+      padding-bottom: 0.4rem; 
     }
+    .prose-lcc h2 { font-size: 1.35rem; font-weight: 600; letter-spacing: -0.015em; text-transform: uppercase; margin-top: 1.5rem; margin-bottom: 0.5rem; color: #AEBA7F; }
+    .prose-lcc h3 { font-size: 1.15rem; font-weight: 600; margin-top: 1.25rem; margin-bottom: 0.5rem; color: #F2EDE3; }
+    .prose-lcc p { margin-bottom: 1rem; line-height: 1.7; color: #C4BEB2; }
+    .prose-lcc ul { list-style-type: square; margin-left: 1.25rem; margin-bottom: 1rem; color: #C4BEB2; }
+    .prose-lcc ol { list-style-type: decimal; margin-left: 1.25rem; margin-bottom: 1rem; color: #C4BEB2; }
+    .prose-lcc hr { border: 0; border-top: 1px dashed rgba(242, 237, 227, 0.23); margin: 2rem 0; }
+    .prose-lcc strong { color: #F2EDE3; font-weight: 600; }
+    .prose-lcc blockquote { border-left: 3px solid #AEBA7F; padding-left: 1rem; color: #C4BEB2; margin: 1.25rem 0; font-style: italic; }
   </style>
 </head>
 
-<body class="bg-[#000000] text-[#ededed] min-h-screen font-sans antialiased flex flex-col selection:bg-[#333] selection:text-white">
+<body class="min-h-screen font-sans antialiased flex flex-col selection:bg-[#AEBA7F] selection:text-[#080907]">
 
-  <!-- Header Vercel Style -->
-  <header class="border-b border-[#1f1f1f] bg-[#000000]/90 backdrop-blur sticky top-0 z-50">
-    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
+  <!-- Header Ufficiale LCC -->
+  <header class="border-b border-lcc-line bg-[#080907]/95 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between">
       
-      <!-- Brand & Status -->
-      <div class="flex items-center space-x-3">
-        <div class="w-6 h-6 rounded-md bg-white text-black flex items-center justify-center font-bold text-xs">
-          ▲
-        </div>
-        <div class="flex items-center space-x-2">
-          <span class="font-semibold text-sm tracking-tight text-white">DocToMD</span>
-          <span class="text-gray-600">/</span>
-          <span class="text-xs font-mono text-gray-400">studio</span>
-          <span class="hidden sm:inline-block text-[10px] font-mono px-2 py-0.5 rounded border border-[#2a2a2a] bg-[#0d0d0d] text-gray-400 ml-2">v2.0.0</span>
-        </div>
+      <!-- Brand & Code -->
+      <div class="flex items-center space-x-3 sm:space-x-4">
+        <!-- Logo Ufficiale LCC -->
+        <a href="/" class="flex items-center space-x-2 group">
+          <img src="/static/lcc-logo.png" alt="LOW CONFIDENCE CLUB" class="h-8 w-8 object-contain rounded bg-[#11130F] p-0.5 border border-lcc-line group-hover:border-[#AEBA7F] transition" />
+          <div class="flex flex-col">
+            <span class="font-mono text-[10px] tracking-widest text-[#AEBA7F] uppercase leading-none">[ DTM // LAB-01 ]</span>
+            <span class="font-bold text-sm tracking-tight text-[#F2EDE3] uppercase mt-0.5">DocToMD</span>
+          </div>
+        </a>
+        <span class="hidden md:inline-block text-[11px] font-mono text-[#7A7871]">|</span>
+        <span class="hidden md:inline-block text-[11px] font-mono text-[#C4BEB2] tracking-wide italic">"Low confidence. High output."</span>
       </div>
 
-      <!-- Action items -->
+      <!-- Live Engine Badge & Manifesto Button -->
       <div class="flex items-center space-x-3">
-        <div class="flex items-center space-x-1.5 px-2.5 py-1 rounded-full border border-[#222] bg-[#0a0a0a] text-xs font-mono text-gray-400">
-          <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-          <span>C-Engine 100% Locale</span>
+        <div class="hidden sm:flex items-center space-x-2 px-2.5 py-1 rounded bg-[#11130F] border border-lcc-subtle text-[11px] font-mono text-[#C4BEB2]">
+          <span class="w-1.5 h-1.5 rounded-full bg-[#AEBA7F] animate-pulse"></span>
+          <span>PyMuPDF C-Engine // 100% Offline</span>
         </div>
 
-        <button id="btnOpenTips" class="text-xs font-mono text-gray-400 hover:text-white px-2.5 py-1 rounded border border-[#262626] hover:border-[#444] transition flex items-center space-x-1.5 bg-[#0a0a0a]">
-          <i data-lucide="book-open" class="w-3.5 h-3.5"></i>
-          <span>Manuale & Dritte</span>
+        <button id="btnOpenTips" class="text-xs font-mono text-[#F2EDE3] hover:text-[#AEBA7F] px-3 py-1.5 rounded bg-[#11130F] border border-lcc-line hover:border-[#AEBA7F] transition flex items-center space-x-1.5">
+          <span>[ ? // Dritte & Regole ]</span>
         </button>
       </div>
     </div>
 
-    <!-- Monochromatic Segmented Control Tabs -->
-    <div class="border-t border-[#1a1a1a] bg-[#050505]">
-      <div class="max-w-6xl mx-auto px-4 sm:px-6 flex space-x-1 overflow-x-auto py-1.5 scrollbar-none">
-        <button onclick="switchTab('markdown')" id="tabNav-markdown" class="tab-btn text-xs font-mono px-3.5 py-1.5 rounded-md transition text-white bg-[#1a1a1a] border border-[#333] flex items-center space-x-1.5 whitespace-nowrap">
-          <i data-lucide="file-text" class="w-3.5 h-3.5"></i>
-          <span>Markdown</span>
+    <!-- Segmented Control LCC Tabs -->
+    <div class="border-t border-lcc-subtle bg-[#11130F]">
+      <div class="max-w-6xl mx-auto px-4 sm:px-6 flex space-x-1 sm:space-x-2 overflow-x-auto py-1.5 scrollbar-none">
+        
+        <button onclick="switchTab('markdown')" id="tabNav-markdown" class="tab-btn text-xs font-mono px-3 py-1.5 rounded transition text-[#080907] bg-[#AEBA7F] font-semibold flex items-center space-x-1.5 whitespace-nowrap">
+          <span>[ 01 // MARKDOWN ]</span>
         </button>
 
-        <button onclick="switchTab('compress')" id="tabNav-compress" class="tab-btn text-xs font-mono px-3.5 py-1.5 rounded-md transition text-gray-400 hover:text-gray-200 hover:bg-[#121212] flex items-center space-x-1.5 whitespace-nowrap">
-          <i data-lucide="minimize-2" class="w-3.5 h-3.5"></i>
-          <span>Comprimi</span>
+        <button onclick="switchTab('compress')" id="tabNav-compress" class="tab-btn text-xs font-mono px-3 py-1.5 rounded transition text-[#C4BEB2] hover:text-[#F2EDE3] hover:bg-[#171914] flex items-center space-x-1.5 whitespace-nowrap">
+          <span>[ 02 // COMPRIMI ]</span>
         </button>
 
-        <button onclick="switchTab('merge')" id="tabNav-merge" class="tab-btn text-xs font-mono px-3.5 py-1.5 rounded-md transition text-gray-400 hover:text-gray-200 hover:bg-[#121212] flex items-center space-x-1.5 whitespace-nowrap">
-          <i data-lucide="git-merge" class="w-3.5 h-3.5"></i>
-          <span>Unisci</span>
+        <button onclick="switchTab('merge')" id="tabNav-merge" class="tab-btn text-xs font-mono px-3 py-1.5 rounded transition text-[#C4BEB2] hover:text-[#F2EDE3] hover:bg-[#171914] flex items-center space-x-1.5 whitespace-nowrap">
+          <span>[ 03 // UNISCI ]</span>
         </button>
 
-        <button onclick="switchTab('split')" id="tabNav-split" class="tab-btn text-xs font-mono px-3.5 py-1.5 rounded-md transition text-gray-400 hover:text-gray-200 hover:bg-[#121212] flex items-center space-x-1.5 whitespace-nowrap">
-          <i data-lucide="scissors" class="w-3.5 h-3.5"></i>
-          <span>Dividi</span>
+        <button onclick="switchTab('split')" id="tabNav-split" class="tab-btn text-xs font-mono px-3 py-1.5 rounded transition text-[#C4BEB2] hover:text-[#F2EDE3] hover:bg-[#171914] flex items-center space-x-1.5 whitespace-nowrap">
+          <span>[ 04 // DIVIDI ]</span>
         </button>
 
-        <button onclick="switchTab('images')" id="tabNav-images" class="tab-btn text-xs font-mono px-3.5 py-1.5 rounded-md transition text-gray-400 hover:text-gray-200 hover:bg-[#121212] flex items-center space-x-1.5 whitespace-nowrap">
-          <i data-lucide="image" class="w-3.5 h-3.5"></i>
-          <span>PNG Export</span>
+        <button onclick="switchTab('images')" id="tabNav-images" class="tab-btn text-xs font-mono px-3 py-1.5 rounded transition text-[#C4BEB2] hover:text-[#F2EDE3] hover:bg-[#171914] flex items-center space-x-1.5 whitespace-nowrap">
+          <span>[ 05 // PNG EXPORT ]</span>
         </button>
+
       </div>
     </div>
   </header>
 
-  <!-- Content Workspace -->
-  <main class="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-8 space-y-8 bg-grid-pattern">
+  <!-- Main Work Area -->
+  <main class="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 py-8 space-y-8">
 
     <!-- ========================================================= -->
     <!-- 1. TOOL: PDF TO MARKDOWN -->
@@ -176,87 +191,93 @@
       
       <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
         
-        <!-- Dropzone Monocromatica -->
-        <div class="lg:col-span-2 bg-[#0a0a0a] border border-[#222222] rounded-xl p-6 relative">
-          <div id="dropZone" class="border border-dashed border-[#333333] hover:border-[#666666] rounded-lg p-10 flex flex-col items-center justify-center text-center cursor-pointer transition duration-150 bg-[#000000]/60 hover:bg-[#0f0f0f] group">
+        <!-- Dropzone LCC -->
+        <div class="lg:col-span-2 bg-[#11130F] border border-lcc-line rounded-xl p-6 relative">
+          
+          <div class="flex items-center justify-between mb-3 text-[11px] font-mono text-[#AEBA7F]">
+            <span>&gt;_ INGRESSO_DOCUMENTO</span>
+            <span>STATUS: PRONTO</span>
+          </div>
+
+          <div id="dropZone" class="border border-dashed border-lcc-line hover:border-[#AEBA7F] rounded-lg p-10 flex flex-col items-center justify-center text-center cursor-pointer transition duration-150 bg-[#080907]/80 hover:bg-[#141712] group">
             <input type="file" id="fileInput" accept=".pdf" multiple class="hidden" />
             
-            <div class="w-10 h-10 rounded-lg border border-[#333] bg-[#111] flex items-center justify-center mb-3 text-gray-300 group-hover:text-white group-hover:border-[#555] transition">
-              <i data-lucide="arrow-up-tray" class="w-4 h-4"></i>
+            <div class="w-11 h-11 rounded border border-lcc-line bg-[#11130F] flex items-center justify-center mb-3 text-[#AEBA7F] group-hover:border-[#AEBA7F] group-hover:scale-105 transition">
+              <span class="font-mono text-sm font-bold">&gt;_</span>
             </div>
             
-            <p class="text-sm font-medium text-white">Trascina un file PDF o <span class="underline underline-offset-4 decoration-[#555]">seleziona da disco</span></p>
-            <p class="text-xs font-mono text-gray-500 mt-1">Nativo &bull; Tabelle GFM &bull; De-sillabazione automatica</p>
+            <p class="text-sm font-medium text-[#F2EDE3]">Trascina qui il file PDF o <span class="underline underline-offset-4 decoration-[#AEBA7F]">seleziona dal computer</span></p>
+            <p class="text-xs font-mono text-[#C4BEB2] mt-1.5">Estrazione testo vettoriale &bull; Tabelle GFM &bull; De-sillabazione a fine riga</p>
           </div>
 
           <!-- Document Loaded Pill -->
-          <div id="fileInfoBar" class="mt-4 hidden flex items-center justify-between border border-[#2b2b2b] bg-[#111111] rounded-lg p-3 text-xs font-mono">
+          <div id="fileInfoBar" class="mt-4 hidden flex items-center justify-between border border-lcc-line bg-[#080907] rounded-lg p-3 text-xs font-mono">
             <div class="flex items-center space-x-2.5 truncate">
-              <span class="w-2 h-2 rounded-full bg-white"></span>
-              <span id="selectedFileName" class="text-white truncate font-medium">file.pdf</span>
-              <span id="selectedFileSize" class="text-gray-500"></span>
+              <span class="text-[#AEBA7F]">&gt;</span>
+              <span id="selectedFileName" class="text-[#F2EDE3] truncate font-medium">file.pdf</span>
+              <span id="selectedFileSize" class="text-[#7A7871]"></span>
             </div>
-            <button id="btnStartConvert" class="bg-white hover:bg-[#eaeaea] text-black font-semibold text-xs px-4 py-2 rounded transition flex items-center space-x-1.5 active:scale-[0.98]">
-              <span>Converti Documento</span>
-              <kbd class="px-1 py-0.2 bg-gray-200 border border-gray-300 rounded text-[9px] text-black">↵</kbd>
+            <button id="btnStartConvert" class="bg-[#AEBA7F] hover:bg-[#D9E6A3] text-[#080907] font-bold text-xs px-4 py-2 rounded transition flex items-center space-x-1.5 active:scale-[0.98]">
+              <span>[ ESEGUI TRASFORMAZIONE ]</span>
             </button>
           </div>
 
-          <!-- Loading -->
+          <!-- Loading Indicator -->
           <div id="loadingIndicator" class="hidden mt-4 text-center py-4">
-            <div class="inline-flex items-center space-x-2 text-gray-300 text-xs font-mono">
-              <i data-lucide="loader" class="w-4 h-4 animate-spin text-white"></i>
-              <span>Elaborazione in corso a 100+ pag/sec...</span>
+            <div class="inline-flex items-center space-x-2 text-[#AEBA7F] text-xs font-mono">
+              <i data-lucide="loader" class="w-4 h-4 animate-spin"></i>
+              <span>Elaborazione pagine in RAM locale...</span>
             </div>
           </div>
+
         </div>
 
         <!-- Options Box -->
-        <div class="bg-[#0a0a0a] border border-[#222222] rounded-xl p-5 space-y-4">
-          <div class="border-b border-[#222] pb-3">
-            <h3 class="text-xs font-mono text-gray-400 uppercase tracking-wider">Parametri di Estrazione</h3>
+        <div class="bg-[#11130F] border border-lcc-line rounded-xl p-5 space-y-4">
+          <div class="border-b border-lcc-subtle pb-3">
+            <h3 class="text-xs font-mono text-[#AEBA7F] uppercase tracking-wider">[ PARAMETRI DI ESTRAZIONE ]</h3>
           </div>
 
-          <div class="space-y-3 text-xs">
+          <div class="space-y-3.5 text-xs">
             <label class="flex items-start space-x-3 cursor-pointer select-none">
-              <input type="checkbox" id="optFrontmatter" checked class="mt-0.5 rounded bg-[#1a1a1a] border-[#333] text-white focus:ring-0 focus:ring-offset-0">
+              <input type="checkbox" id="optFrontmatter" checked class="mt-0.5 rounded bg-[#080907] border-lcc-line text-[#AEBA7F] focus:ring-0">
               <div>
-                <span class="text-gray-200 font-medium">Frontmatter YAML</span>
-                <p class="text-[11px] text-gray-500 mt-0.5">Inietta titolo, autore, pagine e data in intestazione</p>
+                <span class="text-[#F2EDE3] font-medium">Frontmatter YAML</span>
+                <p class="text-[11px] text-[#C4BEB2] mt-0.5">Genera blocco con titolo, autore, pagine e timestamp</p>
               </div>
             </label>
 
             <label class="flex items-start space-x-3 cursor-pointer select-none">
-              <input type="checkbox" id="optImages" class="mt-0.5 rounded bg-[#1a1a1a] border-[#333] text-white focus:ring-0 focus:ring-offset-0">
+              <input type="checkbox" id="optImages" class="mt-0.5 rounded bg-[#080907] border-lcc-line text-[#AEBA7F] focus:ring-0">
               <div>
-                <span class="text-gray-200 font-medium">Estrai Immagini Interne</span>
-                <p class="text-[11px] text-gray-500 mt-0.5">Salva figure in cartella e impacchetta in .zip</p>
+                <span class="text-[#F2EDE3] font-medium">Estrai Immagini Interne</span>
+                <p class="text-[11px] text-[#C4BEB2] mt-0.5">Salva figure in cartella dedicata e prepara ZIP</p>
               </div>
             </label>
 
             <label class="flex items-start space-x-3 cursor-pointer select-none">
-              <input type="checkbox" id="optSeparators" class="mt-0.5 rounded bg-[#1a1a1a] border-[#333] text-white focus:ring-0 focus:ring-offset-0">
+              <input type="checkbox" id="optSeparators" class="mt-0.5 rounded bg-[#080907] border-lcc-line text-[#AEBA7F] focus:ring-0">
               <div>
-                <span class="text-gray-200 font-medium">Divisori di Pagina</span>
-                <p class="text-[11px] text-gray-500 mt-0.5">Inserisce riga '---' con numero pagina</p>
+                <span class="text-[#F2EDE3] font-medium">Divisori di Pagina</span>
+                <p class="text-[11px] text-[#C4BEB2] mt-0.5">Inserisce delimitatori '---' con indice pagina</p>
               </div>
             </label>
           </div>
 
-          <div class="pt-3 border-t border-[#1f1f1f] text-[11px] font-mono text-gray-500 flex items-center justify-between">
-            <span>Algoritmo:</span>
-            <span class="text-gray-300">PyMuPDF4LLM</span>
+          <div class="pt-3 border-t border-lcc-subtle text-[11px] font-mono text-[#7A7871] flex items-center justify-between">
+            <span>PIPELINE:</span>
+            <span class="text-[#AEBA7F]">PyMuPDF4LLM + Clean</span>
           </div>
         </div>
 
       </div>
 
-      <!-- Scanned PDF Warning Bar -->
-      <div id="scanAlertBox" class="hidden border border-[#443311] bg-[#1a1500] rounded-xl p-4 text-xs font-mono text-[#e5c07b] flex items-start space-x-3">
-        <i data-lucide="alert-triangle" class="w-4 h-4 shrink-0 text-amber-400 mt-0.5"></i>
+      <!-- Scanned PDF Alert Box -->
+      <div id="scanAlertBox" class="hidden border border-[#AEBA7F]/40 bg-[#171914] rounded-xl p-4 text-xs font-mono text-[#D9E6A3] flex items-start space-x-3">
+        <i data-lucide="alert-triangle" class="w-4 h-4 shrink-0 text-[#AEBA7F] mt-0.5"></i>
         <div>
-          <span class="font-semibold text-amber-300 block mb-1">Rilevata Scansione Fotografica</span>
-          <span id="scanAlertMsg" class="text-amber-200/80 leading-relaxed"></span>
+          <span class="font-bold text-[#F2EDE3] block mb-1">[ RILEVATA SCANSIONE O IMMAGINE SENZA TESTO ]</span>
+          <span id="scanAlertMsg" class="text-[#C4BEB2] leading-relaxed"></span>
         </div>
       </div>
 
@@ -264,29 +285,28 @@
       <div id="resultSection" class="hidden space-y-4">
         
         <!-- Toolbar & Stats -->
-        <div class="border border-[#222] bg-[#0d0d0d] rounded-xl p-3 flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
+        <div class="border border-lcc-line bg-[#11130F] rounded-xl p-3 flex flex-wrap items-center justify-between gap-3 text-xs font-mono">
           
-          <div class="flex items-center space-x-4 text-gray-400">
-            <span>Tempo: <strong id="statElapsed" class="text-white font-normal">0ms</strong></span>
-            <span>Pagine: <strong id="statPages" class="text-white font-normal">0</strong></span>
-            <span>Parole: <strong id="statWords" class="text-white font-normal">0</strong></span>
-            <span id="statImageBadge" class="hidden">Figure: <strong id="statImages" class="text-white font-normal">0</strong></span>
+          <div class="flex items-center space-x-4 text-[#C4BEB2]">
+            <span>Tempo: <strong id="statElapsed" class="text-[#AEBA7F] font-normal">0ms</strong></span>
+            <span>Pagine: <strong id="statPages" class="text-[#F2EDE3] font-normal">0</strong></span>
+            <span>Parole: <strong id="statWords" class="text-[#F2EDE3] font-normal">0</strong></span>
+            <span id="statImageBadge" class="hidden">Figure: <strong id="statImages" class="text-[#F2EDE3] font-normal">0</strong></span>
           </div>
 
           <div class="flex items-center space-x-2">
-            <button id="btnCopy" class="bg-[#1a1a1a] hover:bg-[#262626] text-white border border-[#333] px-3 py-1.5 rounded transition flex items-center space-x-1.5 active:scale-[0.98]">
-              <i data-lucide="copy" class="w-3.5 h-3.5"></i>
-              <span id="copyText">Copia</span>
-              <kbd class="px-1 text-[9px] bg-[#222] border border-[#3a3a3a] rounded text-gray-400">⌘C</kbd>
+            <button id="btnCopy" class="bg-[#171914] hover:bg-[#20241b] text-[#F2EDE3] border border-lcc-line px-3 py-1.5 rounded transition flex items-center space-x-1.5 active:scale-[0.98]">
+              <i data-lucide="copy" class="w-3.5 h-3.5 text-[#AEBA7F]"></i>
+              <span id="copyText">[ Copia MD ]</span>
             </button>
 
-            <button id="btnDownloadMd" class="bg-white hover:bg-[#ededed] text-black font-semibold px-3.5 py-1.5 rounded transition flex items-center space-x-1.5 active:scale-[0.98]">
+            <button id="btnDownloadMd" class="bg-[#AEBA7F] hover:bg-[#D9E6A3] text-[#080907] font-bold px-3.5 py-1.5 rounded transition flex items-center space-x-1.5 active:scale-[0.98]">
               <i data-lucide="download" class="w-3.5 h-3.5"></i>
               <span>Scarica .md</span>
             </button>
 
-            <button id="btnDownloadZip" class="hidden bg-[#1f1f1f] hover:bg-[#2d2d2d] text-white border border-[#3a3a3a] px-3.5 py-1.5 rounded transition flex items-center space-x-1.5">
-              <i data-lucide="archive" class="w-3.5 h-3.5"></i>
+            <button id="btnDownloadZip" class="hidden bg-[#171914] hover:bg-[#20241b] text-[#F2EDE3] border border-lcc-line px-3.5 py-1.5 rounded transition flex items-center space-x-1.5">
+              <i data-lucide="archive" class="w-3.5 h-3.5 text-[#AEBA7F]"></i>
               <span>Scarica ZIP</span>
             </button>
           </div>
@@ -294,20 +314,20 @@
         </div>
 
         <!-- Split / Tab Previewer -->
-        <div class="border border-[#222] bg-[#050505] rounded-xl overflow-hidden shadow-2xl">
+        <div class="border border-lcc-line bg-[#080907] rounded-xl overflow-hidden shadow-2xl">
           
-          <div class="flex items-center justify-between border-b border-[#1f1f1f] px-4 py-2 bg-[#0a0a0a]">
+          <div class="flex items-center justify-between border-b border-lcc-line px-4 py-2 bg-[#11130F]">
             <div class="flex space-x-1">
-              <button id="tabPreview" class="px-3 py-1 text-xs font-mono rounded bg-white text-black font-medium">Anteprima Formattata</button>
-              <button id="tabRaw" class="px-3 py-1 text-xs font-mono rounded text-gray-400 hover:text-white hover:bg-[#141414]">Sorgente Raw</button>
+              <button id="tabPreview" class="px-3 py-1 text-xs font-mono rounded bg-[#AEBA7F] text-[#080907] font-bold">Anteprima Formattata</button>
+              <button id="tabRaw" class="px-3 py-1 text-xs font-mono rounded text-[#C4BEB2] hover:text-[#F2EDE3] hover:bg-[#171914]">Sorgente Raw</button>
             </div>
-            <span class="text-xs font-mono text-gray-500" id="previewFilename">output.md</span>
+            <span class="text-xs font-mono text-[#7A7871]" id="previewFilename">output.md</span>
           </div>
 
-          <div id="viewPreview" class="p-6 md:p-8 max-h-[680px] overflow-y-auto prose-mono-doc"></div>
+          <div id="viewPreview" class="p-6 md:p-8 max-h-[680px] overflow-y-auto prose-lcc"></div>
           
           <div id="viewRaw" class="hidden p-4 max-h-[680px] overflow-y-auto">
-            <textarea id="rawMarkdownText" readonly class="w-full h-[620px] bg-[#000000] text-gray-300 font-mono text-xs leading-relaxed p-4 rounded-lg border border-[#222] focus:outline-none resize-none"></textarea>
+            <textarea id="rawMarkdownText" readonly class="w-full h-[620px] bg-[#080907] text-[#C4BEB2] font-mono text-xs leading-relaxed p-4 rounded-lg border border-lcc-subtle focus:outline-none resize-none"></textarea>
           </div>
 
         </div>
@@ -315,20 +335,20 @@
       </div>
 
       <!-- Batch Result View -->
-      <div id="batchResultSection" class="hidden border border-[#222] bg-[#0a0a0a] rounded-xl p-6 space-y-4">
+      <div id="batchResultSection" class="hidden border border-lcc-line bg-[#11130F] rounded-xl p-6 space-y-4">
         <div class="flex items-center justify-between">
           <div>
-            <h3 class="text-sm font-semibold text-white">Elaborazione Batch Terminata</h3>
-            <p class="text-xs font-mono text-gray-400 mt-0.5" id="batchSummaryText"></p>
+            <h3 class="text-sm font-semibold text-[#F2EDE3] uppercase">[ ELABORAZIONE BATCH TERMINATA ]</h3>
+            <p class="text-xs font-mono text-[#C4BEB2] mt-0.5" id="batchSummaryText"></p>
           </div>
-          <button id="btnDownloadBatchZip" class="bg-white hover:bg-[#ededed] text-black font-semibold text-xs px-4 py-2 rounded flex items-center space-x-1.5">
+          <button id="btnDownloadBatchZip" class="bg-[#AEBA7F] hover:bg-[#D9E6A3] text-[#080907] font-bold text-xs px-4 py-2 rounded flex items-center space-x-1.5">
             <i data-lucide="archive" class="w-3.5 h-3.5"></i>
-            <span>Scarica Archivio ZIP Completo</span>
+            <span>Scarica Archivio ZIP</span>
           </button>
         </div>
         <div class="overflow-x-auto">
-          <table class="w-full text-left text-xs font-mono text-gray-300">
-            <thead class="bg-[#141414] text-gray-400 uppercase text-[10px] tracking-wider border-b border-[#222]">
+          <table class="w-full text-left text-xs font-mono text-[#C4BEB2]">
+            <thead class="bg-[#080907] text-[#AEBA7F] uppercase text-[10px] tracking-wider border-b border-lcc-line">
               <tr>
                 <th class="py-2.5 px-4">Documento</th>
                 <th class="py-2.5 px-4">Pagine</th>
@@ -337,7 +357,7 @@
                 <th class="py-2.5 px-4">Stato</th>
               </tr>
             </thead>
-            <tbody id="batchTableBody" class="divide-y divide-[#1f1f1f]"></tbody>
+            <tbody id="batchTableBody" class="divide-y border-lcc-subtle"></tbody>
           </table>
         </div>
       </div>
@@ -348,61 +368,59 @@
     <!-- 2. TOOL: COMPRIMI PDF -->
     <!-- ========================================================= -->
     <section id="section-compress" class="tool-section hidden space-y-6">
-      <div class="max-w-xl mx-auto border border-[#222] bg-[#0a0a0a] rounded-xl p-8 space-y-6">
+      <div class="max-w-xl mx-auto border border-lcc-line bg-[#11130F] rounded-xl p-8 space-y-6">
         
-        <div>
-          <h2 class="text-base font-semibold text-white flex items-center space-x-2">
-            <i data-lucide="minimize-2" class="w-4 h-4 text-gray-300"></i>
-            <span>Compressione PDF Intelligente</span>
-          </h2>
-          <p class="text-xs text-gray-400 font-mono mt-1">Ottimizzazione stream C-Engine e ricompressione grafica</p>
+        <div class="border-b border-lcc-subtle pb-4">
+          <span class="font-mono text-xs text-[#AEBA7F] uppercase tracking-widest">[ 02 // COMPRESSIONE ]</span>
+          <h2 class="text-lg font-bold text-[#F2EDE3] uppercase mt-1">Ottimizza e Riduci PDF</h2>
+          <p class="text-xs text-[#C4BEB2] font-mono mt-0.5">Pulizia stream, rimozione ridondanze e ricompressione grafica in RAM</p>
         </div>
 
-        <div id="dropZoneCompress" class="border border-dashed border-[#333] hover:border-[#666] rounded-lg p-8 flex flex-col items-center justify-center text-center cursor-pointer transition bg-[#000]/50 hover:bg-[#111]">
+        <div id="dropZoneCompress" class="border border-dashed border-lcc-line hover:border-[#AEBA7F] rounded-lg p-8 flex flex-col items-center justify-center text-center cursor-pointer transition bg-[#080907]/80 hover:bg-[#171914]">
           <input type="file" id="fileCompressInput" accept=".pdf" class="hidden" />
-          <i data-lucide="file-up" class="w-6 h-6 text-gray-400 mb-2"></i>
-          <p class="text-xs font-medium text-white">Trascina qui il file PDF da comprimere</p>
-          <p id="compressFileLabel" class="text-[11px] text-gray-500 font-mono mt-1"></p>
+          <i data-lucide="file-up" class="w-6 h-6 text-[#AEBA7F] mb-2"></i>
+          <p class="text-xs font-medium text-[#F2EDE3]">Trascina qui il file PDF da comprimere</p>
+          <p id="compressFileLabel" class="text-[11px] text-[#C4BEB2] font-mono mt-1"></p>
         </div>
 
         <div class="space-y-2">
-          <label class="block text-[11px] font-mono uppercase text-gray-400">Livello Ottimizzazione:</label>
+          <label class="block text-[11px] font-mono uppercase text-[#AEBA7F]">[ MODALITÀ DI COMPRESSIONE ]</label>
           <div class="grid grid-cols-3 gap-2 text-xs font-mono">
-            <button type="button" onclick="selectCompressLevel('light')" id="lvl-light" class="compress-lvl-btn border border-[#2a2a2a] bg-[#111] p-3 rounded-lg text-center hover:border-[#444] transition">
-              <span class="block text-gray-200 font-medium">LIGHT</span>
-              <span class="text-[10px] text-gray-500 block mt-0.5">Qualità 100%</span>
+            <button type="button" onclick="selectCompressLevel('light')" id="lvl-light" class="compress-lvl-btn border border-lcc-line bg-[#080907] p-3 rounded-lg text-center hover:border-[#AEBA7F] transition">
+              <span class="block text-[#F2EDE3] font-medium">LIGHT</span>
+              <span class="text-[10px] text-[#7A7871] block mt-0.5">Qualità 100%</span>
             </button>
-            <button type="button" onclick="selectCompressLevel('medium')" id="lvl-medium" class="compress-lvl-btn border border-white bg-white text-black p-3 rounded-lg text-center font-medium transition">
-              <span class="block font-semibold">BALANCED</span>
-              <span class="text-[10px] opacity-75 block mt-0.5">-40/70%</span>
+            <button type="button" onclick="selectCompressLevel('medium')" id="lvl-medium" class="compress-lvl-btn border border-[#AEBA7F] bg-[#AEBA7F] text-[#080907] p-3 rounded-lg text-center font-bold transition">
+              <span class="block font-bold">BALANCED</span>
+              <span class="text-[10px] opacity-80 block mt-0.5">-40/70%</span>
             </button>
-            <button type="button" onclick="selectCompressLevel('strong')" id="lvl-strong" class="compress-lvl-btn border border-[#2a2a2a] bg-[#111] p-3 rounded-lg text-center hover:border-[#444] transition">
-              <span class="block text-gray-200 font-medium">STRONG</span>
-              <span class="text-[10px] text-gray-500 block mt-0.5">Per Email</span>
+            <button type="button" onclick="selectCompressLevel('strong')" id="lvl-strong" class="compress-lvl-btn border border-lcc-line bg-[#080907] p-3 rounded-lg text-center hover:border-[#AEBA7F] transition">
+              <span class="block text-[#F2EDE3] font-medium">STRONG</span>
+              <span class="text-[10px] text-[#7A7871] block mt-0.5">Per Email</span>
             </button>
           </div>
         </div>
 
-        <button id="btnExecuteCompress" disabled class="w-full bg-white hover:bg-[#ededed] disabled:opacity-30 disabled:hover:bg-white text-black font-semibold py-2.5 rounded-lg transition text-xs font-mono flex items-center justify-center space-x-2">
-          <span>Avvia Compressione</span>
+        <button id="btnExecuteCompress" disabled class="w-full bg-[#AEBA7F] hover:bg-[#D9E6A3] disabled:opacity-30 disabled:hover:bg-[#AEBA7F] text-[#080907] font-bold py-2.5 rounded-lg transition text-xs font-mono flex items-center justify-center space-x-2">
+          <span>[ ESEGUI COMPRESSIONE ]</span>
         </button>
 
-        <!-- Result Metric Box -->
-        <div id="compressResultBox" class="hidden border border-[#2a2a2a] bg-[#0d0d0d] rounded-lg p-4 space-y-3 font-mono text-xs">
-          <div class="flex items-center justify-between text-gray-400">
-            <span>Originale:</span>
-            <span id="compOrigSize" class="text-white">0 KB</span>
+        <!-- Result Box -->
+        <div id="compressResultBox" class="hidden border border-lcc-line bg-[#080907] rounded-lg p-4 space-y-3 font-mono text-xs">
+          <div class="flex items-center justify-between text-[#C4BEB2]">
+            <span>Dimensione Originale:</span>
+            <span id="compOrigSize" class="text-[#F2EDE3]">0 KB</span>
           </div>
-          <div class="flex items-center justify-between text-gray-400">
-            <span>Compresso:</span>
-            <span id="compNewSize" class="text-white font-medium">0 KB</span>
+          <div class="flex items-center justify-between text-[#C4BEB2]">
+            <span>Dimensione Finale:</span>
+            <span id="compNewSize" class="text-[#AEBA7F] font-bold">0 KB</span>
           </div>
-          <div class="flex items-center justify-between pt-2 border-t border-[#1f1f1f]">
-            <span class="text-gray-300 font-medium">Risparmio:</span>
-            <span id="compSavedPct" class="px-2 py-0.5 rounded bg-emerald-950 border border-emerald-800 text-emerald-400 font-bold">0%</span>
+          <div class="flex items-center justify-between pt-2 border-t border-lcc-subtle">
+            <span class="text-[#F2EDE3] font-medium">Spazio Risparmiato:</span>
+            <span id="compSavedPct" class="px-2 py-0.5 rounded bg-[#171914] border border-[#AEBA7F] text-[#AEBA7F] font-bold">0%</span>
           </div>
-          <a id="btnDownloadCompressed" href="#" download class="block w-full text-center bg-white hover:bg-[#ededed] text-black font-semibold py-2 rounded text-xs transition mt-3">
-            Scarica PDF Ottimizzato
+          <a id="btnDownloadCompressed" href="#" download class="block w-full text-center bg-[#AEBA7F] hover:bg-[#D9E6A3] text-[#080907] font-bold py-2 rounded text-xs transition mt-3">
+            [ Scarica PDF Ottimizzato ]
           </a>
         </div>
 
@@ -413,27 +431,25 @@
     <!-- 3. TOOL: UNISCI PDF -->
     <!-- ========================================================= -->
     <section id="section-merge" class="tool-section hidden space-y-6">
-      <div class="max-w-xl mx-auto border border-[#222] bg-[#0a0a0a] rounded-xl p-8 space-y-6">
+      <div class="max-w-xl mx-auto border border-lcc-line bg-[#11130F] rounded-xl p-8 space-y-6">
         
-        <div>
-          <h2 class="text-base font-semibold text-white flex items-center space-x-2">
-            <i data-lucide="git-merge" class="w-4 h-4 text-gray-300"></i>
-            <span>Unisci Documenti PDF</span>
-          </h2>
-          <p class="text-xs text-gray-400 font-mono mt-1">Fusione senza ricodifica e senza perdita qualitativa</p>
+        <div class="border-b border-lcc-subtle pb-4">
+          <span class="font-mono text-xs text-[#AEBA7F] uppercase tracking-widest">[ 03 // UNIONE DOCUMENTI ]</span>
+          <h2 class="text-lg font-bold text-[#F2EDE3] uppercase mt-1">Unisci Più PDF (Merge)</h2>
+          <p class="text-xs text-[#C4BEB2] font-mono mt-0.5">Concatenazione sequenziale di alberi vettoriali senza perdita di metadati</p>
         </div>
 
-        <div id="dropZoneMerge" class="border border-dashed border-[#333] hover:border-[#666] rounded-lg p-8 flex flex-col items-center justify-center text-center cursor-pointer transition bg-[#000]/50 hover:bg-[#111]">
+        <div id="dropZoneMerge" class="border border-dashed border-lcc-line hover:border-[#AEBA7F] rounded-lg p-8 flex flex-col items-center justify-center text-center cursor-pointer transition bg-[#080907]/80 hover:bg-[#171914]">
           <input type="file" id="fileMergeInput" accept=".pdf" multiple class="hidden" />
-          <i data-lucide="files" class="w-6 h-6 text-gray-400 mb-2"></i>
-          <p class="text-xs font-medium text-white">Trascina 2 o più file PDF da unire</p>
-          <p class="text-[11px] text-gray-500 font-mono mt-1">L'ordine di selezione determinerà l'ordine delle pagine</p>
+          <i data-lucide="files" class="w-6 h-6 text-[#AEBA7F] mb-2"></i>
+          <p class="text-xs font-medium text-[#F2EDE3]">Trascina 2 o più file PDF da combinare</p>
+          <p class="text-[11px] text-[#C4BEB2] font-mono mt-1">L'ordine di selezione determinerà l'impaginazione finale</p>
         </div>
 
-        <ul id="mergeFileList" class="divide-y divide-[#1f1f1f] border border-[#222] bg-[#0d0d0d] rounded-lg text-xs font-mono max-h-44 overflow-y-auto"></ul>
+        <ul id="mergeFileList" class="divide-y border-lcc-subtle border border-lcc-line bg-[#080907] rounded-lg text-xs font-mono max-h-44 overflow-y-auto"></ul>
 
-        <button id="btnExecuteMerge" disabled class="w-full bg-white hover:bg-[#ededed] disabled:opacity-30 disabled:hover:bg-white text-black font-semibold py-2.5 rounded-lg transition text-xs font-mono flex items-center justify-center space-x-2">
-          <span>Unisci File e Scarica</span>
+        <button id="btnExecuteMerge" disabled class="w-full bg-[#AEBA7F] hover:bg-[#D9E6A3] disabled:opacity-30 disabled:hover:bg-[#AEBA7F] text-[#080907] font-bold py-2.5 rounded-lg transition text-xs font-mono flex items-center justify-center space-x-2">
+          <span>[ UNISCI FILE E SCARICA ]</span>
         </button>
 
       </div>
@@ -443,31 +459,29 @@
     <!-- 4. TOOL: DIVIDI PDF -->
     <!-- ========================================================= -->
     <section id="section-split" class="tool-section hidden space-y-6">
-      <div class="max-w-xl mx-auto border border-[#222] bg-[#0a0a0a] rounded-xl p-8 space-y-6">
+      <div class="max-w-xl mx-auto border border-lcc-line bg-[#11130F] rounded-xl p-8 space-y-6">
         
-        <div>
-          <h2 class="text-base font-semibold text-white flex items-center space-x-2">
-            <i data-lucide="scissors" class="w-4 h-4 text-gray-300"></i>
-            <span>Dividi ed Estrai Pagine</span>
-          </h2>
-          <p class="text-xs text-gray-400 font-mono mt-1">Estrai selettivamente sequenze di pagine</p>
+        <div class="border-b border-lcc-subtle pb-4">
+          <span class="font-mono text-xs text-[#AEBA7F] uppercase tracking-widest">[ 04 // DIVISIONE DOCUMENTO ]</span>
+          <h2 class="text-lg font-bold text-[#F2EDE3] uppercase mt-1">Dividi ed Estrai Pagine</h2>
+          <p class="text-xs text-[#C4BEB2] font-mono mt-0.5">Estrazione selettiva e generazione di un nuovo PDF circoscritto</p>
         </div>
 
-        <div id="dropZoneSplit" class="border border-dashed border-[#333] hover:border-[#666] rounded-lg p-8 flex flex-col items-center justify-center text-center cursor-pointer transition bg-[#000]/50 hover:bg-[#111]">
+        <div id="dropZoneSplit" class="border border-dashed border-lcc-line hover:border-[#AEBA7F] rounded-lg p-8 flex flex-col items-center justify-center text-center cursor-pointer transition bg-[#080907]/80 hover:bg-[#171914]">
           <input type="file" id="fileSplitInput" accept=".pdf" class="hidden" />
-          <i data-lucide="file-minus" class="w-6 h-6 text-gray-400 mb-2"></i>
-          <p class="text-xs font-medium text-white">Trascina il PDF da dividere</p>
-          <p id="splitFileLabel" class="text-[11px] text-gray-500 font-mono mt-1"></p>
+          <i data-lucide="scissors" class="w-6 h-6 text-[#AEBA7F] mb-2"></i>
+          <p class="text-xs font-medium text-[#F2EDE3]">Trascina qui il file PDF da dividere</p>
+          <p id="splitFileLabel" class="text-[11px] text-[#C4BEB2] font-mono mt-1"></p>
         </div>
 
         <div>
-          <label class="block text-[11px] font-mono uppercase text-gray-400 mb-1.5">Intervallo di Pagine:</label>
-          <input type="text" id="splitPagesInput" placeholder="es. 1-3, 5, 8-12" class="w-full bg-[#111] border border-[#2a2a2a] rounded-lg px-3.5 py-2 text-xs font-mono text-white focus:outline-none focus:border-white transition">
-          <p class="text-[10px] font-mono text-gray-500 mt-1">Esempio: "1-4" estrae le prime quattro pagine, "2, 5" estrae solo pagina 2 e 5.</p>
+          <label class="block text-[11px] font-mono uppercase text-[#AEBA7F] mb-1.5">[ SEQUENZA PAGINE DA ESTRARRE ]</label>
+          <input type="text" id="splitPagesInput" placeholder="es. 1-3, 5, 8-12" class="w-full bg-[#080907] border border-lcc-line rounded-lg px-3.5 py-2 text-xs font-mono text-[#F2EDE3] focus:outline-none focus:border-[#AEBA7F] transition">
+          <p class="text-[10px] font-mono text-[#7A7871] mt-1">Esempio: "1-4" estrae le prime quattro pagine; "2, 5" estrae solo pagine 2 e 5.</p>
         </div>
 
-        <button id="btnExecuteSplit" disabled class="w-full bg-white hover:bg-[#ededed] disabled:opacity-30 disabled:hover:bg-white text-black font-semibold py-2.5 rounded-lg transition text-xs font-mono flex items-center justify-center space-x-2">
-          <span>Estrai e Scarica</span>
+        <button id="btnExecuteSplit" disabled class="w-full bg-[#AEBA7F] hover:bg-[#D9E6A3] disabled:opacity-30 disabled:hover:bg-[#AEBA7F] text-[#080907] font-bold py-2.5 rounded-lg transition text-xs font-mono flex items-center justify-center space-x-2">
+          <span>[ ESTRAI PAGINE E SCARICA ]</span>
         </button>
 
       </div>
@@ -477,33 +491,31 @@
     <!-- 5. TOOL: PDF TO IMMAGINI -->
     <!-- ========================================================= -->
     <section id="section-images" class="tool-section hidden space-y-6">
-      <div class="max-w-xl mx-auto border border-[#222] bg-[#0a0a0a] rounded-xl p-8 space-y-6">
+      <div class="max-w-xl mx-auto border border-lcc-line bg-[#11130F] rounded-xl p-8 space-y-6">
         
-        <div>
-          <h2 class="text-base font-semibold text-white flex items-center space-x-2">
-            <i data-lucide="image" class="w-4 h-4 text-gray-300"></i>
-            <span>Rendering PDF in Immagini PNG</span>
-          </h2>
-          <p class="text-xs text-gray-400 font-mono mt-1">Esportazione ad alta risoluzione delle singole pagine</p>
+        <div class="border-b border-lcc-subtle pb-4">
+          <span class="font-mono text-xs text-[#AEBA7F] uppercase tracking-widest">[ 05 // RENDERING GRAFICO ]</span>
+          <h2 class="text-lg font-bold text-[#F2EDE3] uppercase mt-1">PDF in Immagini PNG</h2>
+          <p class="text-xs text-[#C4BEB2] font-mono mt-0.5">Rasterizzazione delle singole pagine con densità di pixel configurabile</p>
         </div>
 
-        <div id="dropZoneImg" class="border border-dashed border-[#333] hover:border-[#666] rounded-lg p-8 flex flex-col items-center justify-center text-center cursor-pointer transition bg-[#000]/50 hover:bg-[#111]">
+        <div id="dropZoneImg" class="border border-dashed border-lcc-line hover:border-[#AEBA7F] rounded-lg p-8 flex flex-col items-center justify-center text-center cursor-pointer transition bg-[#080907]/80 hover:bg-[#171914]">
           <input type="file" id="fileImgInput" accept=".pdf" class="hidden" />
-          <i data-lucide="file-image" class="w-6 h-6 text-gray-400 mb-2"></i>
-          <p class="text-xs font-medium text-white">Trascina qui il file PDF</p>
-          <p id="imgFileLabel" class="text-[11px] text-gray-500 font-mono mt-1"></p>
+          <i data-lucide="image" class="w-6 h-6 text-[#AEBA7F] mb-2"></i>
+          <p class="text-xs font-medium text-[#F2EDE3]">Trascina qui il file PDF da convertire</p>
+          <p id="imgFileLabel" class="text-[11px] text-[#C4BEB2] font-mono mt-1"></p>
         </div>
 
         <div>
-          <label class="block text-[11px] font-mono uppercase text-gray-400 mb-1.5">Densità Pixel (DPI):</label>
-          <select id="imgDpiSelect" class="w-full bg-[#111] border border-[#2a2a2a] rounded-lg px-3.5 py-2 text-xs font-mono text-white focus:outline-none focus:border-white">
-            <option value="150" selected>150 DPI — Standard Web (Leggero)</option>
-            <option value="300">300 DPI — Massima Risoluzione (Stampa/Archivio)</option>
+          <label class="block text-[11px] font-mono uppercase text-[#AEBA7F] mb-1.5">[ DENSITÀ PIXEL // DPI ]</label>
+          <select id="imgDpiSelect" class="w-full bg-[#080907] border border-lcc-line rounded-lg px-3.5 py-2 text-xs font-mono text-[#F2EDE3] focus:outline-none focus:border-[#AEBA7F]">
+            <option value="150" selected>150 DPI — Standard Web (Leggero & Veloce)</option>
+            <option value="300">300 DPI — Alta Risoluzione (Stampa & Archivio)</option>
           </select>
         </div>
 
-        <button id="btnExecutePdfToImg" disabled class="w-full bg-white hover:bg-[#ededed] disabled:opacity-30 disabled:hover:bg-white text-black font-semibold py-2.5 rounded-lg transition text-xs font-mono flex items-center justify-center space-x-2">
-          <span>Esporta Pagine in ZIP</span>
+        <button id="btnExecutePdfToImg" disabled class="w-full bg-[#AEBA7F] hover:bg-[#D9E6A3] disabled:opacity-30 disabled:hover:bg-[#AEBA7F] text-[#080907] font-bold py-2.5 rounded-lg transition text-xs font-mono flex items-center justify-center space-x-2">
+          <span>[ ESPORTA TUTTE LE PAGINE IN ZIP ]</span>
         </button>
 
       </div>
@@ -511,63 +523,70 @@
 
   </main>
 
-  <!-- Modal Manuale / Dritte -->
-  <div id="tipsModal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center p-4">
-    <div class="bg-[#0c0c0c] border border-[#2a2a2a] rounded-xl max-w-xl w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden font-mono text-xs">
+  <!-- Modal Manuale & Dritte LCC -->
+  <div id="tipsModal" class="fixed inset-0 z-50 bg-[#080907]/90 backdrop-blur-sm hidden flex items-center justify-center p-4">
+    <div class="bg-[#11130F] border border-lcc-line rounded-xl max-w-xl w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden font-mono text-xs">
       
-      <div class="flex items-center justify-between px-5 py-3.5 border-b border-[#1f1f1f]">
+      <div class="flex items-center justify-between px-5 py-3.5 border-b border-lcc-line bg-[#080907]">
         <div class="flex items-center space-x-2">
-          <i data-lucide="terminal" class="w-4 h-4 text-white"></i>
-          <span class="text-sm font-semibold text-white">Architettura & Dritte Tecniche</span>
+          <span class="text-[#AEBA7F]">&gt;_</span>
+          <span class="text-sm font-bold text-[#F2EDE3] uppercase">[ ARCHITETTURA & NOTE DI LABORATORIO ]</span>
         </div>
-        <button id="btnCloseTips" class="text-gray-400 hover:text-white p-1 rounded hover:bg-[#1a1a1a]">
+        <button id="btnCloseTips" class="text-[#C4BEB2] hover:text-[#F2EDE3] p-1 rounded hover:bg-[#171914]">
           <i data-lucide="x" class="w-4 h-4"></i>
         </button>
       </div>
 
-      <div class="p-5 overflow-y-auto space-y-4 text-gray-400 leading-relaxed">
-        <div class="border border-[#1f1f1f] bg-[#080808] p-3 rounded-lg">
-          <p class="font-semibold text-white">1. De-sillabazione a Fine Riga (De-hyphenation)</p>
-          <p class="text-[11px] text-gray-400 mt-1">I PDF tipografici spezzano le parole a capo con un trattino. Il motore ripulisce la sillabazione ricomponendo la parola integra, salvaguardando gli embedding per RAG e le ricerche semantiche.</p>
+      <div class="p-5 overflow-y-auto space-y-4 text-[#C4BEB2] leading-relaxed">
+        <div class="border border-lcc-subtle bg-[#080907] p-3.5 rounded-lg">
+          <p class="font-bold text-[#AEBA7F]">[ 01 // DE-SILLABAZIONE A FINE RIGA ]</p>
+          <p class="text-[11px] text-[#C4BEB2] mt-1">I PDF tipografici spezzano le parole a capo con un trattino. Il motore applica un algoritmo di unione automatica per conservare la coerenza lessicale essenziale per RAG ed embedding.</p>
         </div>
 
-        <div class="border border-[#1f1f1f] bg-[#080808] p-3 rounded-lg">
-          <p class="font-semibold text-white">2. Compressione Senza Perdita</p>
-          <p class="text-[11px] text-gray-400 mt-1">PyMuPDF opera a livello di albero degli oggetti PDF in C, rimuovendo ridondanze di font, stream de-flated e ricomprimendo gli stream immagine senza degradare la leggibilità del testo vettoriale.</p>
+        <div class="border border-lcc-subtle bg-[#080907] p-3.5 rounded-lg">
+          <p class="font-bold text-[#AEBA7F]">[ 02 // COMPRESSIONE C-ENGINE ]</p>
+          <p class="text-[11px] text-[#C4BEB2] mt-1">PyMuPDF opera a livello di albero degli oggetti PDF in C, rimuovendo ridondanze di font, stream de-flated e ricomprimendo gli stream immagine senza degradare la leggibilità del testo vettoriale.</p>
         </div>
 
-        <div class="border border-[#1f1f1f] bg-[#080808] p-3 rounded-lg">
-          <p class="font-semibold text-white">3. Zero Chiamate Esterne (Privacy 100%)</p>
-          <p class="text-[11px] text-gray-400 mt-1">Nessun token viene inviato a server terzi. Tutti i documenti transitano unicamente in RAM per il tempo strettamente necessario alla conversione.</p>
+        <div class="border border-lcc-subtle bg-[#080907] p-3.5 rounded-lg">
+          <p class="font-bold text-[#AEBA7F]">[ 03 // ISOLAMENTO E PRIVACY ASSOLUTA ]</p>
+          <p class="text-[11px] text-[#C4BEB2] mt-1">Nessun token viene inviato a server cloud terzi. Tutti i documenti transitano unicamente in RAM per il tempo strettamente necessario all'elaborazione richiesta.</p>
         </div>
       </div>
 
-      <div class="p-3.5 border-t border-[#1f1f1f] bg-[#070707] flex justify-end">
-        <button id="btnCloseTipsBtn" class="bg-white hover:bg-gray-200 text-black font-semibold text-xs px-4 py-1.5 rounded">Chiudi</button>
+      <div class="p-3.5 border-t border-lcc-line bg-[#080907] flex justify-end">
+        <button id="btnCloseTipsBtn" class="bg-[#AEBA7F] hover:bg-[#D9E6A3] text-[#080907] font-bold text-xs px-4 py-1.5 rounded">[ CHIUDI ]</button>
       </div>
 
     </div>
   </div>
 
-  <!-- Footer -->
-  <footer class="border-t border-[#1a1a1a] py-5 text-center text-xs font-mono text-gray-600 mt-auto bg-[#000000]">
-    <span>DocToMD Studio &bull; PyMuPDF C-Engine &bull; Zero External AI Bloat</span>
+  <!-- Footer Ufficiale con Crediti Umberto Fiore // LOW CONFIDENCE CLUB -->
+  <footer class="border-t border-lcc-line py-8 text-center text-xs font-mono text-[#C4BEB2] mt-auto bg-[#080907]">
+    <div class="max-w-6xl mx-auto px-4 space-y-2">
+      <p class="text-sm font-semibold tracking-wide text-[#F2EDE3]">
+        Developed by <span class="text-[#AEBA7F]">Umberto Fiore</span> // <span class="tracking-wider">LOW CONFIDENCE CLUB</span>
+      </p>
+      <p class="text-[11px] text-[#7A7871] tracking-widest uppercase">
+        [ Doubt. Build. Repeat. ] &bull; "Low confidence. High output."
+      </p>
+    </div>
   </footer>
 
-  <!-- Script Logica Suite Monocromatica -->
+  <!-- Script Logica Suite -->
   <script>
     lucide.createIcons();
 
     function switchTab(tabName) {
       document.querySelectorAll('.tool-section').forEach(sec => sec.classList.add('hidden'));
       document.querySelectorAll('.tab-btn').forEach(btn => {
-        btn.className = 'tab-btn text-xs font-mono px-3.5 py-1.5 rounded-md transition text-gray-400 hover:text-gray-200 hover:bg-[#121212] flex items-center space-x-1.5 whitespace-nowrap';
+        btn.className = 'tab-btn text-xs font-mono px-3 py-1.5 rounded transition text-[#C4BEB2] hover:text-[#F2EDE3] hover:bg-[#171914] flex items-center space-x-1.5 whitespace-nowrap';
       });
 
       const activeSec = document.getElementById(`section-${tabName}`);
       const activeBtn = document.getElementById(`tabNav-${tabName}`);
       if (activeSec) activeSec.classList.remove('hidden');
-      if (activeBtn) activeBtn.className = 'tab-btn text-xs font-mono px-3.5 py-1.5 rounded-md transition text-white bg-[#1a1a1a] border border-[#333] flex items-center space-x-1.5 whitespace-nowrap';
+      if (activeBtn) activeBtn.className = 'tab-btn text-xs font-mono px-3 py-1.5 rounded transition text-[#080907] bg-[#AEBA7F] font-semibold flex items-center space-x-1.5 whitespace-nowrap';
     }
 
     function formatBytes(bytes) {
@@ -607,24 +626,24 @@
     dropZone.addEventListener('click', () => fileInput.click());
     fileInput.addEventListener('change', (e) => handleFilesSelected(e.target.files));
 
-    ['dragenter', 'dragover'].forEach(ev => dropZone.addEventListener(ev, (e) => { e.preventDefault(); dropZone.classList.add('border-white'); }));
-    ['dragleave', 'drop'].forEach(ev => dropZone.addEventListener(ev, (e) => { e.preventDefault(); dropZone.classList.remove('border-white'); }));
+    ['dragenter', 'dragover'].forEach(ev => dropZone.addEventListener(ev, (e) => { e.preventDefault(); dropZone.classList.add('border-[#AEBA7F]'); }));
+    ['dragleave', 'drop'].forEach(ev => dropZone.addEventListener(ev, (e) => { e.preventDefault(); dropZone.classList.remove('border-[#AEBA7F]'); }));
     dropZone.addEventListener('drop', (e) => handleFilesSelected(e.dataTransfer.files));
 
     function handleFilesSelected(files) {
       if (!files || files.length === 0) return;
       currentFiles = Array.from(files).filter(f => f.name.toLowerCase().endsWith('.pdf'));
-      if (currentFiles.length === 0) { alert('Seleziona almeno un file con estensione .pdf'); return; }
+      if (currentFiles.length === 0) { alert('Seleziona almeno un file valido (.pdf)'); return; }
 
       if (currentFiles.length === 1) {
         selectedFileName.innerText = currentFiles[0].name;
         selectedFileSize.innerText = `(${formatBytes(currentFiles[0].size)})`;
-        btnStartConvert.innerHTML = '<span>Converti Documento</span><kbd class="px-1 py-0.2 bg-gray-200 border border-gray-300 rounded text-[9px] text-black">↵</kbd>';
+        btnStartConvert.innerHTML = '<span>[ ESEGUI TRASFORMAZIONE ]</span>';
       } else {
         selectedFileName.innerText = `${currentFiles.length} file PDF selezionati`;
         const tot = currentFiles.reduce((acc, f) => acc + f.size, 0);
         selectedFileSize.innerText = `(${formatBytes(tot)})`;
-        btnStartConvert.innerHTML = '<span>Converti Batch</span><kbd class="px-1 py-0.2 bg-gray-200 border border-gray-300 rounded text-[9px] text-black">↵</kbd>';
+        btnStartConvert.innerHTML = '<span>[ ESEGUI BATCH ]</span>';
       }
       fileInfoBar.classList.remove('hidden');
     }
@@ -698,15 +717,15 @@
       currentJobId = data.job_id;
       const tbody = document.getElementById('batchTableBody');
       tbody.innerHTML = '';
-      document.getElementById('batchSummaryText').innerText = `${data.processed_count} documenti elaborati`;
+      document.getElementById('batchSummaryText').innerText = `${data.processed_count} documenti elaborati con successo`;
       data.results.forEach(item => {
         const tr = document.createElement('tr');
         tr.innerHTML = `
-          <td class="py-3 px-4 text-white">${item.filename}</td>
+          <td class="py-3 px-4 text-[#F2EDE3] font-medium">${item.filename}</td>
           <td class="py-3 px-4">${item.pages}</td>
           <td class="py-3 px-4">${item.words}</td>
-          <td class="py-3 px-4 text-gray-400">${item.elapsed_ms}ms</td>
-          <td class="py-3 px-4"><span class="px-2 py-0.5 rounded text-[10px] bg-[#1a1a1a] border border-[#333] text-gray-300">OK</span></td>
+          <td class="py-3 px-4 text-[#AEBA7F]">${item.elapsed_ms}ms</td>
+          <td class="py-3 px-4"><span class="px-2 py-0.5 rounded text-[10px] bg-[#171914] border border-lcc-line text-[#AEBA7F]">[ OK ]</span></td>
         `;
         tbody.appendChild(tr);
       });
@@ -714,15 +733,15 @@
     }
 
     document.getElementById('tabPreview').addEventListener('click', () => {
-      document.getElementById('tabPreview').className = 'px-3 py-1 text-xs font-mono rounded bg-white text-black font-medium';
-      document.getElementById('tabRaw').className = 'px-3 py-1 text-xs font-mono rounded text-gray-400 hover:text-white hover:bg-[#141414]';
+      document.getElementById('tabPreview').className = 'px-3 py-1 text-xs font-mono rounded bg-[#AEBA7F] text-[#080907] font-bold';
+      document.getElementById('tabRaw').className = 'px-3 py-1 text-xs font-mono rounded text-[#C4BEB2] hover:text-[#F2EDE3] hover:bg-[#171914]';
       document.getElementById('viewPreview').classList.remove('hidden');
       document.getElementById('viewRaw').classList.add('hidden');
     });
 
     document.getElementById('tabRaw').addEventListener('click', () => {
-      document.getElementById('tabRaw').className = 'px-3 py-1 text-xs font-mono rounded bg-white text-black font-medium';
-      document.getElementById('tabPreview').className = 'px-3 py-1 text-xs font-mono rounded text-gray-400 hover:text-white hover:bg-[#141414]';
+      document.getElementById('tabRaw').className = 'px-3 py-1 text-xs font-mono rounded bg-[#AEBA7F] text-[#080907] font-bold';
+      document.getElementById('tabPreview').className = 'px-3 py-1 text-xs font-mono rounded text-[#C4BEB2] hover:text-[#F2EDE3] hover:bg-[#171914]';
       document.getElementById('viewRaw').classList.remove('hidden');
       document.getElementById('viewPreview').classList.add('hidden');
     });
@@ -731,8 +750,8 @@
       if (!currentRawMarkdown) return;
       await navigator.clipboard.writeText(currentRawMarkdown);
       const ct = document.getElementById('copyText');
-      ct.innerText = 'Copiato!';
-      setTimeout(() => ct.innerText = 'Copia', 2000);
+      ct.innerText = '[ COPIATO! ]';
+      setTimeout(() => ct.innerText = '[ Copia MD ]', 2000);
     });
 
     document.getElementById('btnDownloadMd').addEventListener('click', () => {
@@ -756,9 +775,9 @@
       ['light', 'medium', 'strong'].forEach(l => {
         const btn = document.getElementById(`lvl-${l}`);
         if (l === lvl) {
-          btn.className = 'compress-lvl-btn border border-white bg-white text-black p-3 rounded-lg text-center font-medium transition';
+          btn.className = 'compress-lvl-btn border border-[#AEBA7F] bg-[#AEBA7F] text-[#080907] p-3 rounded-lg text-center font-bold transition';
         } else {
-          btn.className = 'compress-lvl-btn border border-[#2a2a2a] bg-[#111] p-3 rounded-lg text-center hover:border-[#444] transition';
+          btn.className = 'compress-lvl-btn border border-lcc-line bg-[#080907] p-3 rounded-lg text-center hover:border-[#AEBA7F] transition';
         }
       });
     }
@@ -778,7 +797,7 @@
 
     btnExecuteCompress.addEventListener('click', async () => {
       if (!compressFile) return;
-      btnExecuteCompress.innerHTML = '<span>Compressione in corso...</span>';
+      btnExecuteCompress.innerHTML = '<span>[ COMPRESSIONE IN CORSO... ]</span>';
       btnExecuteCompress.disabled = true;
 
       const fd = new FormData();
@@ -808,7 +827,7 @@
       } catch (err) {
         alert(err.message);
       } finally {
-        btnExecuteCompress.innerHTML = '<span>Avvia Compressione</span>';
+        btnExecuteCompress.innerHTML = '<span>[ ESEGUI COMPRESSIONE ]</span>';
         btnExecuteCompress.disabled = false;
       }
     });
@@ -828,8 +847,8 @@
       mergeFileList.innerHTML = '';
       mergeFiles.forEach((f, idx) => {
         const li = document.createElement('li');
-        li.className = 'px-3 py-2 flex items-center justify-between text-gray-300';
-        li.innerHTML = `<span>${idx + 1}. ${f.name}</span><span class="text-gray-500">${formatBytes(f.size)}</span>`;
+        li.className = 'px-3 py-2 flex items-center justify-between text-[#C4BEB2]';
+        li.innerHTML = `<span>${idx + 1}. ${f.name}</span><span class="text-[#7A7871]">${formatBytes(f.size)}</span>`;
         mergeFileList.appendChild(li);
       });
       btnExecuteMerge.disabled = mergeFiles.length < 2;
@@ -837,7 +856,7 @@
 
     btnExecuteMerge.addEventListener('click', async () => {
       if (mergeFiles.length < 2) return;
-      btnExecuteMerge.innerHTML = '<span>Unione in corso...</span>';
+      btnExecuteMerge.innerHTML = '<span>[ UNIONE IN CORSO... ]</span>';
       btnExecuteMerge.disabled = true;
 
       const fd = new FormData();
@@ -854,7 +873,7 @@
       } catch (err) {
         alert(err.message);
       } finally {
-        btnExecuteMerge.innerHTML = '<span>Unisci File e Scarica</span>';
+        btnExecuteMerge.innerHTML = '<span>[ UNISCI FILE E SCARICA ]</span>';
         btnExecuteMerge.disabled = false;
       }
     });
@@ -884,7 +903,7 @@
 
     btnExecuteSplit.addEventListener('click', async () => {
       if (!splitFile) return;
-      btnExecuteSplit.innerHTML = '<span>Estrazione in corso...</span>';
+      btnExecuteSplit.innerHTML = '<span>[ ESTRAZIONE IN CORSO... ]</span>';
       btnExecuteSplit.disabled = true;
 
       const fd = new FormData();
@@ -902,7 +921,7 @@
       } catch (err) {
         alert(err.message);
       } finally {
-        btnExecuteSplit.innerHTML = '<span>Estrai e Scarica</span>';
+        btnExecuteSplit.innerHTML = '<span>[ ESTRAI PAGINE E SCARICA ]</span>';
         checkSplitReady();
       }
     });
@@ -926,7 +945,7 @@
 
     btnExecutePdfToImg.addEventListener('click', async () => {
       if (!imgFile) return;
-      btnExecutePdfToImg.innerHTML = '<span>Generazione immagini...</span>';
+      btnExecutePdfToImg.innerHTML = '<span>[ RENDERING IN CORSO... ]</span>';
       btnExecutePdfToImg.disabled = true;
 
       const fd = new FormData();
@@ -944,7 +963,7 @@
       } catch (err) {
         alert(err.message);
       } finally {
-        btnExecutePdfToImg.innerHTML = '<span>Esporta Pagine in ZIP</span>';
+        btnExecutePdfToImg.innerHTML = '<span>[ ESPORTA TUTTE LE PAGINE IN ZIP ]</span>';
         btnExecutePdfToImg.disabled = false;
       }
     });
