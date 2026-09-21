@@ -1,0 +1,4 @@
+238c182a754aee4595c51dd80930846c76bf6f1a69a65cd3e7d1eded49df0a85  lcc_brand/assets/logo/lcc-logo-official.png
+137665db51d6a5ad74836986246c204dbc565ad6e667f6db5bcf4ab3639954cf  lcc_brand/assets/brand/lcc-brand-guidelines-official.png
+94dd7e5354f82ed469c463930049e1ded711df0364072005db25076454b68aa8  lcc_brand/assets/brand/lcc-social-card-current.png
+1517f3f7a6a715817454fe33e06d3abd0dafaa19013659d6e31ec5b016cc00b8  lcc_brand/assets/editorial_example/moliere-ex-machina-approved-example.png

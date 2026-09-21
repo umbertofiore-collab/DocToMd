@@ -1,0 +1,45 @@
+{
+  "$schema": "https://www.designtokens.org/tr/drafts/format/",
+  "brand": "LOW CONFIDENCE CLUB",
+  "version": "1.0",
+  "status": "current digital tokens",
+  "color": {
+    "dark": {
+      "background": "#080907",
+      "surface": "#11130F",
+      "text": "#F2EDE3",
+      "textMuted": "#C4BEB2",
+      "olive": "#AEBA7F",
+      "oliveDeep": "#778454",
+      "focus": "#D9E6A3",
+      "line": "rgba(242, 237, 227, 0.23)"
+    },
+    "light": {
+      "background": "#EEE8DC",
+      "surface": "#E2DACB",
+      "text": "#10120E",
+      "textMuted": "#4A4C43",
+      "olive": "#53612F",
+      "oliveDeep": "#657241",
+      "focus": "#354019",
+      "line": "rgba(16, 18, 14, 0.25)"
+    }
+  },
+  "typography": {
+    "displayFallback": "Arial Narrow, Aptos Narrow, Arial, sans-serif",
+    "monoFallback": "SFMono-Regular, Consolas, Liberation Mono, monospace",
+    "note": "No specific commercial font is supplied or licensed in this pack."
+  },
+  "marks": ["[ ]", ">_", "block cursor"],
+  "motion": {
+    "character": "short, restrained, functional",
+    "reducedMotion": "required"
+  },
+  "accessibility": {
+    "minimumContrast": "WCAG AA",
+    "minimumInteractiveTarget": "44px",
+    "minimumViewport": "320px",
+    "zoomTarget": "200%"
+  }
+}
+

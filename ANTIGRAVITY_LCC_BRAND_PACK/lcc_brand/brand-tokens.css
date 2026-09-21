@@ -1,0 +1,28 @@
+:root {
+  --lcc-background: #080907;
+  --lcc-surface: #11130f;
+  --lcc-text: #f2ede3;
+  --lcc-text-muted: #c4beb2;
+  --lcc-olive: #aeba7f;
+  --lcc-olive-deep: #778454;
+  --lcc-paper: #eee8dc;
+  --lcc-paper-text: #10120e;
+  --lcc-line: rgba(242, 237, 227, 0.23);
+  --lcc-focus: #d9e6a3;
+  --lcc-display-font: "Arial Narrow", "Aptos Narrow", Arial, sans-serif;
+  --lcc-mono-font: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  color-scheme: dark;
+}
+
+:root[data-theme="light"] {
+  --lcc-background: #eee8dc;
+  --lcc-surface: #e2dacb;
+  --lcc-text: #10120e;
+  --lcc-text-muted: #4a4c43;
+  --lcc-olive: #53612f;
+  --lcc-olive-deep: #657241;
+  --lcc-line: rgba(16, 18, 14, 0.25);
+  --lcc-focus: #354019;
+  color-scheme: light;
+}
+
