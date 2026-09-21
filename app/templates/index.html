@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>DocToMD - Convertitore PDF in Markdown Ultra-Veloce</title>
+  <title>DocToMD Suite - Coltellino Svizzero per Documenti</title>
   
   <!-- Tailwind CSS -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -14,12 +14,9 @@
         extend: {
           colors: {
             brand: {
-              50: '#f0fdf4',
-              100: '#dcfce7',
-              500: '#22c55e',
-              600: '#16a34a',
-              700: '#15803d',
-              900: '#14532d',
+              500: '#10b981',
+              600: '#059669',
+              700: '#047857',
             }
           }
         }
@@ -69,22 +66,21 @@
     .prose-custom ul { list-style-type: disc; margin-left: 1.5rem; margin-bottom: 0.85rem; }
     .prose-custom ol { list-style-type: decimal; margin-left: 1.5rem; margin-bottom: 0.85rem; }
     .prose-custom hr { border: 0; border-top: 1px dashed #4b5563; margin: 1.5rem 0; }
-    .prose-custom blockquote { border-left: 4px solid #16a34a; padding-left: 1rem; color: #9ca3af; font-style: italic; margin: 1rem 0; }
   </style>
 </head>
 
-<body class="bg-gray-950 text-gray-100 min-h-screen font-sans antialiased flex flex-col">
+<body class="bg-gray-950 text-gray-100 min-h-screen font-sans antialiased flex flex-col selection:bg-emerald-600 selection:text-white">
 
   <!-- Header -->
-  <header class="border-b border-gray-800 bg-gray-900/60 backdrop-blur sticky top-0 z-40">
+  <header class="border-b border-gray-800 bg-gray-900/70 backdrop-blur sticky top-0 z-40">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
       <div class="flex items-center space-x-3">
         <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-400 flex items-center justify-center shadow-lg shadow-emerald-900/30">
-          <i data-lucide="file-text" class="w-5 h-5 text-white"></i>
+          <i data-lucide="layers" class="w-5 h-5 text-white"></i>
         </div>
         <div>
-          <span class="font-bold text-lg tracking-tight bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">DocToMD</span>
-          <span class="ml-2 text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Ultra-Fast</span>
+          <span class="font-bold text-lg tracking-tight bg-gradient-to-r from-white to-gray-300 bg-clip-text text-transparent">DocToMD Suite</span>
+          <span class="ml-2 text-xs font-semibold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Swiss Army Knife</span>
         </div>
       </div>
 
@@ -93,203 +89,183 @@
           <i data-lucide="lightbulb" class="w-4 h-4 text-amber-400"></i>
           <span>Dritte & Best Practice</span>
         </button>
-        <a href="https://github.com/pymupdf/PyMuPDF" target="_blank" class="text-xs text-gray-400 hover:text-white flex items-center space-x-1 px-2 py-1">
-          <i data-lucide="cpu" class="w-4 h-4"></i>
-          <span class="hidden sm:inline">Engine: PyMuPDF4LLM</span>
-        </a>
       </div>
+    </div>
+
+    <!-- Navigation Tabs Bar -->
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex space-x-1 sm:space-x-3 overflow-x-auto py-2 border-t border-gray-800/60 scrollbar-none">
+      <button onclick="switchTab('markdown')" id="tabNav-markdown" class="tab-btn active-tab flex items-center space-x-2 px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition whitespace-nowrap bg-emerald-600 text-white">
+        <i data-lucide="file-text" class="w-4 h-4"></i>
+        <span>PDF ➔ Markdown</span>
+      </button>
+
+      <button onclick="switchTab('compress')" id="tabNav-compress" class="tab-btn flex items-center space-x-2 px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition whitespace-nowrap text-gray-400 hover:text-white hover:bg-gray-800">
+        <i data-lucide="minimize-2" class="w-4 h-4"></i>
+        <span>Comprimi PDF</span>
+      </button>
+
+      <button onclick="switchTab('merge')" id="tabNav-merge" class="tab-btn flex items-center space-x-2 px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition whitespace-nowrap text-gray-400 hover:text-white hover:bg-gray-800">
+        <i data-lucide="git-merge" class="w-4 h-4"></i>
+        <span>Unisci PDF</span>
+      </button>
+
+      <button onclick="switchTab('split')" id="tabNav-split" class="tab-btn flex items-center space-x-2 px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition whitespace-nowrap text-gray-400 hover:text-white hover:bg-gray-800">
+        <i data-lucide="scissors" class="w-4 h-4"></i>
+        <span>Dividi PDF</span>
+      </button>
+
+      <button onclick="switchTab('images')" id="tabNav-images" class="tab-btn flex items-center space-x-2 px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition whitespace-nowrap text-gray-400 hover:text-white hover:bg-gray-800">
+        <i data-lucide="image" class="w-4 h-4"></i>
+        <span>PDF ➔ Immagini</span>
+      </button>
     </div>
   </header>
 
-  <!-- Main Container -->
+  <!-- Main Workspace -->
   <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
 
-    <!-- Top Action Card: Dropzone & Settings -->
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-      
-      <!-- Dropzone (col-span-2) -->
-      <div class="lg:col-span-2 bg-gray-900/80 border border-gray-800 rounded-2xl p-6 shadow-xl relative overflow-hidden flex flex-col justify-between">
-        <div id="dropZone" class="border-2 border-dashed border-gray-700 hover:border-emerald-500/70 rounded-xl p-8 flex flex-col items-center justify-center text-center cursor-pointer transition bg-gray-950/40 hover:bg-gray-900/50 group">
-          <input type="file" id="fileInput" accept=".pdf" multiple class="hidden" />
-          <div class="w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mb-4 group-hover:scale-110 transition duration-300">
-            <i data-lucide="upload-cloud" class="w-7 h-7 text-emerald-400"></i>
-          </div>
-          <p class="text-base font-medium text-gray-200">Trascina qui il tuo file <span class="text-emerald-400">PDF</span> oppure <span class="underline decoration-emerald-500 underline-offset-4">sfoglia</span></p>
-          <p class="text-xs text-gray-500 mt-2">Supporta file singoli e conversioni batch multiple &bull; Elaborazione ultra-veloce</p>
-        </div>
-
-        <!-- Selected File Status Badge -->
-        <div id="fileInfoBar" class="mt-4 hidden flex items-center justify-between bg-gray-800/80 border border-gray-700/80 rounded-xl px-4 py-2.5 text-sm">
-          <div class="flex items-center space-x-2.5 truncate">
-            <i data-lucide="file-check-2" class="w-4 h-4 text-emerald-400 shrink-0"></i>
-            <span id="selectedFileName" class="font-mono text-xs sm:text-sm text-gray-200 truncate">nessun file</span>
-            <span id="selectedFileSize" class="text-xs text-gray-400"></span>
-          </div>
-          <button id="btnStartConvert" class="flex items-center space-x-2 bg-emerald-600 hover:bg-emerald-500 text-white font-medium text-xs sm:text-sm px-4 py-1.5 rounded-lg shadow-md shadow-emerald-950/50 transition">
-            <i data-lucide="sparkles" class="w-4 h-4"></i>
-            <span>Converti Ora</span>
-          </button>
-        </div>
-
-        <!-- Progress Indicator -->
-        <div id="loadingIndicator" class="hidden mt-4 text-center py-4">
-          <div class="inline-flex items-center space-x-2 text-emerald-400 text-sm font-medium">
-            <i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i>
-            <span>Conversione in corso con PyMuPDF ad alta velocità...</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Settings Panel -->
-      <div class="bg-gray-900/80 border border-gray-800 rounded-2xl p-6 shadow-xl flex flex-col justify-between">
-        <div>
-          <h3 class="text-sm font-semibold text-gray-200 uppercase tracking-wider mb-4 flex items-center space-x-2">
-            <i data-lucide="sliders" class="w-4 h-4 text-emerald-400"></i>
-            <span>Opzioni di Conversione</span>
-          </h3>
-
-          <div class="space-y-3.5 text-sm">
-            <label class="flex items-start space-x-3 cursor-pointer select-none">
-              <input type="checkbox" id="optFrontmatter" checked class="mt-1 rounded bg-gray-800 border-gray-700 text-emerald-500 focus:ring-emerald-500/20 focus:ring-offset-0">
-              <div>
-                <span class="text-gray-200 font-medium">Metadati YAML Frontmatter</span>
-                <p class="text-xs text-gray-500">Aggiunge titolo, autore, pagine e data all'inizio del file</p>
-              </div>
-            </label>
-
-            <label class="flex items-start space-x-3 cursor-pointer select-none">
-              <input type="checkbox" id="optImages" class="mt-1 rounded bg-gray-800 border-gray-700 text-emerald-500 focus:ring-emerald-500/20 focus:ring-offset-0">
-              <div>
-                <span class="text-gray-200 font-medium">Estrai Immagini incorporate</span>
-                <p class="text-xs text-gray-500">Salva e collega le immagini (fornisce archivio .zip)</p>
-              </div>
-            </label>
-
-            <label class="flex items-start space-x-3 cursor-pointer select-none">
-              <input type="checkbox" id="optSeparators" class="mt-1 rounded bg-gray-800 border-gray-700 text-emerald-500 focus:ring-emerald-500/20 focus:ring-offset-0">
-              <div>
-                <span class="text-gray-200 font-medium">Separatori di Pagina</span>
-                <p class="text-xs text-gray-500">Inserisce separatori '---' e commento pagina</p>
-              </div>
-            </label>
-          </div>
-        </div>
-
-        <div class="mt-6 pt-4 border-t border-gray-800/80">
-          <div class="flex items-center justify-between text-xs text-gray-400">
-            <span>Prestazioni:</span>
-            <span class="text-emerald-400 font-semibold">&gt; 100 pag/sec</span>
-          </div>
-          <div class="flex items-center justify-between text-xs text-gray-400 mt-1">
-            <span>Tabelle Markdown:</span>
-            <span class="text-emerald-400 font-semibold">GFM Nativo</span>
-          </div>
-        </div>
-      </div>
-
-    </div>
-
-    <!-- Scanned PDF Alert (Hidden by default) -->
-    <div id="scanAlertBox" class="hidden bg-amber-500/10 border border-amber-500/30 rounded-xl p-4 text-amber-200 text-sm flex items-start space-x-3">
-      <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-400 shrink-0 mt-0.5"></i>
-      <div>
-        <p class="font-semibold text-amber-300">Possibile PDF Scansionato / Immagine</p>
-        <p id="scanAlertMsg" class="text-xs text-amber-200/80 mt-1"></p>
-        <p class="text-xs text-amber-300/90 mt-2 font-medium">💡 Dritta: Per i documenti scansionati senza testo vettoriale, consulta la sezione 'Dritte & Best Practice' per integrare OCR o un Vision LLM.</p>
-      </div>
-    </div>
-
-    <!-- Results Section (Hidden until conversion) -->
-    <div id="resultSection" class="hidden space-y-4">
-      
-      <!-- Stats bar & Actions -->
-      <div class="bg-gray-900 border border-gray-800 rounded-xl p-4 flex flex-wrap items-center justify-between gap-4">
+    <!-- ========================================================= -->
+    <!-- 1. SEZIONE: PDF TO MARKDOWN -->
+    <!-- ========================================================= -->
+    <section id="section-markdown" class="tool-section space-y-6">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
-        <!-- Metrics -->
-        <div class="flex flex-wrap items-center gap-4 text-xs sm:text-sm">
-          <div class="flex items-center space-x-1.5 text-gray-300">
-            <i data-lucide="clock" class="w-4 h-4 text-emerald-400"></i>
-            <span>Tempo: <strong id="statElapsed" class="text-white">0 ms</strong></span>
+        <!-- Dropzone (col-span-2) -->
+        <div class="lg:col-span-2 bg-gray-900/80 border border-gray-800 rounded-2xl p-6 shadow-xl flex flex-col justify-between">
+          <div id="dropZone" class="border-2 border-dashed border-gray-700 hover:border-emerald-500/70 rounded-xl p-8 flex flex-col items-center justify-center text-center cursor-pointer transition bg-gray-950/40 hover:bg-gray-900/50 group">
+            <input type="file" id="fileInput" accept=".pdf" multiple class="hidden" />
+            <div class="w-14 h-14 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mb-4 group-hover:scale-110 transition duration-300">
+              <i data-lucide="upload-cloud" class="w-7 h-7 text-emerald-400"></i>
+            </div>
+            <p class="text-base font-medium text-gray-200">Trascina qui il tuo file <span class="text-emerald-400">PDF</span> oppure <span class="underline decoration-emerald-500 underline-offset-4">sfoglia</span></p>
+            <p class="text-xs text-gray-500 mt-2">Supporta file singoli e conversioni batch multiple &bull; Elaborazione ultra-veloce</p>
           </div>
-          <div class="flex items-center space-x-1.5 text-gray-300">
-            <i data-lucide="book-open" class="w-4 h-4 text-emerald-400"></i>
-            <span>Pagine: <strong id="statPages" class="text-white">0</strong></span>
-          </div>
-          <div class="flex items-center space-x-1.5 text-gray-300">
-            <i data-lucide="file-type" class="w-4 h-4 text-emerald-400"></i>
-            <span>Parole: <strong id="statWords" class="text-white">0</strong></span>
-          </div>
-          <div id="statImageBadge" class="hidden flex items-center space-x-1.5 text-gray-300">
-            <i data-lucide="image" class="w-4 h-4 text-emerald-400"></i>
-            <span>Immagini: <strong id="statImages" class="text-white">0</strong></span>
-          </div>
-        </div>
 
-        <!-- Buttons -->
-        <div class="flex items-center space-x-2.5">
-          <button id="btnCopy" class="flex items-center space-x-1.5 text-xs sm:text-sm bg-gray-800 hover:bg-gray-700 text-gray-200 px-3 py-1.5 rounded-lg border border-gray-700 transition">
-            <i data-lucide="copy" class="w-4 h-4"></i>
-            <span id="copyText">Copia MD</span>
-          </button>
-          
-          <button id="btnDownloadMd" class="flex items-center space-x-1.5 text-xs sm:text-sm bg-emerald-600 hover:bg-emerald-500 text-white font-medium px-3.5 py-1.5 rounded-lg transition shadow-md shadow-emerald-950/40">
-            <i data-lucide="download" class="w-4 h-4"></i>
-            <span>Scarica .md</span>
-          </button>
-
-          <button id="btnDownloadZip" class="hidden flex items-center space-x-1.5 text-xs sm:text-sm bg-indigo-600 hover:bg-indigo-500 text-white font-medium px-3.5 py-1.5 rounded-lg transition shadow-md shadow-indigo-950/40">
-            <i data-lucide="archive" class="w-4 h-4"></i>
-            <span>Scarica ZIP (MD + Immagini)</span>
-          </button>
-        </div>
-      </div>
-
-      <!-- Dual Preview Tabs -->
-      <div class="bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden shadow-2xl">
-        
-        <!-- Tab Bar -->
-        <div class="flex items-center justify-between border-b border-gray-800 px-4 py-2 bg-gray-950/60">
-          <div class="flex space-x-2">
-            <button id="tabPreview" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-emerald-600 text-white">
-              Anteprima Formattata
-            </button>
-            <button id="tabRaw" class="px-3 py-1.5 text-xs font-semibold rounded-lg text-gray-400 hover:text-white hover:bg-gray-800">
-              Sorgente Markdown
+          <!-- Status Bar -->
+          <div id="fileInfoBar" class="mt-4 hidden flex items-center justify-between bg-gray-800/80 border border-gray-700/80 rounded-xl px-4 py-2.5 text-sm">
+            <div class="flex items-center space-x-2.5 truncate">
+              <i data-lucide="file-check-2" class="w-4 h-4 text-emerald-400 shrink-0"></i>
+              <span id="selectedFileName" class="font-mono text-xs sm:text-sm text-gray-200 truncate">nessun file</span>
+              <span id="selectedFileSize" class="text-xs text-gray-400"></span>
+            </div>
+            <button id="btnStartConvert" class="flex items-center space-x-2 bg-emerald-600 hover:bg-emerald-500 text-white font-medium text-xs sm:text-sm px-4 py-1.5 rounded-lg shadow-md transition">
+              <i data-lucide="sparkles" class="w-4 h-4"></i>
+              <span>Converti in Markdown</span>
             </button>
           </div>
-          <span class="text-xs text-gray-500 font-mono" id="previewFilename">anteprima.md</span>
+
+          <div id="loadingIndicator" class="hidden mt-4 text-center py-4">
+            <div class="inline-flex items-center space-x-2 text-emerald-400 text-sm font-medium">
+              <i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i>
+              <span>Conversione in corso con PyMuPDF...</span>
+            </div>
+          </div>
         </div>
 
-        <!-- Rendered View -->
-        <div id="viewPreview" class="p-6 md:p-8 max-h-[700px] overflow-y-auto prose prose-invert prose-emerald max-w-none prose-custom text-gray-200">
-        </div>
-
-        <!-- Raw Markdown View -->
-        <div id="viewRaw" class="hidden p-4 max-h-[700px] overflow-y-auto">
-          <textarea id="rawMarkdownText" readonly class="w-full h-[650px] bg-gray-950 text-gray-300 font-mono text-xs sm:text-sm p-4 rounded-xl border border-gray-800 focus:outline-none resize-none selection:bg-emerald-600 selection:text-white"></textarea>
-        </div>
-
-      </div>
-
-    </div>
-
-    <!-- Batch Results Section (Hidden until batch conversion) -->
-    <div id="batchResultSection" class="hidden space-y-4">
-      <div class="bg-gray-900 border border-gray-800 rounded-2xl p-6 shadow-xl">
-        <div class="flex items-center justify-between mb-4">
+        <!-- Opzioni Markdown -->
+        <div class="bg-gray-900/80 border border-gray-800 rounded-2xl p-6 shadow-xl flex flex-col justify-between">
           <div>
-            <h3 class="text-lg font-bold text-white flex items-center space-x-2">
-              <i data-lucide="layers" class="w-5 h-5 text-emerald-400"></i>
-              <span>Conversione Batch Completata</span>
+            <h3 class="text-sm font-semibold text-gray-200 uppercase tracking-wider mb-4 flex items-center space-x-2">
+              <i data-lucide="sliders" class="w-4 h-4 text-emerald-400"></i>
+              <span>Opzioni Markdown</span>
             </h3>
-            <p class="text-xs text-gray-400 mt-0.5" id="batchSummaryText">0 documenti convertiti</p>
+
+            <div class="space-y-3.5 text-sm">
+              <label class="flex items-start space-x-3 cursor-pointer select-none">
+                <input type="checkbox" id="optFrontmatter" checked class="mt-1 rounded bg-gray-800 border-gray-700 text-emerald-500 focus:ring-emerald-500/20">
+                <div>
+                  <span class="text-gray-200 font-medium">Metadati YAML Frontmatter</span>
+                  <p class="text-xs text-gray-500">Incolla titolo, autore, pagine e data all'inizio</p>
+                </div>
+              </label>
+
+              <label class="flex items-start space-x-3 cursor-pointer select-none">
+                <input type="checkbox" id="optImages" class="mt-1 rounded bg-gray-800 border-gray-700 text-emerald-500 focus:ring-emerald-500/20">
+                <div>
+                  <span class="text-gray-200 font-medium">Estrai Immagini</span>
+                  <p class="text-xs text-gray-500">Salva figure in cartella e genera archivio .zip</p>
+                </div>
+              </label>
+
+              <label class="flex items-start space-x-3 cursor-pointer select-none">
+                <input type="checkbox" id="optSeparators" class="mt-1 rounded bg-gray-800 border-gray-700 text-emerald-500 focus:ring-emerald-500/20">
+                <div>
+                  <span class="text-gray-200 font-medium">Separatori di Pagina</span>
+                  <p class="text-xs text-gray-500">Inserisce separatori '---' e commento pagina</p>
+                </div>
+              </label>
+            </div>
           </div>
-          <button id="btnDownloadBatchZip" class="flex items-center space-x-2 bg-emerald-600 hover:bg-emerald-500 text-white font-medium text-xs sm:text-sm px-4 py-2 rounded-lg transition shadow-lg shadow-emerald-950/40">
+
+          <div class="mt-6 pt-4 border-t border-gray-800/80 text-xs text-gray-400 flex items-center justify-between">
+            <span>Motore:</span>
+            <span class="text-emerald-400 font-semibold">PyMuPDF4LLM Nativo</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Scanned Alert -->
+      <div id="scanAlertBox" class="hidden bg-amber-500/10 border border-amber-500/30 rounded-xl p-4 text-amber-200 text-sm flex items-start space-x-3">
+        <i data-lucide="alert-triangle" class="w-5 h-5 text-amber-400 shrink-0 mt-0.5"></i>
+        <div>
+          <p class="font-semibold text-amber-300">Possibile PDF Scansionato</p>
+          <p id="scanAlertMsg" class="text-xs text-amber-200/80 mt-1"></p>
+        </div>
+      </div>
+
+      <!-- Single Result Section -->
+      <div id="resultSection" class="hidden space-y-4">
+        <div class="bg-gray-900 border border-gray-800 rounded-xl p-4 flex flex-wrap items-center justify-between gap-4">
+          <div class="flex flex-wrap items-center gap-4 text-xs sm:text-sm">
+            <span class="text-gray-300">Tempo: <strong id="statElapsed" class="text-white">0 ms</strong></span>
+            <span class="text-gray-300">Pagine: <strong id="statPages" class="text-white">0</strong></span>
+            <span class="text-gray-300">Parole: <strong id="statWords" class="text-white">0</strong></span>
+            <span id="statImageBadge" class="hidden text-gray-300">Immagini: <strong id="statImages" class="text-white">0</strong></span>
+          </div>
+          <div class="flex items-center space-x-2.5">
+            <button id="btnCopy" class="flex items-center space-x-1.5 text-xs sm:text-sm bg-gray-800 hover:bg-gray-700 text-gray-200 px-3 py-1.5 rounded-lg border border-gray-700 transition">
+              <i data-lucide="copy" class="w-4 h-4"></i>
+              <span id="copyText">Copia MD</span>
+            </button>
+            <button id="btnDownloadMd" class="flex items-center space-x-1.5 text-xs sm:text-sm bg-emerald-600 hover:bg-emerald-500 text-white font-medium px-3.5 py-1.5 rounded-lg transition shadow-md">
+              <i data-lucide="download" class="w-4 h-4"></i>
+              <span>Scarica .md</span>
+            </button>
+            <button id="btnDownloadZip" class="hidden flex items-center space-x-1.5 text-xs sm:text-sm bg-indigo-600 hover:bg-indigo-500 text-white font-medium px-3.5 py-1.5 rounded-lg transition">
+              <i data-lucide="archive" class="w-4 h-4"></i>
+              <span>Scarica ZIP</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="bg-gray-900 border border-gray-800 rounded-2xl overflow-hidden shadow-2xl">
+          <div class="flex items-center justify-between border-b border-gray-800 px-4 py-2 bg-gray-950/60">
+            <div class="flex space-x-2">
+              <button id="tabPreview" class="px-3 py-1.5 text-xs font-semibold rounded-lg bg-emerald-600 text-white">Anteprima Formattata</button>
+              <button id="tabRaw" class="px-3 py-1.5 text-xs font-semibold rounded-lg text-gray-400 hover:text-white hover:bg-gray-800">Sorgente Markdown</button>
+            </div>
+            <span class="text-xs text-gray-500 font-mono" id="previewFilename">anteprima.md</span>
+          </div>
+          <div id="viewPreview" class="p-6 md:p-8 max-h-[650px] overflow-y-auto prose prose-invert prose-emerald max-w-none prose-custom text-gray-200"></div>
+          <div id="viewRaw" class="hidden p-4 max-h-[650px] overflow-y-auto">
+            <textarea id="rawMarkdownText" readonly class="w-full h-[600px] bg-gray-950 text-gray-300 font-mono text-xs sm:text-sm p-4 rounded-xl border border-gray-800 focus:outline-none resize-none"></textarea>
+          </div>
+        </div>
+      </div>
+
+      <!-- Batch Result Section -->
+      <div id="batchResultSection" class="hidden bg-gray-900 border border-gray-800 rounded-2xl p-6 shadow-xl space-y-4">
+        <div class="flex items-center justify-between">
+          <h3 class="text-base font-bold text-white flex items-center space-x-2">
+            <i data-lucide="layers" class="w-5 h-5 text-emerald-400"></i>
+            <span>Conversione Batch Completata</span>
+          </h3>
+          <button id="btnDownloadBatchZip" class="flex items-center space-x-2 bg-emerald-600 hover:bg-emerald-500 text-white font-medium text-xs sm:text-sm px-4 py-2 rounded-lg transition shadow-md">
             <i data-lucide="archive" class="w-4 h-4"></i>
             <span>Scarica Archivio ZIP Completo</span>
           </button>
         </div>
-
         <div class="overflow-x-auto">
           <table class="w-full text-left text-xs sm:text-sm text-gray-300">
             <thead class="bg-gray-800/60 text-gray-400 uppercase text-[11px] tracking-wider">
@@ -301,189 +277,228 @@
                 <th class="py-2.5 px-4 rounded-r-lg">Stato</th>
               </tr>
             </thead>
-            <tbody id="batchTableBody" class="divide-y divide-gray-800/60">
-            </tbody>
+            <tbody id="batchTableBody" class="divide-y divide-gray-800/60"></tbody>
           </table>
         </div>
       </div>
-    </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- 2. SEZIONE: COMPRIMI PDF -->
+    <!-- ========================================================= -->
+    <section id="section-compress" class="tool-section hidden space-y-6">
+      <div class="max-w-2xl mx-auto bg-gray-900/80 border border-gray-800 rounded-2xl p-8 shadow-xl space-y-6">
+        <div class="text-center">
+          <h2 class="text-xl font-bold text-white flex items-center justify-center space-x-2">
+            <i data-lucide="minimize-2" class="w-6 h-6 text-emerald-400"></i>
+            <span>Comprimi Documento PDF</span>
+          </h2>
+          <p class="text-xs text-gray-400 mt-1">Riduci le dimensioni dei file pesanti mantenendo un'eccellente leggibilità.</p>
+        </div>
+
+        <div id="dropZoneCompress" class="border-2 border-dashed border-gray-700 hover:border-emerald-500/70 rounded-xl p-8 flex flex-col items-center justify-center text-center cursor-pointer transition bg-gray-950/40 hover:bg-gray-900/50">
+          <input type="file" id="fileCompressInput" accept=".pdf" class="hidden" />
+          <i data-lucide="file-up" class="w-10 h-10 text-emerald-400 mb-3"></i>
+          <p class="text-sm font-medium text-gray-200">Trascina qui il file PDF da comprimere</p>
+          <p id="compressFileLabel" class="text-xs text-gray-400 mt-1 font-mono"></p>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold uppercase text-gray-300 mb-2">Livello di Compressione:</label>
+          <div class="grid grid-cols-3 gap-3">
+            <button type="button" onclick="selectCompressLevel('light')" id="lvl-light" class="compress-lvl-btn border border-gray-700 rounded-xl p-3 text-center text-xs hover:border-emerald-500 transition">
+              <span class="font-bold block text-white">Leggera</span>
+              <span class="text-gray-400 text-[11px]">Massima Qualità</span>
+            </button>
+            <button type="button" onclick="selectCompressLevel('medium')" id="lvl-medium" class="compress-lvl-btn border-2 border-emerald-500 bg-emerald-500/10 rounded-xl p-3 text-center text-xs transition">
+              <span class="font-bold block text-emerald-300">Bilanciata</span>
+              <span class="text-gray-300 text-[11px]">Consigliata (-40/70%)</span>
+            </button>
+            <button type="button" onclick="selectCompressLevel('strong')" id="lvl-strong" class="compress-lvl-btn border border-gray-700 rounded-xl p-3 text-center text-xs hover:border-emerald-500 transition">
+              <span class="font-bold block text-white">Forte</span>
+              <span class="text-gray-400 text-[11px]">Per Email</span>
+            </button>
+          </div>
+        </div>
+
+        <button id="btnExecuteCompress" disabled class="w-full bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 disabled:hover:bg-emerald-600 text-white font-medium py-3 rounded-xl transition shadow-lg flex items-center justify-center space-x-2">
+          <i data-lucide="zap" class="w-5 h-5"></i>
+          <span>Comprimi Ora</span>
+        </button>
+
+        <!-- Compress Results Box -->
+        <div id="compressResultBox" class="hidden bg-emerald-950/30 border border-emerald-500/30 rounded-xl p-5 space-y-3">
+          <div class="flex items-center justify-between text-sm">
+            <span class="text-gray-300">Dimensione Originale:</span>
+            <strong id="compOrigSize" class="text-gray-200 font-mono">0 KB</strong>
+          </div>
+          <div class="flex items-center justify-between text-sm">
+            <span class="text-gray-300">Nuova Dimensione:</span>
+            <strong id="compNewSize" class="text-emerald-400 font-mono">0 KB</strong>
+          </div>
+          <div class="flex items-center justify-between text-sm border-t border-gray-800 pt-2">
+            <span class="text-emerald-300 font-semibold">Spazio Risparmiato:</span>
+            <span id="compSavedPct" class="px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 font-bold font-mono">0%</span>
+          </div>
+          <a id="btnDownloadCompressed" href="#" download class="block w-full text-center bg-emerald-600 hover:bg-emerald-500 text-white font-medium py-2.5 rounded-lg transition shadow-md mt-4">
+            Scarica PDF Compresso
+          </a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- 3. SEZIONE: UNISCI PDF -->
+    <!-- ========================================================= -->
+    <section id="section-merge" class="tool-section hidden space-y-6">
+      <div class="max-w-2xl mx-auto bg-gray-900/80 border border-gray-800 rounded-2xl p-8 shadow-xl space-y-6">
+        <div class="text-center">
+          <h2 class="text-xl font-bold text-white flex items-center justify-center space-x-2">
+            <i data-lucide="git-merge" class="w-6 h-6 text-emerald-400"></i>
+            <span>Unisci Più PDF (Merge)</span>
+          </h2>
+          <p class="text-xs text-gray-400 mt-1">Seleziona 2 o più file PDF per combinarli in un unico documento continuo.</p>
+        </div>
+
+        <div id="dropZoneMerge" class="border-2 border-dashed border-gray-700 hover:border-emerald-500/70 rounded-xl p-8 flex flex-col items-center justify-center text-center cursor-pointer transition bg-gray-950/40 hover:bg-gray-900/50">
+          <input type="file" id="fileMergeInput" accept=".pdf" multiple class="hidden" />
+          <i data-lucide="files" class="w-10 h-10 text-emerald-400 mb-3"></i>
+          <p class="text-sm font-medium text-gray-200">Trascina qui 2 o più file PDF da unire</p>
+          <p class="text-xs text-gray-500 mt-1">I file verranno uniti nell'ordine di selezione</p>
+        </div>
+
+        <ul id="mergeFileList" class="divide-y divide-gray-800 bg-gray-950/60 rounded-xl border border-gray-800 text-xs font-mono max-h-48 overflow-y-auto"></ul>
+
+        <button id="btnExecuteMerge" disabled class="w-full bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 disabled:hover:bg-emerald-600 text-white font-medium py-3 rounded-xl transition shadow-lg flex items-center justify-center space-x-2">
+          <i data-lucide="combine" class="w-5 h-5"></i>
+          <span>Unisci PDF e Scarica</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- 4. SEZIONE: DIVIDI PDF -->
+    <!-- ========================================================= -->
+    <section id="section-split" class="tool-section hidden space-y-6">
+      <div class="max-w-2xl mx-auto bg-gray-900/80 border border-gray-800 rounded-2xl p-8 shadow-xl space-y-6">
+        <div class="text-center">
+          <h2 class="text-xl font-bold text-white flex items-center justify-center space-x-2">
+            <i data-lucide="scissors" class="w-6 h-6 text-emerald-400"></i>
+            <span>Dividi ed Estrai Pagine</span>
+          </h2>
+          <p class="text-xs text-gray-400 mt-1">Estrai solo le pagine che ti interessano da un documento PDF.</p>
+        </div>
+
+        <div id="dropZoneSplit" class="border-2 border-dashed border-gray-700 hover:border-emerald-500/70 rounded-xl p-8 flex flex-col items-center justify-center text-center cursor-pointer transition bg-gray-950/40 hover:bg-gray-900/50">
+          <input type="file" id="fileSplitInput" accept=".pdf" class="hidden" />
+          <i data-lucide="file-minus" class="w-10 h-10 text-emerald-400 mb-3"></i>
+          <p class="text-sm font-medium text-gray-200">Trascina qui il file PDF da dividere</p>
+          <p id="splitFileLabel" class="text-xs text-gray-400 mt-1 font-mono"></p>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold uppercase text-gray-300 mb-1.5">Pagine da estrarre:</label>
+          <input type="text" id="splitPagesInput" placeholder="Es. 1-3, 5, 8-12" class="w-full bg-gray-950 border border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-200 focus:outline-none focus:border-emerald-500 font-mono">
+          <p class="text-[11px] text-gray-500 mt-1">Indica le pagine separate da virgola o intervalli con trattino (es. 1-5, 8).</p>
+        </div>
+
+        <button id="btnExecuteSplit" disabled class="w-full bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 disabled:hover:bg-emerald-600 text-white font-medium py-3 rounded-xl transition shadow-lg flex items-center justify-center space-x-2">
+          <i data-lucide="download" class="w-5 h-5"></i>
+          <span>Estrai Pagine e Scarica</span>
+        </button>
+      </div>
+    </section>
+
+    <!-- ========================================================= -->
+    <!-- 5. SEZIONE: PDF TO IMMAGINI -->
+    <!-- ========================================================= -->
+    <section id="section-images" class="tool-section hidden space-y-6">
+      <div class="max-w-2xl mx-auto bg-gray-900/80 border border-gray-800 rounded-2xl p-8 shadow-xl space-y-6">
+        <div class="text-center">
+          <h2 class="text-xl font-bold text-white flex items-center justify-center space-x-2">
+            <i data-lucide="image" class="w-6 h-6 text-emerald-400"></i>
+            <span>Converti PDF in Immagini PNG</span>
+          </h2>
+          <p class="text-xs text-gray-400 mt-1">Esporta ciascuna pagina del documento in un'immagine nitida ad alta risoluzione.</p>
+        </div>
+
+        <div id="dropZoneImg" class="border-2 border-dashed border-gray-700 hover:border-emerald-500/70 rounded-xl p-8 flex flex-col items-center justify-center text-center cursor-pointer transition bg-gray-950/40 hover:bg-gray-900/50">
+          <input type="file" id="fileImgInput" accept=".pdf" class="hidden" />
+          <i data-lucide="file-image" class="w-10 h-10 text-emerald-400 mb-3"></i>
+          <p class="text-sm font-medium text-gray-200">Trascina qui il file PDF da convertire in immagini</p>
+          <p id="imgFileLabel" class="text-xs text-gray-400 mt-1 font-mono"></p>
+        </div>
+
+        <div>
+          <label class="block text-xs font-semibold uppercase text-gray-300 mb-1.5">Risoluzione Immagini:</label>
+          <select id="imgDpiSelect" class="w-full bg-gray-950 border border-gray-700 rounded-xl px-4 py-2.5 text-sm text-gray-200 focus:outline-none focus:border-emerald-500">
+            <option value="150" selected>150 DPI (Standard - Veloce e leggera)</option>
+            <option value="300">300 DPI (Alta Risoluzione - Nitidezza massima)</option>
+          </select>
+        </div>
+
+        <button id="btnExecutePdfToImg" disabled class="w-full bg-emerald-600 hover:bg-emerald-500 disabled:opacity-40 disabled:hover:bg-emerald-600 text-white font-medium py-3 rounded-xl transition shadow-lg flex items-center justify-center space-x-2">
+          <i data-lucide="archive" class="w-5 h-5"></i>
+          <span>Esporta Tutte le Pagine in ZIP</span>
+        </button>
+      </div>
+    </section>
 
   </main>
 
   <!-- Modal / Drawer Dritte & Best Practice -->
   <div id="tipsModal" class="fixed inset-0 z-50 bg-black/70 backdrop-blur-sm hidden flex items-center justify-center p-4">
     <div class="bg-gray-900 border border-gray-800 rounded-2xl max-w-2xl w-full max-h-[85vh] flex flex-col shadow-2xl overflow-hidden">
-      
-      <!-- Modal Header -->
       <div class="flex items-center justify-between px-6 py-4 border-b border-gray-800">
         <div class="flex items-center space-x-2.5">
           <i data-lucide="compass" class="w-5 h-5 text-emerald-400"></i>
-          <h3 class="text-lg font-bold text-white">Dritte & Best Practice per PDF to Markdown</h3>
+          <h3 class="text-lg font-bold text-white">Dritte & Best Practice DocToMD Suite</h3>
         </div>
         <button id="btnCloseTips" class="text-gray-400 hover:text-white p-1 rounded-lg hover:bg-gray-800 transition">
           <i data-lucide="x" class="w-5 h-5"></i>
         </button>
       </div>
-
-      <!-- Modal Body -->
       <div class="p-6 overflow-y-auto space-y-4 text-sm text-gray-300 leading-relaxed">
-        
         <div class="bg-gray-800/50 p-4 rounded-xl border border-gray-700/60">
-          <h4 class="font-semibold text-emerald-400 flex items-center space-x-2">
-            <span>1. La differenza tra PDF Nativi e PDF Scannerizzati</span>
-          </h4>
-          <p class="mt-1 text-xs text-gray-300">
-            I PDF contengono testo vettoriale o semplici fotografie delle pagine (scansioni). Questa app usa <strong>PyMuPDF4LLM</strong>, che elabora documenti nativi a oltre <strong>100 pagine/secondo</strong> senza richiedere GPU. Se il PDF è un'immagine senza testo, l'app ti avvisa e serve un passaggio di <em>OCR</em> (Tesseract o Vision LLM come Gemini / GPT-4o).
-          </p>
+          <h4 class="font-semibold text-emerald-400">1. De-sillabazione automatica</h4>
+          <p class="mt-1 text-xs text-gray-300">Ricompone le parole spezzate a capo con trattino, fondamentale per le ricerche vettoriali AI e i sistemi RAG.</p>
         </div>
-
         <div class="bg-gray-800/50 p-4 rounded-xl border border-gray-700/60">
-          <h4 class="font-semibold text-emerald-400 flex items-center space-x-2">
-            <span>2. Gestione Intelligente delle Tabelle</span>
-          </h4>
-          <p class="mt-1 text-xs text-gray-300">
-            Le tabelle nei PDF non hanno tag strutturati (come <code>&lt;table&gt;</code> nell'HTML), ma sono solo linee e coordinate di testo. PyMuPDF ricostruisce geometricamente le celle e le converte in tabelle Markdown GFM (<code>| col1 | col2 |</code>) pronte per essere lette da umani e modelli LLM.
-          </p>
+          <h4 class="font-semibold text-emerald-400">2. Compressione Intelligente</h4>
+          <p class="mt-1 text-xs text-gray-300">Rimuove stream duplicati e ricomprime le immagini mantenendo la massima leggibilità dei caratteri vettoriali.</p>
         </div>
-
         <div class="bg-gray-800/50 p-4 rounded-xl border border-gray-700/60">
-          <h4 class="font-semibold text-emerald-400 flex items-center space-x-2">
-            <span>3. Rimozione Sillabazioni (De-hyphenation)</span>
-          </h4>
-          <p class="mt-1 text-xs text-gray-300">
-            I PDF tipografici spezzano le parole a fine riga con un trattino (es. <code>innova- \n zione</code>). L'app applica automaticamente una pulizia regex per ricomporre la parola intera (<code>innovazione</code>), fondamentale per evitare che le ricerche semantiche e i sistemi RAG falliscano il matching.
-          </p>
+          <h4 class="font-semibold text-emerald-400">3. Unione e Divisione Senza Perdita</h4>
+          <p class="mt-1 text-xs text-gray-300">PyMuPDF opera a livello di albero degli oggetti PDF in C, garantendo unione e ritagli istantanei senza degradare i testi.</p>
         </div>
-
-        <div class="bg-gray-800/50 p-4 rounded-xl border border-gray-700/60">
-          <h4 class="font-semibold text-emerald-400 flex items-center space-x-2">
-            <span>4. Metadati YAML (Frontmatter) per Sistemi RAG</span>
-          </h4>
-          <p class="mt-1 text-xs text-gray-300">
-            Se usi il Markdown per alimentare una pipeline di Retrieval-Augmented Generation o un archivio Obsidian/Notion, attiva il Frontmatter YAML. Permetterà ai tuoi chunk di conservare il titolo del documento originale, la data e il conteggio pagine.
-          </p>
-        </div>
-
-        <div class="bg-gray-800/50 p-4 rounded-xl border border-gray-700/60">
-          <h4 class="font-semibold text-emerald-400 flex items-center space-x-2">
-            <span>5. Formule Matematiche e Documenti Scientifici</span>
-          </h4>
-          <p class="mt-1 text-xs text-gray-300">
-            Per documenti accademici con integrali e matrici complesse, puoi combinare questo strumento veloce per il 95% del testo con modelli specializzati in LaTeX (es. Nougat o marker-pdf) sulle sole sezioni con formule.
-          </p>
-        </div>
-
       </div>
-
-      <!-- Modal Footer -->
       <div class="p-4 border-t border-gray-800 bg-gray-950/40 flex justify-end">
-        <button id="btnCloseTipsBtn" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold px-4 py-2 rounded-lg transition">
-          Ho Capito
-        </button>
+        <button id="btnCloseTipsBtn" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold px-4 py-2 rounded-lg transition">Chiudi</button>
       </div>
-
     </div>
   </div>
 
   <!-- Footer -->
   <footer class="border-t border-gray-800 py-6 text-center text-xs text-gray-500 mt-auto">
-    <p>DocToMD &bull; Creato con PyMuPDF, FastAPI e Tailwind &bull; Conversione istantanea locale al 100% privata</p>
+    <p>DocToMD Suite &bull; PyMuPDF C-Engine &bull; 100% Locale, Veloce e Privato</p>
   </footer>
 
-  <!-- Script Logica UI -->
+  <!-- Script Logica Suite -->
   <script>
     lucide.createIcons();
 
-    // Inizializza Markdown-it con highlight.js
-    const md = window.markdownit({
-      html: true,
-      linkify: true,
-      typographer: true,
-      highlight: function (str, lang) {
-        if (lang && hljs.getLanguage(lang)) {
-          try {
-            return hljs.highlight(str, { language: lang }).value;
-          } catch (__) {}
-        }
-        return '';
-      }
-    });
+    // Gestione Navigazione Tab
+    function switchTab(tabName) {
+      document.querySelectorAll('.tool-section').forEach(sec => sec.classList.add('hidden'));
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.className = 'tab-btn flex items-center space-x-2 px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition whitespace-nowrap text-gray-400 hover:text-white hover:bg-gray-800';
+      });
 
-    // Elementi DOM
-    const dropZone = document.getElementById('dropZone');
-    const fileInput = document.getElementById('fileInput');
-    const fileInfoBar = document.getElementById('fileInfoBar');
-    const selectedFileName = document.getElementById('selectedFileName');
-    const selectedFileSize = document.getElementById('selectedFileSize');
-    const btnStartConvert = document.getElementById('btnStartConvert');
-    const loadingIndicator = document.getElementById('loadingIndicator');
-
-    const optFrontmatter = document.getElementById('optFrontmatter');
-    const optImages = document.getElementById('optImages');
-    const optSeparators = document.getElementById('optSeparators');
-
-    const resultSection = document.getElementById('resultSection');
-    const batchResultSection = document.getElementById('batchResultSection');
-    const scanAlertBox = document.getElementById('scanAlertBox');
-    const scanAlertMsg = document.getElementById('scanAlertMsg');
-
-    const statElapsed = document.getElementById('statElapsed');
-    const statPages = document.getElementById('statPages');
-    const statWords = document.getElementById('statWords');
-    const statImages = document.getElementById('statImages');
-    const statImageBadge = document.getElementById('statImageBadge');
-
-    const btnCopy = document.getElementById('btnCopy');
-    const copyText = document.getElementById('copyText');
-    const btnDownloadMd = document.getElementById('btnDownloadMd');
-    const btnDownloadZip = document.getElementById('btnDownloadZip');
-    const btnDownloadBatchZip = document.getElementById('btnDownloadBatchZip');
-
-    const tabPreview = document.getElementById('tabPreview');
-    const tabRaw = document.getElementById('tabRaw');
-    const viewPreview = document.getElementById('viewPreview');
-    const viewRaw = document.getElementById('viewRaw');
-    const rawMarkdownText = document.getElementById('rawMarkdownText');
-    const previewFilename = document.getElementById('previewFilename');
-
-    // Tips Modal
-    const tipsModal = document.getElementById('tipsModal');
-    const btnOpenTips = document.getElementById('btnOpenTips');
-    const btnCloseTips = document.getElementById('btnCloseTips');
-    const btnCloseTipsBtn = document.getElementById('btnCloseTipsBtn');
-
-    let currentFiles = [];
-    let currentJobId = null;
-    let currentRawMarkdown = "";
-
-    // Eventi Drag & Drop
-    dropZone.addEventListener('click', () => fileInput.click());
-
-    ['dragenter', 'dragover'].forEach(eventName => {
-      dropZone.addEventListener(eventName, (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        dropZone.classList.add('border-emerald-500', 'bg-gray-900/80');
-      }, false);
-    });
-
-    ['dragleave', 'drop'].forEach(eventName => {
-      dropZone.addEventListener(eventName, (e) => {
-        e.preventDefault();
-        e.stopPropagation();
-        dropZone.classList.remove('border-emerald-500', 'bg-gray-900/80');
-      }, false);
-    });
-
-    dropZone.addEventListener('drop', (e) => {
-      const dt = e.dataTransfer;
-      const files = dt.files;
-      handleFilesSelected(files);
-    });
-
-    fileInput.addEventListener('change', (e) => {
-      handleFilesSelected(e.target.files);
-    });
+      const activeSec = document.getElementById(`section-${tabName}`);
+      const activeBtn = document.getElementById(`tabNav-${tabName}`);
+      if (activeSec) activeSec.classList.remove('hidden');
+      if (activeBtn) activeBtn.className = 'tab-btn flex items-center space-x-2 px-3.5 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition whitespace-nowrap bg-emerald-600 text-white';
+    }
 
     function formatBytes(bytes) {
       if (bytes === 0) return '0 B';
@@ -493,75 +508,82 @@
       return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
     }
 
+    // =========================================================
+    // 1. LOGICA: PDF TO MARKDOWN
+    // =========================================================
+    const md = window.markdownit({
+      html: true,
+      linkify: true,
+      highlight: function (str, lang) {
+        if (lang && hljs.getLanguage(lang)) {
+          try { return hljs.highlight(str, { language: lang }).value; } catch (__) {}
+        }
+        return '';
+      }
+    });
+
+    const dropZone = document.getElementById('dropZone');
+    const fileInput = document.getElementById('fileInput');
+    const fileInfoBar = document.getElementById('fileInfoBar');
+    const selectedFileName = document.getElementById('selectedFileName');
+    const selectedFileSize = document.getElementById('selectedFileSize');
+    const btnStartConvert = document.getElementById('btnStartConvert');
+    const loadingIndicator = document.getElementById('loadingIndicator');
+
+    let currentFiles = [];
+    let currentJobId = null;
+    let currentRawMarkdown = "";
+
+    dropZone.addEventListener('click', () => fileInput.click());
+    fileInput.addEventListener('change', (e) => handleFilesSelected(e.target.files));
+
+    ['dragenter', 'dragover'].forEach(ev => dropZone.addEventListener(ev, (e) => { e.preventDefault(); dropZone.classList.add('border-emerald-500'); }));
+    ['dragleave', 'drop'].forEach(ev => dropZone.addEventListener(ev, (e) => { e.preventDefault(); dropZone.classList.remove('border-emerald-500'); }));
+    dropZone.addEventListener('drop', (e) => handleFilesSelected(e.dataTransfer.files));
+
     function handleFilesSelected(files) {
       if (!files || files.length === 0) return;
       currentFiles = Array.from(files).filter(f => f.name.toLowerCase().endsWith('.pdf'));
-
-      if (currentFiles.length === 0) {
-        alert('Seleziona almeno un file valido con estensione .pdf');
-        return;
-      }
+      if (currentFiles.length === 0) { alert('Seleziona almeno un PDF valido.'); return; }
 
       if (currentFiles.length === 1) {
         selectedFileName.innerText = currentFiles[0].name;
         selectedFileSize.innerText = `(${formatBytes(currentFiles[0].size)})`;
-        btnStartConvert.innerHTML = '<i data-lucide="sparkles" class="w-4 h-4"></i><span>Converti PDF</span>';
+        btnStartConvert.innerHTML = '<i data-lucide="sparkles" class="w-4 h-4"></i><span>Converti in Markdown</span>';
       } else {
         selectedFileName.innerText = `${currentFiles.length} file PDF selezionati`;
-        const totalSize = currentFiles.reduce((acc, f) => acc + f.size, 0);
-        selectedFileSize.innerText = `(${formatBytes(totalSize)})`;
+        const tot = currentFiles.reduce((acc, f) => acc + f.size, 0);
+        selectedFileSize.innerText = `(${formatBytes(tot)})`;
         btnStartConvert.innerHTML = '<i data-lucide="layers" class="w-4 h-4"></i><span>Converti Tutti (Batch)</span>';
       }
       lucide.createIcons();
       fileInfoBar.classList.remove('hidden');
     }
 
-    // Esegui Conversione
     btnStartConvert.addEventListener('click', async () => {
       if (currentFiles.length === 0) return;
-
       loadingIndicator.classList.remove('hidden');
       fileInfoBar.classList.add('hidden');
-      resultSection.classList.add('hidden');
-      batchResultSection.classList.add('hidden');
-      scanAlertBox.classList.add('hidden');
+      document.getElementById('resultSection').classList.add('hidden');
+      document.getElementById('batchResultSection').classList.add('hidden');
 
       const formData = new FormData();
-      formData.append('extract_images', optImages.checked);
-      formData.append('include_frontmatter', optFrontmatter.checked);
-      formData.append('add_page_separators', optSeparators.checked);
+      formData.append('extract_images', document.getElementById('optImages').checked);
+      formData.append('include_frontmatter', document.getElementById('optFrontmatter').checked);
+      formData.append('add_page_separators', document.getElementById('optSeparators').checked);
 
       try {
         if (currentFiles.length === 1) {
           formData.append('file', currentFiles[0]);
-          const response = await fetch('/api/convert', {
-            method: 'POST',
-            body: formData
-          });
-
-          if (!response.ok) {
-            const errData = await response.json();
-            throw new Error(errData.detail || 'Errore nella conversione');
-          }
-
-          const data = await response.json();
+          const res = await fetch('/api/convert', { method: 'POST', body: formData });
+          if (!res.ok) throw new Error((await res.json()).detail || 'Errore');
+          const data = await res.json();
           renderSingleResult(data);
         } else {
-          // Batch
-          for (let f of currentFiles) {
-            formData.append('files', f);
-          }
-          const response = await fetch('/api/convert-batch', {
-            method: 'POST',
-            body: formData
-          });
-
-          if (!response.ok) {
-            const errData = await response.json();
-            throw new Error(errData.detail || 'Errore nella conversione batch');
-          }
-
-          const data = await response.json();
+          for (let f of currentFiles) formData.append('files', f);
+          const res = await fetch('/api/convert-batch', { method: 'POST', body: formData });
+          if (!res.ok) throw new Error((await res.json()).detail || 'Errore');
+          const data = await res.json();
           renderBatchResult(data);
         }
       } catch (err) {
@@ -575,124 +597,296 @@
     function renderSingleResult(data) {
       currentJobId = data.job_id;
       currentRawMarkdown = data.markdown;
-
-      statElapsed.innerText = `${data.elapsed_ms} ms`;
-      statPages.innerText = data.page_count;
-      statWords.innerText = data.word_count.toLocaleString('it-IT');
+      document.getElementById('statElapsed').innerText = `${data.elapsed_ms} ms`;
+      document.getElementById('statPages').innerText = data.page_count;
+      document.getElementById('statWords').innerText = data.word_count.toLocaleString('it-IT');
 
       if (data.image_count > 0) {
-        statImages.innerText = data.image_count;
-        statImageBadge.classList.remove('hidden');
+        document.getElementById('statImages').innerText = data.image_count;
+        document.getElementById('statImageBadge').classList.remove('hidden');
       } else {
-        statImageBadge.classList.add('hidden');
+        document.getElementById('statImageBadge').classList.add('hidden');
       }
 
       if (data.is_scanned) {
-        scanAlertMsg.innerText = data.scan_warning;
-        scanAlertBox.classList.remove('hidden');
-      }
-
-      if (data.has_zip) {
-        btnDownloadZip.classList.remove('hidden');
+        document.getElementById('scanAlertMsg').innerText = data.scan_warning;
+        document.getElementById('scanAlertBox').classList.remove('hidden');
       } else {
-        btnDownloadZip.classList.add('hidden');
+        document.getElementById('scanAlertBox').classList.add('hidden');
       }
 
-      previewFilename.innerText = data.md_filename;
-      rawMarkdownText.value = data.markdown;
-      viewPreview.innerHTML = md.render(data.markdown);
+      if (data.has_zip) document.getElementById('btnDownloadZip').classList.remove('hidden');
+      else document.getElementById('btnDownloadZip').classList.add('hidden');
 
-      resultSection.classList.remove('hidden');
-      window.scrollTo({ top: resultSection.offsetTop - 80, behavior: 'smooth' });
+      document.getElementById('previewFilename').innerText = data.md_filename;
+      document.getElementById('rawMarkdownText').value = data.markdown;
+      document.getElementById('viewPreview').innerHTML = md.render(data.markdown);
+      document.getElementById('resultSection').classList.remove('hidden');
+      window.scrollTo({ top: document.getElementById('resultSection').offsetTop - 80, behavior: 'smooth' });
     }
 
     function renderBatchResult(data) {
       currentJobId = data.job_id;
       const tbody = document.getElementById('batchTableBody');
       tbody.innerHTML = '';
-
-      document.getElementById('batchSummaryText').innerText = `${data.processed_count} documenti elaborati con successo`;
-
       data.results.forEach(item => {
         const tr = document.createElement('tr');
-        tr.className = 'hover:bg-gray-800/30 transition';
-        if (item.status === 'success') {
-          tr.innerHTML = `
-            <td class="py-3 px-4 font-mono font-medium text-white">${item.filename}</td>
-            <td class="py-3 px-4">${item.pages}</td>
-            <td class="py-3 px-4">${item.words.toLocaleString('it-IT')}</td>
-            <td class="py-3 px-4 text-emerald-400 font-medium">${item.elapsed_ms} ms</td>
-            <td class="py-3 px-4">
-              <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">Completato</span>
-            </td>
-          `;
-        } else {
-          tr.innerHTML = `
-            <td class="py-3 px-4 font-mono text-white">${item.filename}</td>
-            <td colspan="3" class="py-3 px-4 text-red-400">${item.error}</td>
-            <td class="py-3 px-4">
-              <span class="inline-flex items-center px-2 py-0.5 rounded text-xs font-semibold bg-red-500/20 text-red-400">Errore</span>
-            </td>
-          `;
-        }
+        tr.innerHTML = `
+          <td class="py-3 px-4 font-mono text-white">${item.filename}</td>
+          <td class="py-3 px-4">${item.pages}</td>
+          <td class="py-3 px-4">${item.words}</td>
+          <td class="py-3 px-4 text-emerald-400 font-medium">${item.elapsed_ms} ms</td>
+          <td class="py-3 px-4"><span class="px-2 py-0.5 rounded text-xs bg-emerald-500/20 text-emerald-400">Completato</span></td>
+        `;
         tbody.appendChild(tr);
       });
-
-      batchResultSection.classList.remove('hidden');
-      window.scrollTo({ top: batchResultSection.offsetTop - 80, behavior: 'smooth' });
+      document.getElementById('batchResultSection').classList.remove('hidden');
     }
 
-    // Tabs switch
-    tabPreview.addEventListener('click', () => {
-      tabPreview.className = 'px-3 py-1.5 text-xs font-semibold rounded-lg bg-emerald-600 text-white';
-      tabRaw.className = 'px-3 py-1.5 text-xs font-semibold rounded-lg text-gray-400 hover:text-white hover:bg-gray-800';
-      viewPreview.classList.remove('hidden');
-      viewRaw.classList.add('hidden');
+    document.getElementById('tabPreview').addEventListener('click', () => {
+      document.getElementById('tabPreview').className = 'px-3 py-1.5 text-xs font-semibold rounded-lg bg-emerald-600 text-white';
+      document.getElementById('tabRaw').className = 'px-3 py-1.5 text-xs font-semibold rounded-lg text-gray-400 hover:text-white hover:bg-gray-800';
+      document.getElementById('viewPreview').classList.remove('hidden');
+      document.getElementById('viewRaw').classList.add('hidden');
     });
 
-    tabRaw.addEventListener('click', () => {
-      tabRaw.className = 'px-3 py-1.5 text-xs font-semibold rounded-lg bg-emerald-600 text-white';
-      tabPreview.className = 'px-3 py-1.5 text-xs font-semibold rounded-lg text-gray-400 hover:text-white hover:bg-gray-800';
-      viewRaw.classList.remove('hidden');
-      viewPreview.classList.add('hidden');
+    document.getElementById('tabRaw').addEventListener('click', () => {
+      document.getElementById('tabRaw').className = 'px-3 py-1.5 text-xs font-semibold rounded-lg bg-emerald-600 text-white';
+      document.getElementById('tabPreview').className = 'px-3 py-1.5 text-xs font-semibold rounded-lg text-gray-400 hover:text-white hover:bg-gray-800';
+      document.getElementById('viewRaw').classList.remove('hidden');
+      document.getElementById('viewPreview').classList.add('hidden');
     });
 
-    // Copia Markdown
-    btnCopy.addEventListener('click', async () => {
+    document.getElementById('btnCopy').addEventListener('click', async () => {
       if (!currentRawMarkdown) return;
       await navigator.clipboard.writeText(currentRawMarkdown);
-      copyText.innerText = 'Copiato!';
-      btnCopy.classList.add('text-emerald-400', 'border-emerald-500');
-      setTimeout(() => {
-        copyText.innerText = 'Copia MD';
-        btnCopy.classList.remove('text-emerald-400', 'border-emerald-500');
-      }, 2000);
+      const ct = document.getElementById('copyText');
+      ct.innerText = 'Copiato!';
+      setTimeout(() => ct.innerText = 'Copia MD', 2000);
     });
 
-    // Download MD
-    btnDownloadMd.addEventListener('click', () => {
-      if (!currentJobId) return;
-      window.location.href = `/api/download/${currentJobId}/md`;
+    document.getElementById('btnDownloadMd').addEventListener('click', () => {
+      if (currentJobId) window.location.href = `/api/download/${currentJobId}/md`;
+    });
+    document.getElementById('btnDownloadZip').addEventListener('click', () => {
+      if (currentJobId) window.location.href = `/api/download/${currentJobId}/zip`;
+    });
+    document.getElementById('btnDownloadBatchZip').addEventListener('click', () => {
+      if (currentJobId) window.location.href = `/api/download/${currentJobId}/zip`;
     });
 
-    // Download ZIP
-    btnDownloadZip.addEventListener('click', () => {
-      if (!currentJobId) return;
-      window.location.href = `/api/download/${currentJobId}/zip`;
+    // =========================================================
+    // 2. LOGICA: COMPRIMI PDF
+    // =========================================================
+    let compressFile = null;
+    let selectedCompressLevel = 'medium';
+
+    function selectCompressLevel(lvl) {
+      selectedCompressLevel = lvl;
+      ['light', 'medium', 'strong'].forEach(l => {
+        const btn = document.getElementById(`lvl-${l}`);
+        if (l === lvl) {
+          btn.className = 'compress-lvl-btn border-2 border-emerald-500 bg-emerald-500/10 rounded-xl p-3 text-center text-xs transition';
+        } else {
+          btn.className = 'compress-lvl-btn border border-gray-700 rounded-xl p-3 text-center text-xs hover:border-emerald-500 transition';
+        }
+      });
+    }
+
+    const dropZoneCompress = document.getElementById('dropZoneCompress');
+    const fileCompressInput = document.getElementById('fileCompressInput');
+    const btnExecuteCompress = document.getElementById('btnExecuteCompress');
+
+    dropZoneCompress.addEventListener('click', () => fileCompressInput.click());
+    fileCompressInput.addEventListener('change', (e) => {
+      if (e.target.files.length > 0) {
+        compressFile = e.target.files[0];
+        document.getElementById('compressFileLabel').innerText = `${compressFile.name} (${formatBytes(compressFile.size)})`;
+        btnExecuteCompress.removeAttribute('disabled');
+      }
     });
 
-    btnDownloadBatchZip.addEventListener('click', () => {
-      if (!currentJobId) return;
-      window.location.href = `/api/download/${currentJobId}/zip`;
+    btnExecuteCompress.addEventListener('click', async () => {
+      if (!compressFile) return;
+      btnExecuteCompress.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i><span>Compressione in corso...</span>';
+      btnExecuteCompress.disabled = true;
+
+      const fd = new FormData();
+      fd.append('file', compressFile);
+      fd.append('level', selectedCompressLevel);
+
+      try {
+        const res = await fetch('/api/compress', { method: 'POST', body: fd });
+        if (!res.ok) throw new Error('Errore durante la compressione');
+
+        const origSize = res.headers.get('X-Original-Size');
+        const newSize = res.headers.get('X-New-Size');
+        const savedPct = res.headers.get('X-Saved-Percent');
+
+        const blob = await res.blob();
+        const downloadUrl = URL.createObjectURL(blob);
+
+        document.getElementById('compOrigSize').innerText = formatBytes(parseInt(origSize));
+        document.getElementById('compNewSize').innerText = formatBytes(parseInt(newSize));
+        document.getElementById('compSavedPct').innerText = `-${savedPct}%`;
+
+        const btnDl = document.getElementById('btnDownloadCompressed');
+        btnDl.href = downloadUrl;
+        btnDl.download = `${compressFile.name.replace(/\.pdf$/i, '')}_compresso.pdf`;
+
+        document.getElementById('compressResultBox').classList.remove('hidden');
+      } catch (err) {
+        alert(err.message);
+      } finally {
+        btnExecuteCompress.innerHTML = '<i data-lucide="zap" class="w-5 h-5"></i><span>Comprimi Ora</span>';
+        btnExecuteCompress.disabled = false;
+        lucide.createIcons();
+      }
     });
 
-    // Modal Tips
-    btnOpenTips.addEventListener('click', () => tipsModal.classList.remove('hidden'));
-    btnCloseTips.addEventListener('click', () => tipsModal.classList.add('hidden'));
-    btnCloseTipsBtn.addEventListener('click', () => tipsModal.classList.add('hidden'));
-    tipsModal.addEventListener('click', (e) => {
-      if (e.target === tipsModal) tipsModal.classList.add('hidden');
+    // =========================================================
+    // 3. LOGICA: UNISCI PDF (MERGE)
+    // =========================================================
+    let mergeFiles = [];
+    const dropZoneMerge = document.getElementById('dropZoneMerge');
+    const fileMergeInput = document.getElementById('fileMergeInput');
+    const btnExecuteMerge = document.getElementById('btnExecuteMerge');
+    const mergeFileList = document.getElementById('mergeFileList');
+
+    dropZoneMerge.addEventListener('click', () => fileMergeInput.click());
+    fileMergeInput.addEventListener('change', (e) => {
+      mergeFiles = Array.from(e.target.files).filter(f => f.name.toLowerCase().endsWith('.pdf'));
+      mergeFileList.innerHTML = '';
+      mergeFiles.forEach((f, idx) => {
+        const li = document.createElement('li');
+        li.className = 'px-3 py-2 flex items-center justify-between text-gray-300';
+        li.innerHTML = `<span>${idx + 1}. ${f.name}</span><span class="text-gray-500">${formatBytes(f.size)}</span>`;
+        mergeFileList.appendChild(li);
+      });
+      btnExecuteMerge.disabled = mergeFiles.length < 2;
     });
+
+    btnExecuteMerge.addEventListener('click', async () => {
+      if (mergeFiles.length < 2) return;
+      btnExecuteMerge.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i><span>Unione in corso...</span>';
+      btnExecuteMerge.disabled = true;
+
+      const fd = new FormData();
+      mergeFiles.forEach(f => fd.append('files', f));
+
+      try {
+        const res = await fetch('/api/merge', { method: 'POST', body: fd });
+        if (!res.ok) throw new Error('Errore durante l\'unione');
+        const blob = await res.blob();
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = 'documento_unito.pdf';
+        a.click();
+      } catch (err) {
+        alert(err.message);
+      } finally {
+        btnExecuteMerge.innerHTML = '<i data-lucide="combine" class="w-5 h-5"></i><span>Unisci PDF e Scarica</span>';
+        btnExecuteMerge.disabled = false;
+        lucide.createIcons();
+      }
+    });
+
+    // =========================================================
+    // 4. LOGICA: DIVIDI PDF (SPLIT)
+    // =========================================================
+    let splitFile = null;
+    const dropZoneSplit = document.getElementById('dropZoneSplit');
+    const fileSplitInput = document.getElementById('fileSplitInput');
+    const splitPagesInput = document.getElementById('splitPagesInput');
+    const btnExecuteSplit = document.getElementById('btnExecuteSplit');
+
+    dropZoneSplit.addEventListener('click', () => fileSplitInput.click());
+    fileSplitInput.addEventListener('change', (e) => {
+      if (e.target.files.length > 0) {
+        splitFile = e.target.files[0];
+        document.getElementById('splitFileLabel').innerText = `${splitFile.name} (${formatBytes(splitFile.size)})`;
+        checkSplitReady();
+      }
+    });
+    splitPagesInput.addEventListener('input', checkSplitReady);
+
+    function checkSplitReady() {
+      btnExecuteSplit.disabled = !(splitFile && splitPagesInput.value.trim().length > 0);
+    }
+
+    btnExecuteSplit.addEventListener('click', async () => {
+      if (!splitFile) return;
+      btnExecuteSplit.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i><span>Estrazione in corso...</span>';
+      btnExecuteSplit.disabled = true;
+
+      const fd = new FormData();
+      fd.append('file', splitFile);
+      fd.append('page_selection', splitPagesInput.value.trim());
+
+      try {
+        const res = await fetch('/api/split', { method: 'POST', body: fd });
+        if (!res.ok) throw new Error((await res.json()).detail || 'Errore divisione');
+        const blob = await res.blob();
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `${splitFile.name.replace(/\.pdf$/i, '')}_estratto.pdf`;
+        a.click();
+      } catch (err) {
+        alert(err.message);
+      } finally {
+        btnExecuteSplit.innerHTML = '<i data-lucide="download" class="w-5 h-5"></i><span>Estrai Pagine e Scarica</span>';
+        checkSplitReady();
+        lucide.createIcons();
+      }
+    });
+
+    // =========================================================
+    // 5. LOGICA: PDF TO IMMAGINI
+    // =========================================================
+    let imgFile = null;
+    const dropZoneImg = document.getElementById('dropZoneImg');
+    const fileImgInput = document.getElementById('fileImgInput');
+    const btnExecutePdfToImg = document.getElementById('btnExecutePdfToImg');
+
+    dropZoneImg.addEventListener('click', () => fileImgInput.click());
+    fileImgInput.addEventListener('change', (e) => {
+      if (e.target.files.length > 0) {
+        imgFile = e.target.files[0];
+        document.getElementById('imgFileLabel').innerText = `${imgFile.name} (${formatBytes(imgFile.size)})`;
+        btnExecutePdfToImg.disabled = false;
+      }
+    });
+
+    btnExecutePdfToImg.addEventListener('click', async () => {
+      if (!imgFile) return;
+      btnExecutePdfToImg.innerHTML = '<i data-lucide="loader-2" class="w-5 h-5 animate-spin"></i><span>Generazione immagini...</span>';
+      btnExecutePdfToImg.disabled = true;
+
+      const fd = new FormData();
+      fd.append('file', imgFile);
+      fd.append('dpi', document.getElementById('imgDpiSelect').value);
+
+      try {
+        const res = await fetch('/api/pdf-to-images', { method: 'POST', body: fd });
+        if (!res.ok) throw new Error('Errore esportazione immagini');
+        const blob = await res.blob();
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = `${imgFile.name.replace(/\.pdf$/i, '')}_immagini.zip`;
+        a.click();
+      } catch (err) {
+        alert(err.message);
+      } finally {
+        btnExecutePdfToImg.innerHTML = '<i data-lucide="archive" class="w-5 h-5"></i><span>Esporta Tutte le Pagine in ZIP</span>';
+        btnExecutePdfToImg.disabled = false;
+        lucide.createIcons();
+      }
+    });
+
+    // Tips Modal
+    document.getElementById('btnOpenTips').addEventListener('click', () => document.getElementById('tipsModal').classList.remove('hidden'));
+    document.getElementById('btnCloseTips').addEventListener('click', () => document.getElementById('tipsModal').classList.add('hidden'));
+    document.getElementById('btnCloseTipsBtn').addEventListener('click', () => document.getElementById('tipsModal').classList.add('hidden'));
   </script>
 </body>
 </html>

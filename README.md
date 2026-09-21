@@ -1,95 +1,55 @@
-# DocToMD - Convertitore PDF in Markdown Ultra-Veloce
+# DocToMD Suite - Il Coltellino Svizzero per Documenti PDF
 
-Applicazione moderna, veloce e completa per convertire documenti PDF in Markdown pulito e strutturato, ottimizzata per leggibilità umana, Obsidian/Notion e pipeline AI/RAG.
+Suite multifunzione moderna, ultra-veloce e 100% privata per lavorare con file PDF e Markdown.
 
-Sviluppata con **PyMuPDF4LLM**, **FastAPI** e **Tailwind CSS**.
-
----
-
-## ⚡ Caratteristiche Principali
-
-- 🚀 **Velocità Istantanea**: Oltre 100-200 pagine al secondo su CPU standard, senza necessità di GPU o librerie pesanti.
-- 📊 **Tabelle Markdown Perfette**: Ricostruisce le griglie di celle e le converte in tabelle compatibili con GitHub Flavored Markdown (`| Colonna | Valore |`).
-- 🏷️ **Gerarchia Titoli Intelligente**: Mappatura automatica dei font per rilevare `# H1`, `## H2`, `### H3`.
-- 🖼️ **Estrazione Immagini**: Salva tutte le immagini incorporate e le collega automaticamente nel Markdown, fornendo un archivio ZIP pronto all'uso.
-- 🧹 **Post-Processing Intelligente**:
-  - Rimozione automatica delle sillabazioni di fine riga (De-hyphenation: `inter- \n vento` $\rightarrow$ `intervento`).
-  - Normalizzazione delle righe vuote e pulizia degli spazi.
-- 📑 **Metadati YAML (Frontmatter)**: Inclusione opzionale di titolo, autore, conteggio pagine e data.
-- 🔍 **Rilevamento Scansioni (OCR Alert)**: Notifica automatica se il PDF è un'immagine/fotocopia con poco o nessun testo vettoriale.
-- 💻 **Doppia Interfaccia**:
-  - **Web UI Moderna**: Drag & Drop, batch upload, anteprima affiancata (HTML formattato vs Raw Markdown), copia con un clic.
-  - **CLI per Terminale**: Conversione di singoli file o intere cartelle con un solo comando.
+Sviluppata con **PyMuPDF (C-Engine)**, **FastAPI** e **Tailwind CSS**.
 
 ---
 
-## 🚀 Avvio Rapido
+## 🛠️ Strumenti Inclusi nella Suite
 
-### Metodo 1: Doppio click su macOS
-Fai doppio click sul file **`start.command`** presente nella cartella per avviare il server e aprire automaticamente il browser su `http://localhost:8000`.
+1. 📑 **PDF ➔ Markdown (Ultra-Fast)**
+   - Conversione istantanea con conservazione dei titoli (`#`, `##`, `###`), elenchi e grassetti.
+   - Generazione tabelle compatibili con GitHub Flavored Markdown (`| col1 | col2 |`).
+   - De-sillabazione automatica di fine riga (`inter-\n vento` $\rightarrow$ `intervento`).
+   - Estrazione immagini incorporate e metadati YAML Frontmatter.
+   - Anteprima live formattata e sorgente raw con pulsante *"Copia MD"*.
 
-### Metodo 2: Da Terminale
+2. 🗜️ **Comprimi PDF (Intelligent Compressor)**
+   - Riduzione del peso dei PDF pesanti fino al 70% preservando la leggibilità.
+   - 3 livelli: Leggera (stampa), Bilanciata (web/schermo), Forte (invio email).
+   - Calcolo e visualizzazione immediata dello spazio risparmiato.
+
+3. 🧩 **Unisci PDF (Merge)**
+   - Combina 2 o più file PDF in un unico documento ordinato con 1 clic.
+
+4. ✂️ **Dividi ed Estrai Pagine (Split)**
+   - Estrai intervalli specifici di pagine (es. `1-3, 5, 8-12`) in un nuovo PDF pulito.
+
+5. 🖼️ **PDF ➔ Immagini (High Resolution)**
+   - Esporta ogni pagina del PDF come immagine PNG ad alta risoluzione (150 o 300 DPI) racchiusa in uno ZIP.
+
+---
+
+## 🚀 Avvio Locale
+
+### Su macOS (Doppio Click)
+Fai doppio click sul file **`start.command`** per avviare il server e aprire l'interfaccia nel browser.
+
+### Da Terminale
 ```bash
 ./run.sh
 ```
 
----
-
-## 🖥️ Utilizzo da Riga di Comando (CLI)
-
-Puoi usare la CLI per convertire singoli file o elaborare intere directory:
-
+### Tramite CLI (Terminale)
 ```bash
-# Attiva l'ambiente virtuale
-source .venv/bin/activate
-
-# 1. Converti un singolo file PDF
-python cli.py documento.pdf
-
-# 2. Converti ed estrai anche le immagini incorporate
-python cli.py documento.pdf -o mio_output.md --images
-
-# 3. Converti un'intera cartella di file PDF
-python cli.py ./cartella_pdf/ -o ./output_md/
-
-# 4. Aggiungi separatori visivi per ogni pagina
-python cli.py documento.pdf --separators
+./.venv/bin/python cli.py documento.pdf -o risultato.md --images
 ```
 
 ---
 
-## 💡 Dritte e Best Practice per Risultati Perfetti
-
-Consulta la guida approfondita inclusa nel progetto:
-👉 [GUIDA_E_DRITTE.md](./GUIDA_E_DRITTE.md)
-
-Troverai le soluzioni e i consigli pratici su:
-1. Come gestire PDF scansionati vs PDF nativi.
-2. Perché la de-sillabazione è cruciale per i sistemi RAG ed embedding.
-3. Come escludere header e numeri di pagina ripetuti.
-4. Come trattare formule matematiche complesse (LaTeX) e layout multi-colonna.
-5. Confronto prestazionale e di costi rispetto a Vision LLM e OCR tradizionali.
-
----
-
-## 🛠️ Struttura del Progetto
-
-```
-pdf to mark down/
-├── app/
-│   ├── converter.py       # Motore di conversione ed elaborazione del testo
-│   ├── server.py          # Server FastAPI con endpoint singoli, batch e download
-│   └── templates/
-│       └── index.html     # Interfaccia Web reattiva e moderna
-├── cli.py                 # Strumento da riga di comando (CLI)
-├── GUIDA_E_DRITTE.md      # Guida tecnica e consigli pratici
-├── requirements.txt       # Dipendenze Python
-├── run.sh                 # Script di avvio per macOS / Linux
-├── start.command          # Launcher con doppio click per macOS
-└── README.md              # Questo file
-```
-
----
-
-## 🔒 Privacy & Sicurezza
-Tutta l'elaborazione avviene al **100% in locale** sul tuo computer. Nessun dato, documento o immagine viene trasmesso a server cloud di terze parti.
+## 🌐 Deploy Cloud Gratuito (Render.com)
+Il progetto è configurato per il deploy continuo su Render:
+- **Build Command**: `pip install -r requirements.txt`
+- **Start Command**: `uvicorn app.server:app --host 0.0.0.0 --port $PORT`
+Ad ogni `git push`, Render aggiorna automaticamente la web app online.

@@ -1,6 +1,11 @@
 """
-DocToMD - FastAPI Web Server
-Fornisce API REST e Interfaccia Web per la conversione di PDF in Markdown.
+DocToMD Suite - FastAPI Web Server
+Fornisce API REST e Interfaccia Web moderna per la Suite di elaborazione PDF:
+1. Conversione PDF in Markdown
+2. Compressione intelligente PDF
+3. Unione di più PDF (Merge)
+4. Divisione ed estrazione pagine (Split)
+5. Esportazione pagine PDF in immagini PNG (PDF to Images)
 """
 
 import os
@@ -8,22 +13,27 @@ import io
 import uuid
 import shutil
 import zipfile
-import tempfile
 from pathlib import Path
 from typing import List, Optional
 
 from fastapi import FastAPI, File, Form, UploadFile, HTTPException, BackgroundTasks
-from fastapi.responses import HTMLResponse, FileResponse, JSONResponse
+from fastapi.responses import HTMLResponse, FileResponse, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.templating import Jinja2Templates
 from starlette.requests import Request
 
-from app.converter import convert_pdf_to_markdown
+from app.converter import (
+    convert_pdf_to_markdown,
+    compress_pdf,
+    merge_pdfs,
+    split_pdf,
+    pdf_to_images_zip
+)
 
 app = FastAPI(
-    title="DocToMD - PDF to Markdown Converter",
-    description="Applicazione moderna e ultra-veloce per convertire documenti PDF in Markdown pulito",
-    version="1.0.0"
+    title="DocToMD Suite - Swiss Army Knife for Documents",
+    description="Applicazione moderna e ultra-veloce per convertire, comprimere, unire e dividere documenti PDF",
+    version="2.0.0"
 )
 
 app.add_middleware(
@@ -43,7 +53,7 @@ templates = Jinja2Templates(directory=str(TEMPLATES_DIR))
 
 
 def cleanup_temp_file(filepath: Path):
-    """Pulisce file o cartelle temporanee dopo il download."""
+    """Pulisce file o cartelle temporanee."""
     try:
         if filepath.is_file():
             filepath.unlink(missing_ok=True)
@@ -55,15 +65,19 @@ def cleanup_temp_file(filepath: Path):
 
 @app.get("/", response_class=HTMLResponse)
 async def home(request: Request):
-    """Serve la pagina principale dell'interfaccia utente."""
+    """Serve la pagina principale dell'interfaccia utente (Suite DocToMD)."""
     return templates.TemplateResponse(request=request, name="index.html")
 
 
 @app.get("/api/health")
 async def health():
     """Health check endpoint."""
-    return {"status": "ok", "service": "DocToMD"}
+    return {"status": "ok", "service": "DocToMD Suite", "version": "2.0.0"}
 
+
+# =====================================================================
+# 1. API: CONVERSIONE PDF IN MARKDOWN
+# =====================================================================
 
 @app.post("/api/convert")
 async def convert_single_pdf(
@@ -72,10 +86,7 @@ async def convert_single_pdf(
     include_frontmatter: bool = Form(True),
     add_page_separators: bool = Form(False),
 ):
-    """
-    Converte un singolo file PDF in Markdown.
-    Restituisce i dati del Markdown convertito e ID per il download.
-    """
+    """Converte un singolo PDF in Markdown strutturato."""
     if not file.filename.lower().endswith(".pdf"):
         raise HTTPException(status_code=400, detail="Il file fornito deve essere in formato PDF.")
 
@@ -89,7 +100,6 @@ async def convert_single_pdf(
 
     image_dir = job_dir / "images" if extract_images else None
     image_dir_str = str(image_dir) if image_dir else None
-
     base_name = Path(file.filename).stem
 
     try:
@@ -102,7 +112,6 @@ async def convert_single_pdf(
             add_page_separators=add_page_separators
         )
 
-        # Salva il file Markdown su disco per il download
         md_filename = f"{base_name}.md"
         md_path = job_dir / md_filename
         with open(md_path, "w", encoding="utf-8") as f:
@@ -111,14 +120,11 @@ async def convert_single_pdf(
         zip_available = False
         zip_filename = None
 
-        # Se ci sono immagini estratte, crea anche uno zip con .md + cartella immagini
         if extract_images and image_dir and image_dir.exists() and result["image_count"] > 0:
             zip_filename = f"{base_name}_markdown.zip"
             zip_path = job_dir / zip_filename
             with zipfile.ZipFile(zip_path, "w", zipfile.ZIP_DEFLATED) as zip_file:
-                # Aggiungi file markdown
                 zip_file.write(md_path, arcname=md_filename)
-                # Aggiungi immagini
                 for img_file in image_dir.glob("*.*"):
                     zip_file.write(img_file, arcname=f"images/{img_file.name}")
             zip_available = True
@@ -141,7 +147,7 @@ async def convert_single_pdf(
         }
     except Exception as e:
         cleanup_temp_file(job_dir)
-        raise HTTPException(status_code=500, detail=f"Errore durante la conversione: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Errore nella conversione: {str(e)}")
 
 
 @app.post("/api/convert-batch")
@@ -151,9 +157,7 @@ async def convert_batch_pdfs(
     include_frontmatter: bool = Form(True),
     add_page_separators: bool = Form(False),
 ):
-    """
-    Converte un elenco di file PDF e li raggruppa in un unico archivio ZIP scaricabile.
-    """
+    """Converte più file PDF e li raggruppa in un unico archivio ZIP scaricabile."""
     if not files:
         raise HTTPException(status_code=400, detail="Nessun file selezionato.")
 
@@ -186,11 +190,9 @@ async def convert_batch_pdfs(
                     add_page_separators=add_page_separators
                 )
 
-                # Salva md nel master zip
                 md_bytes = res["markdown"].encode("utf-8")
                 master_zip.writestr(f"{base_name}.md", md_bytes)
 
-                # Se ci sono immagini, salvale nel zip
                 if extract_images and file_img_dir and file_img_dir.exists():
                     for img in file_img_dir.glob("*.*"):
                         master_zip.write(img, arcname=f"{base_name}_images/{img.name}")
@@ -220,12 +222,153 @@ async def convert_batch_pdfs(
     }
 
 
+# =====================================================================
+# 2. API: COMPRESSIONE PDF
+# =====================================================================
+
+@app.post("/api/compress")
+async def api_compress_pdf(
+    file: UploadFile = File(...),
+    level: str = Form("medium")
+):
+    """Comprime un file PDF e restituisce il file ottimizzato con le statistiche."""
+    if not file.filename.lower().endswith(".pdf"):
+        raise HTTPException(status_code=400, detail="Il file fornito deve essere un PDF.")
+
+    contents = await file.read()
+    if len(contents) == 0:
+        raise HTTPException(status_code=400, detail="Il file caricato è vuoto.")
+
+    try:
+        compressed_bytes, orig_size, new_size, saved_pct = compress_pdf(contents, level=level)
+        clean_name = Path(file.filename).stem
+        download_name = f"{clean_name}_compresso.pdf"
+
+        # Headers con statistiche per il client
+        headers = {
+            "Content-Disposition": f'attachment; filename="{download_name}"',
+            "X-Original-Size": str(orig_size),
+            "X-New-Size": str(new_size),
+            "X-Saved-Percent": str(saved_pct)
+        }
+
+        return Response(
+            content=compressed_bytes,
+            media_type="application/pdf",
+            headers=headers
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Errore durante la compressione: {str(e)}")
+
+
+# =====================================================================
+# 3. API: UNISCI PDF (MERGE)
+# =====================================================================
+
+@app.post("/api/merge")
+async def api_merge_pdfs(files: List[UploadFile] = File(...)):
+    """Unisce più file PDF in un unico documento."""
+    if len(files) < 2:
+        raise HTTPException(status_code=400, detail="Seleziona almeno 2 file PDF da unire.")
+
+    pdf_buffers = []
+    for f in files:
+        if f.filename.lower().endswith(".pdf"):
+            data = await f.read()
+            if len(data) > 0:
+                pdf_buffers.append(data)
+
+    if len(pdf_buffers) < 2:
+        raise HTTPException(status_code=400, detail="Almeno 2 file PDF validi devono essere forniti.")
+
+    try:
+        merged_bytes, total_pages = merge_pdfs(pdf_buffers)
+        headers = {
+            "Content-Disposition": 'attachment; filename="documento_unito.pdf"',
+            "X-Total-Pages": str(total_pages)
+        }
+        return Response(
+            content=merged_bytes,
+            media_type="application/pdf",
+            headers=headers
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Errore durante l'unione dei PDF: {str(e)}")
+
+
+# =====================================================================
+# 4. API: DIVIDI PDF (SPLIT)
+# =====================================================================
+
+@app.post("/api/split")
+async def api_split_pdf(
+    file: UploadFile = File(...),
+    page_selection: str = Form(...)
+):
+    """Estrae un intervallo di pagine (es. '1-3, 5') da un PDF."""
+    if not file.filename.lower().endswith(".pdf"):
+        raise HTTPException(status_code=400, detail="Il file fornito deve essere un PDF.")
+
+    contents = await file.read()
+    if len(contents) == 0:
+        raise HTTPException(status_code=400, detail="Il file caricato è vuoto.")
+
+    try:
+        split_bytes, count = split_pdf(contents, page_selection)
+        clean_name = Path(file.filename).stem
+        headers = {
+            "Content-Disposition": f'attachment; filename="{clean_name}_estratto.pdf"',
+            "X-Extracted-Pages": str(count)
+        }
+        return Response(
+            content=split_bytes,
+            media_type="application/pdf",
+            headers=headers
+        )
+    except Exception as e:
+        raise HTTPException(status_code=400, detail=f"Errore durante la divisione: {str(e)}")
+
+
+# =====================================================================
+# 5. API: PDF TO IMMAGINI
+# =====================================================================
+
+@app.post("/api/pdf-to-images")
+async def api_pdf_to_images(
+    file: UploadFile = File(...),
+    dpi: int = Form(150)
+):
+    """Converte ogni pagina del PDF in un'immagine PNG racchiusa in uno ZIP."""
+    if not file.filename.lower().endswith(".pdf"):
+        raise HTTPException(status_code=400, detail="Il file fornito deve essere un PDF.")
+
+    contents = await file.read()
+    if len(contents) == 0:
+        raise HTTPException(status_code=400, detail="Il file caricato è vuoto.")
+
+    try:
+        zip_bytes, page_count = pdf_to_images_zip(contents, dpi=dpi)
+        clean_name = Path(file.filename).stem
+        headers = {
+            "Content-Disposition": f'attachment; filename="{clean_name}_immagini.zip"',
+            "X-Image-Count": str(page_count)
+        }
+        return Response(
+            content=zip_bytes,
+            media_type="application/zip",
+            headers=headers
+        )
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"Errore durante l'esportazione in immagini: {str(e)}")
+
+
+# =====================================================================
+# 6. DOWNLOAD HANDLER PER LE SESSIONI MARKDOWN
+# =====================================================================
+
 @app.get("/api/download/{job_id}/{file_type}")
 async def download_file(job_id: str, file_type: str, background_tasks: BackgroundTasks):
-    """
-    Scarica il file generato (.md o .zip).
-    file_type: 'md' oppure 'zip'.
-    """
+    """Scarica il file generato dalla sessione Markdown (.md o .zip)."""
     job_dir = STORAGE_DIR / job_id
     if not job_dir.exists():
         raise HTTPException(status_code=404, detail="Sessione di conversione scaduta o non trovata.")
