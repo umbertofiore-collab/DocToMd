@@ -23,7 +23,9 @@ from app.converter import (
     compress_pdf,
     merge_pdfs,
     split_pdf,
-    pdf_to_images_zip
+    pdf_to_images_zip,
+    perform_ocr_on_image,
+    perform_ocr_on_pdf
 )
 from app.server import app
 
@@ -220,3 +222,71 @@ def test_fastapi_endpoints_suite(sample_pdf_path):
         )
     assert res_img.status_code == 200
     assert res_img.headers["content-type"] == "application/zip"
+
+
+def test_perform_ocr_on_image():
+    """Test OCR su immagine sintetica generata con PIL."""
+    from PIL import Image, ImageDraw
+
+    img = Image.new("RGB", (400, 100), color=(255, 255, 255))
+    draw = ImageDraw.Draw(img)
+    draw.text((20, 35), "LOW CONFIDENCE CLUB", fill=(0, 0, 0))
+
+    buf = io.BytesIO()
+    img.save(buf, format="PNG")
+    png_bytes = buf.getvalue()
+
+    result = perform_ocr_on_image(png_bytes)
+    assert result["page_count"] == 1
+    assert "CONFIDENCE" in result["markdown"].upper() or "CLUB" in result["markdown"].upper()
+    assert result["confidence"] > 50
+
+
+def test_perform_ocr_on_pdf():
+    """Test OCR su un PDF contenente un'immagine scansionata con testo."""
+    from PIL import Image, ImageDraw
+
+    img = Image.new("RGB", (500, 150), color=(255, 255, 255))
+    draw = ImageDraw.Draw(img)
+    draw.text((20, 50), "RAPID OCR LOCAL TEST", fill=(0, 0, 0))
+
+    buf = io.BytesIO()
+    img.save(buf, format="PNG")
+    png_bytes = buf.getvalue()
+
+    doc = fitz.open()
+    page = doc.new_page(width=500, height=150)
+    page.insert_image(fitz.Rect(0, 0, 500, 150), stream=png_bytes)
+    pdf_bytes = doc.tobytes()
+    doc.close()
+
+    result = perform_ocr_on_pdf(pdf_bytes)
+    assert result["page_count"] == 1
+    assert "RAPID" in result["markdown"].upper() or "LOCAL" in result["markdown"].upper()
+    assert result["confidence"] > 50
+
+
+def test_fastapi_ocr_endpoint():
+    """Test endpoint API /api/ocr con immagine e con PDF."""
+    from PIL import Image, ImageDraw
+    client = TestClient(app)
+
+    # 1. OCR con Immagine PNG
+    img = Image.new("RGB", (400, 100), color=(255, 255, 255))
+    draw = ImageDraw.Draw(img)
+    draw.text((20, 35), "DOCTOMD OCR SYSTEM", fill=(0, 0, 0))
+
+    buf = io.BytesIO()
+    img.save(buf, format="PNG")
+    png_bytes = buf.getvalue()
+
+    res = client.post(
+        "/api/ocr",
+        files={"file": ("scan_sample.png", png_bytes, "image/png")}
+    )
+    assert res.status_code == 200
+    data = res.json()
+    assert data["success"] is True
+    assert "DOCTOMD" in data["markdown"].upper() or "SYSTEM" in data["markdown"].upper()
+    assert data["confidence"] > 50
+

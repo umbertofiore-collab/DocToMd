@@ -27,7 +27,9 @@ from app.converter import (
     compress_pdf,
     merge_pdfs,
     split_pdf,
-    pdf_to_images_zip
+    pdf_to_images_zip,
+    perform_ocr_on_image,
+    perform_ocr_on_pdf
 )
 
 app = FastAPI(
@@ -368,7 +370,62 @@ async def api_pdf_to_images(
 
 
 # =====================================================================
-# 6. DOWNLOAD HANDLER PER LE SESSIONI MARKDOWN
+# 6. API: RICONOSCIMENTO OTTICO CARATTERI (OCR)
+# =====================================================================
+
+@app.post("/api/ocr")
+async def api_ocr(file: UploadFile = File(...)):
+    """
+    Esegue OCR su PDF scansionati o file immagine (PNG, JPG, JPEG, WEBP).
+    Restituisce Markdown strutturato, confidenza media e tempo.
+    """
+    filename_lower = file.filename.lower()
+    valid_extensions = (".pdf", ".png", ".jpg", ".jpeg", ".webp")
+    if not any(filename_lower.endswith(ext) for ext in valid_extensions):
+        raise HTTPException(
+            status_code=400,
+            detail="Formato non supportato. Carica un PDF o un'immagine (.png, .jpg, .jpeg, .webp)."
+        )
+
+    contents = await file.read()
+    if len(contents) == 0:
+        raise HTTPException(status_code=400, detail="Il file caricato è vuoto.")
+
+    job_id = str(uuid.uuid4())
+    job_dir = STORAGE_DIR / job_id
+    job_dir.mkdir(parents=True, exist_ok=True)
+    base_name = Path(file.filename).stem
+
+    try:
+        if filename_lower.endswith(".pdf"):
+            result = perform_ocr_on_pdf(contents)
+        else:
+            result = perform_ocr_on_image(contents)
+
+        md_filename = f"{base_name}_ocr.md"
+        md_path = job_dir / md_filename
+        with open(md_path, "w", encoding="utf-8") as f:
+            f.write(result["markdown"])
+
+        return {
+            "success": True,
+            "filename": file.filename,
+            "job_id": job_id,
+            "md_filename": md_filename,
+            "page_count": result.get("page_count", 1),
+            "word_count": result["word_count"],
+            "confidence": result["confidence"],
+            "elapsed_ms": result["elapsed_ms"],
+            "lines_count": result["lines_count"],
+            "markdown": result["markdown"]
+        }
+    except Exception as e:
+        cleanup_temp_file(job_dir)
+        raise HTTPException(status_code=500, detail=f"Errore durante l'elaborazione OCR: {str(e)}")
+
+
+# =====================================================================
+# 7. DOWNLOAD HANDLER PER LE SESSIONI MARKDOWN & OCR
 # =====================================================================
 
 @app.get("/api/download/{job_id}/{file_type}")

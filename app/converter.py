@@ -1,11 +1,12 @@
 """
-DocToMD Suite - Motore di Elaborazione PDF ad Alte Prestazioni.
+DocToMD Suite - Motore di Elaborazione PDF & OCR ad Alte Prestazioni.
 Fornisce strumenti avanzati per:
 1. Conversione PDF in Markdown (PyMuPDF4LLM)
 2. Compressione intelligente PDF (ottimizzazione immagini e stream)
 3. Unione di più PDF (Merge)
 4. Divisione ed estrazione pagine (Split)
 5. Conversione pagine PDF in immagini PNG ad alta risoluzione
+6. Riconoscimento Ottico dei Caratteri (OCR Engine) per PDF scansionati e immagini
 """
 
 import os
@@ -13,9 +14,21 @@ import io
 import re
 import time
 import zipfile
+import numpy as np
 import pymupdf as fitz
 from typing import Dict, Any, Optional, List, Tuple
 from pathlib import Path
+from PIL import Image
+
+# Singleton lazy loader per l'engine OCR
+_ocr_engine = None
+
+def get_ocr_engine():
+    global _ocr_engine
+    if _ocr_engine is None:
+        from rapidocr_onnxruntime import RapidOCR
+        _ocr_engine = RapidOCR()
+    return _ocr_engine
 
 
 # =====================================================================
@@ -67,8 +80,8 @@ def is_scanned_pdf(doc: fitz.Document, text_content: str) -> Tuple[bool, str]:
 
     if avg_chars_per_page < 30 and total_images > 0:
         return True, (
-            f"Attenzione: rilevati pochissimi caratteri vettoriali ({int(avg_chars_per_page)}/pagina) "
-            f"e {total_images} immagini. Il PDF sembra essere una scansione o una foto."
+            f"Rilevati pochissimi caratteri vettoriali ({int(avg_chars_per_page)}/pagina) "
+            f"e {total_images} figure raster. Questo documento richiede l'elaborazione OCR."
         )
 
     return False, ""
@@ -174,23 +187,11 @@ def convert_pdf_to_markdown(
 # =====================================================================
 
 def compress_pdf(pdf_bytes: bytes, level: str = "medium") -> Tuple[bytes, int, int, float]:
-    """
-    Comprime un documento PDF rimuovendo oggetti duplicati, ripulendo gli stream
-    e ottimizzando le immagini incorporate.
-
-    Livelli:
-    - 'light': pulizia stream e garbage collection non distruttiva (qualità 100%)
-    - 'medium': deflating avanzato + ottimizzazione moderata (consigliata, ottima leggibilità)
-    - 'strong': massima compressione per invio via email / upload portali
-
-    Returns:
-        Tuple[bytes, original_size, new_size, saving_percent]
-    """
+    """Comprime un PDF eliminando ridondanze e ottimizzando gli stream."""
     doc = fitz.open(stream=pdf_bytes, filetype="pdf")
     original_size = len(pdf_bytes)
 
     if level == "strong":
-        # Ricomprimi immagini interne con qualità JPEG più efficiente
         for page in doc:
             image_list = page.get_images()
             for img_info in image_list:
@@ -199,7 +200,6 @@ def compress_pdf(pdf_bytes: bytes, level: str = "medium") -> Tuple[bytes, int, i
                     pix = fitz.Pixmap(doc, xref)
                     if pix.colorspace and pix.colorspace.n >= 4:
                         pix = fitz.Pixmap(fitz.csRGB, pix)
-                    # Ricomprimi in JPEG a qualità 60%
                     img_data = pix.tobytes("jpeg", jpg_quality=60)
                     doc.update_stream(xref, img_data)
                 except Exception:
@@ -226,7 +226,6 @@ def compress_pdf(pdf_bytes: bytes, level: str = "medium") -> Tuple[bytes, int, i
     doc.close()
 
     new_size = len(compressed_bytes)
-    # Se il PDF era già compresso e l'output è maggiore, restituisci l'originale
     if new_size >= original_size:
         compressed_bytes = pdf_bytes
         new_size = original_size
@@ -242,12 +241,7 @@ def compress_pdf(pdf_bytes: bytes, level: str = "medium") -> Tuple[bytes, int, i
 # =====================================================================
 
 def merge_pdfs(pdf_list: List[bytes]) -> Tuple[bytes, int]:
-    """
-    Fonde un elenco di documenti PDF in un unico file cumulativo.
-
-    Returns:
-        Tuple[merged_pdf_bytes, total_pages]
-    """
+    """Fonde più file PDF in sequenza senza perdita qualitativa."""
     merged_doc = fitz.open()
 
     for pdf_bytes in pdf_list:
@@ -269,9 +263,7 @@ def merge_pdfs(pdf_list: List[bytes]) -> Tuple[bytes, int]:
 # =====================================================================
 
 def parse_page_range(range_str: str, max_pages: int) -> List[int]:
-    """
-    Converte una stringa come '1-3, 5, 7-9' in una lista ordinata di indici 0-based.
-    """
+    """Converte una stringa come '1-3, 5, 7-9' in una lista ordinata di indici 0-based."""
     pages = set()
     parts = range_str.split(",")
     for part in parts:
@@ -293,12 +285,7 @@ def parse_page_range(range_str: str, max_pages: int) -> List[int]:
 
 
 def split_pdf(pdf_bytes: bytes, page_selection: str) -> Tuple[bytes, int]:
-    """
-    Estrae solo le pagine indicate (es. '1-3, 5, 8') e genera un nuovo PDF.
-
-    Returns:
-        Tuple[split_pdf_bytes, extracted_pages_count]
-    """
+    """Estrae le pagine indicate e genera un nuovo PDF circoscritto."""
     doc = fitz.open(stream=pdf_bytes, filetype="pdf")
     max_pages = len(doc)
     page_indices = parse_page_range(page_selection, max_pages)
@@ -322,12 +309,7 @@ def split_pdf(pdf_bytes: bytes, page_selection: str) -> Tuple[bytes, int]:
 # =====================================================================
 
 def pdf_to_images_zip(pdf_bytes: bytes, dpi: int = 150) -> Tuple[bytes, int]:
-    """
-    Trasforma ogni singola pagina del PDF in un'immagine PNG nitida e le raccoglie in uno ZIP.
-
-    Returns:
-        Tuple[zip_bytes, image_count]
-    """
+    """Trasforma ogni pagina del PDF in un'immagine PNG nitida racchiusa in uno ZIP."""
     doc = fitz.open(stream=pdf_bytes, filetype="pdf")
     total_pages = len(doc)
 
@@ -337,8 +319,129 @@ def pdf_to_images_zip(pdf_bytes: bytes, dpi: int = 150) -> Tuple[bytes, int]:
             page = doc[page_idx]
             pix = page.get_pixmap(dpi=dpi)
             png_bytes = pix.tobytes("png")
-            filename = f"pagina_{page_idx + 1:03d}.png"
+            filename = f"page_{page_idx + 1:03d}.png"
             master_zip.writestr(filename, png_bytes)
 
     doc.close()
     return zip_buffer.getvalue(), total_pages
+
+
+# =====================================================================
+# 6. STRUMENTO: RICONOSCIMENTO OTTICO CARATTERI (OCR ENGINE)
+# =====================================================================
+
+def perform_ocr_on_image(image_source: bytes | np.ndarray) -> Dict[str, Any]:
+    """
+    Esegue il riconoscimento OCR su una singola immagine (PNG, JPG, WEBP o array numpy).
+    Restituisce il testo in formato Markdown, confidenza media e tempo.
+    """
+    start_time = time.perf_counter()
+    engine = get_ocr_engine()
+
+    if isinstance(image_source, bytes):
+        pil_img = Image.open(io.BytesIO(image_source))
+        if pil_img.mode != "RGB":
+            pil_img = pil_img.convert("RGB")
+        img_np = np.array(pil_img)
+    else:
+        img_np = image_source
+
+    result, elapse = engine(img_np)
+
+    if not result:
+        return {
+            "markdown": "*[ Nessun carattere rilevato tramite OCR ]*",
+            "page_count": 1,
+            "word_count": 0,
+            "confidence": 0.0,
+            "elapsed_ms": round((time.perf_counter() - start_time) * 1000, 2),
+            "lines_count": 0
+        }
+
+    lines = []
+    confidences = []
+
+    for item in result:
+        # item: [coordinates, text, confidence]
+        box, text, conf = item
+        text_clean = text.strip()
+        if text_clean:
+            lines.append(text_clean)
+            confidences.append(float(conf))
+
+    full_markdown = "\n\n".join(lines)
+    avg_conf = round((sum(confidences) / max(len(confidences), 1)) * 100, 1)
+    elapsed_ms = round((time.perf_counter() - start_time) * 1000, 2)
+    words = len(re.findall(r'\b\w+\b', full_markdown))
+
+    return {
+        "markdown": full_markdown,
+        "page_count": 1,
+        "word_count": words,
+        "confidence": avg_conf,
+        "elapsed_ms": elapsed_ms,
+        "lines_count": len(lines)
+    }
+
+
+def perform_ocr_on_pdf(pdf_bytes: bytes, dpi: int = 150) -> Dict[str, Any]:
+    """
+    Esegue OCR pagina per pagina su un PDF scansionato, convertendo ogni pagina
+    in immagine ed estraendo il testo aggregato in formato Markdown.
+    """
+    start_time = time.perf_counter()
+    doc = fitz.open(stream=pdf_bytes, filetype="pdf")
+    total_pages = len(doc)
+
+    pages_markdown = []
+    all_confidences = []
+    total_lines = 0
+
+    for page_idx in range(total_pages):
+        page = doc[page_idx]
+        pix = page.get_pixmap(dpi=dpi)
+        
+        # Converte pixmap in array numpy RGB
+        img_data = np.frombuffer(pix.samples, dtype=np.uint8).reshape((pix.height, pix.width, pix.n))
+        if pix.alpha:
+            img_data = img_data[:, :, :3]
+        elif pix.n == 1:
+            img_data = np.stack([img_data.squeeze()] * 3, axis=-1)
+
+        page_result = perform_ocr_on_image(img_data)
+        page_md = page_result["markdown"]
+        if page_result["confidence"] > 0:
+            all_confidences.append(page_result["confidence"])
+        total_lines += page_result["lines_count"]
+
+        pages_markdown.append(f"<!-- Page {page_idx + 1} // OCR -->\n\n{page_md}")
+
+    doc.close()
+
+    combined_markdown = "\n\n---\n\n".join(pages_markdown)
+    cleaned_markdown = clean_hyphenation(combined_markdown)
+    cleaned_markdown = clean_blank_lines(cleaned_markdown)
+
+    avg_confidence = round((sum(all_confidences) / max(len(all_confidences), 1)), 1) if all_confidences else 0.0
+    elapsed_ms = round((time.perf_counter() - start_time) * 1000, 2)
+    words = len(re.findall(r'\b\w+\b', cleaned_markdown))
+
+    # Aggiungi frontmatter con indicazione OCR
+    frontmatter = (
+        "---\n"
+        f'title: "OCR Extracted Document"\n'
+        f"pages: {total_pages}\n"
+        f"ocr_engine: \"RapidOCR-ONNX\"\n"
+        f"confidence: \"{avg_confidence}%\"\n"
+        f'extracted_at: "{time.strftime("%Y-%m-%d %H:%M:%S")}"\n'
+        "---\n\n"
+    )
+
+    return {
+        "markdown": f"{frontmatter}{cleaned_markdown}",
+        "page_count": total_pages,
+        "word_count": words,
+        "confidence": avg_confidence,
+        "elapsed_ms": elapsed_ms,
+        "lines_count": total_lines
+    }

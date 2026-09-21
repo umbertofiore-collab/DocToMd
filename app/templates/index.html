@@ -181,6 +181,10 @@
           <span>[ 05 // PNG EXPORT ]</span>
         </button>
 
+        <button onclick="switchTab('ocr')" id="tabNav-ocr" class="tab-btn text-xs font-mono px-3 py-1.5 rounded transition text-[#C4BEB2] hover:text-[#F2EDE3] hover:bg-[#171914] flex items-center space-x-1.5 whitespace-nowrap">
+          <span data-i18n="tab_ocr">[ 06 // OCR ENGINE ]</span>
+        </button>
+
       </div>
     </div>
   </header>
@@ -279,9 +283,14 @@
       <!-- Scanned PDF Alert Box -->
       <div id="scanAlertBox" class="hidden border border-[#AEBA7F]/40 bg-[#171914] rounded-xl p-4 text-xs font-mono text-[#D9E6A3] flex items-start space-x-3">
         <i data-lucide="alert-triangle" class="w-4 h-4 shrink-0 text-[#AEBA7F] mt-0.5"></i>
-        <div>
-          <span class="font-bold text-[#F2EDE3] block mb-1" data-i18n="alert_scan_title">[ SCANNED DOCUMENT / NON-VECTOR TEXT DETECTED ]</span>
-          <span id="scanAlertMsg" class="text-[#C4BEB2] leading-relaxed"></span>
+        <div class="space-y-2">
+          <div>
+            <span class="font-bold text-[#F2EDE3] block mb-1" data-i18n="alert_scan_title">[ SCANNED DOCUMENT / NON-VECTOR TEXT DETECTED ]</span>
+            <span id="scanAlertMsg" class="text-[#C4BEB2] leading-relaxed"></span>
+          </div>
+          <button id="btnJumpToOcr" onclick="jumpToOcrWithCurrentFile()" class="text-xs font-mono font-bold bg-[#AEBA7F] hover:bg-[#D9E6A3] text-[#080907] px-3.5 py-1.5 rounded transition flex items-center space-x-1.5 active:scale-[0.98]">
+            <span data-i18n="btn_jump_ocr">[ RUN OCR RECOGNITION ON THIS DOCUMENT ➔ ]</span>
+          </button>
         </div>
       </div>
 
@@ -525,6 +534,136 @@
       </div>
     </section>
 
+    <!-- ========================================================= -->
+    <!-- 6. TOOL: OCR ENGINE (RAPIDOCR NEURAL ENGINE) -->
+    <!-- ========================================================= -->
+    <section id="section-ocr" class="tool-section hidden space-y-6">
+      
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 items-start">
+        
+        <!-- Dropzone & Inputs (2 columns) -->
+        <div class="lg:col-span-2 border border-lcc-line bg-[#11130F] rounded-xl p-8 space-y-6">
+          <div class="border-b border-lcc-subtle pb-4">
+            <span class="font-mono text-xs text-[#AEBA7F] uppercase tracking-widest">[ 06 // OPTICAL CHARACTER RECOGNITION ]</span>
+            <h2 class="text-lg font-bold text-[#F2EDE3] uppercase mt-1" data-i18n="ocr_title">Document & Image OCR Engine</h2>
+            <p class="text-xs text-[#C4BEB2] font-mono mt-0.5" data-i18n="ocr_desc">Rapid local neural character recognition for scanned PDFs, screenshots, and images</p>
+          </div>
+
+          <div id="dropZoneOcr" class="border-2 border-dashed border-lcc-line hover:border-[#AEBA7F] rounded-xl p-8 flex flex-col items-center justify-center text-center cursor-pointer transition bg-[#080907]/80 hover:bg-[#171914]">
+            <input type="file" id="fileOcrInput" accept=".pdf,image/png,image/jpeg,image/webp,image/tiff" class="hidden" />
+            <div class="w-12 h-12 rounded-full bg-[#11130F] border border-lcc-line flex items-center justify-center mb-3 text-[#AEBA7F]">
+              <i data-lucide="scan-text" class="w-6 h-6"></i>
+            </div>
+            <p class="text-xs font-medium text-[#F2EDE3]" data-i18n="ocr_drop_main">Drop your scanned PDF or Image (PNG, JPG, WEBP) here</p>
+            <p class="text-[11px] text-[#7A7871] font-mono mt-1" data-i18n="ocr_drop_sub">RapidOCR ONNX Engine • Multilingual Latin/English • Zero cloud calls</p>
+            <p id="ocrFileLabel" class="text-xs text-[#AEBA7F] font-mono font-medium mt-3 hidden"></p>
+          </div>
+
+          <!-- Document Loaded Pill -->
+          <div id="ocrFileInfoBar" class="hidden flex items-center justify-between border border-lcc-line bg-[#080907] rounded-lg p-3 text-xs font-mono">
+            <div class="flex items-center space-x-2.5 truncate">
+              <span class="text-[#AEBA7F]">&gt;</span>
+              <span id="selectedOcrFileName" class="text-[#F2EDE3] truncate font-medium">document.pdf</span>
+              <span id="selectedOcrFileSize" class="text-[#7A7871]"></span>
+            </div>
+            <button id="btnExecuteOcr" class="bg-[#AEBA7F] hover:bg-[#D9E6A3] text-[#080907] font-bold text-xs px-4 py-2 rounded transition flex items-center space-x-1.5 active:scale-[0.98]">
+              <span data-i18n="btn_run_ocr">[ RUN OCR RECOGNITION ]</span>
+            </button>
+          </div>
+
+          <!-- Loading Indicator -->
+          <div id="ocrLoadingIndicator" class="hidden text-center py-6">
+            <div class="inline-flex items-center space-x-2.5 text-[#AEBA7F] text-xs font-mono">
+              <i data-lucide="loader" class="w-4 h-4 animate-spin"></i>
+              <span data-i18n="btn_running_ocr">Running neural recognition across pages...</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Specifications Box -->
+        <div class="bg-[#11130F] border border-lcc-line rounded-xl p-5 space-y-4">
+          <div class="border-b border-lcc-subtle pb-3">
+            <h3 class="text-xs font-mono text-[#AEBA7F] uppercase tracking-wider" data-i18n="ocr_specs_title">[ OCR SPECIFICATIONS ]</h3>
+          </div>
+
+          <div class="space-y-3 font-mono text-xs text-[#C4BEB2]">
+            <div class="border border-lcc-subtle bg-[#080907] p-3 rounded-lg space-y-1">
+              <span class="text-[#AEBA7F] font-bold block" data-i18n="ocr_spec_engine">Engine: RapidOCR-ONNX</span>
+              <p class="text-[11px] text-[#7A7871]" data-i18n="ocr_spec_engine_desc">Ultra-fast C++/Python ONNX Runtime executing on local CPU.</p>
+            </div>
+            <div class="border border-lcc-subtle bg-[#080907] p-3 rounded-lg space-y-1">
+              <span class="text-[#AEBA7F] font-bold block" data-i18n="ocr_spec_targets">Supported Targets</span>
+              <p class="text-[11px] text-[#7A7871]" data-i18n="ocr_spec_targets_desc">Scanned PDFs, smartphone receipts, documents, screenshots (.png, .jpg, .webp).</p>
+            </div>
+            <div class="border border-lcc-subtle bg-[#080907] p-3 rounded-lg space-y-1">
+              <span class="text-[#AEBA7F] font-bold block" data-i18n="ocr_spec_accuracy">Confidence Tracking</span>
+              <p class="text-[11px] text-[#7A7871]" data-i18n="ocr_spec_accuracy_desc">Calculates mean word and token confidence metrics per page.</p>
+            </div>
+          </div>
+
+          <div class="pt-3 border-t border-lcc-subtle text-[11px] font-mono text-[#7A7871] flex items-center justify-between">
+            <span>NETWORK:</span>
+            <span class="text-[#AEBA7F]">0 kB External</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- OCR Result Output Section -->
+      <div id="ocrResultSection" class="hidden space-y-4">
+        
+        <!-- Toolbar & Stats -->
+        <div class="border border-lcc-line bg-[#11130F] rounded-xl p-4 flex flex-wrap items-center justify-between gap-4 font-mono text-xs">
+          <div class="flex items-center space-x-4">
+            <div class="flex items-center space-x-1.5">
+              <span class="text-[#7A7871]" data-i18n="stat_time">Time:</span>
+              <span id="ocrStatElapsed" class="text-[#AEBA7F] font-bold">0ms</span>
+            </div>
+            <div class="flex items-center space-x-1.5">
+              <span class="text-[#7A7871]" data-i18n="stat_pages">Pages:</span>
+              <span id="ocrStatPages" class="text-[#F2EDE3]">1</span>
+            </div>
+            <div class="flex items-center space-x-1.5">
+              <span class="text-[#7A7871]" data-i18n="stat_words">Words:</span>
+              <span id="ocrStatWords" class="text-[#F2EDE3]">0</span>
+            </div>
+            <div class="flex items-center space-x-1.5">
+              <span class="text-[#7A7871]" data-i18n="ocr_confidence">Confidence:</span>
+              <span id="ocrStatConfidence" class="text-[#AEBA7F] font-bold">0%</span>
+            </div>
+          </div>
+
+          <div class="flex items-center space-x-2">
+            <!-- View Mode Switcher -->
+            <div class="flex items-center border border-lcc-line bg-[#080907] rounded p-0.5">
+              <button id="ocrTabPreview" class="px-3 py-1 text-xs font-mono rounded bg-[#AEBA7F] text-[#080907] font-bold" data-i18n="tab_rendered">Rendered Preview</button>
+              <button id="ocrTabRaw" class="px-3 py-1 text-xs font-mono rounded text-[#C4BEB2] hover:text-[#F2EDE3] hover:bg-[#171914]" data-i18n="tab_raw">Raw Source</button>
+            </div>
+
+            <!-- Copy Button -->
+            <button id="btnCopyOcr" class="border border-lcc-line hover:border-[#AEBA7F] text-[#F2EDE3] hover:text-[#AEBA7F] px-3 py-1 rounded bg-[#080907] transition flex items-center space-x-1.5">
+              <i data-lucide="copy" class="w-3.5 h-3.5"></i>
+              <span id="copyOcrLabel" data-i18n="copy_text">[ Copy MD ]</span>
+            </button>
+
+            <!-- Download Markdown -->
+            <button id="btnDownloadOcrMd" class="bg-[#AEBA7F] hover:bg-[#D9E6A3] text-[#080907] font-bold px-3.5 py-1 rounded transition flex items-center space-x-1.5">
+              <i data-lucide="download" class="w-3.5 h-3.5"></i>
+              <span data-i18n="btn_dl_ocr_md">Download .md</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Rendered and Raw Content -->
+        <div class="border border-lcc-line bg-[#080907] rounded-xl p-6 overflow-hidden">
+          <div id="ocrViewPreview" class="prose prose-invert max-w-none prose-lcc text-sm font-sans min-h-[250px]"></div>
+          <textarea id="ocrRawMarkdownText" readonly class="hidden w-full min-h-[350px] bg-transparent text-xs font-mono text-[#F2EDE3] resize-y focus:outline-none border-0 p-0 leading-relaxed"></textarea>
+        </div>
+
+      </div>
+
+    </section>
+
   </main>
 
   <!-- Modal Manual & Notes -->
@@ -658,7 +797,24 @@
         note_02_body: "PyMuPDF operates at the PDF object-tree level in C, eliminating duplicate font resources, deflating streams, and optimizing embedded imagery without compromising vector text sharpness.",
         note_03_title: "[ 03 // COMPLETE ISOLATION & PRIVACY ]",
         note_03_body: "Zero external calls. No tokens or byte-streams are transmitted to third-party cloud services. All operations execute strictly in local RAM for the time required to perform the task.",
-        btn_close: "[ CLOSE ]"
+        btn_close: "[ CLOSE ]",
+        tab_ocr: "[ 06 // OCR ENGINE ]",
+        ocr_title: "Document & Image OCR Engine",
+        ocr_desc: "Rapid local neural character recognition for scanned PDFs, screenshots, and images",
+        ocr_drop_main: "Drop your scanned PDF or Image (PNG, JPG, WEBP) here",
+        ocr_drop_sub: "RapidOCR ONNX Engine • Multilingual Latin/English • Zero cloud calls",
+        ocr_specs_title: "[ OCR SPECIFICATIONS ]",
+        ocr_spec_engine: "Engine: RapidOCR-ONNX",
+        ocr_spec_engine_desc: "Ultra-fast C++/Python ONNX Runtime executing on local CPU.",
+        ocr_spec_targets: "Supported Targets",
+        ocr_spec_targets_desc: "Scanned PDFs, smartphone receipts, documents, screenshots (.png, .jpg, .webp).",
+        ocr_spec_accuracy: "Confidence Tracking",
+        ocr_spec_accuracy_desc: "Calculates mean word and token confidence metrics per page.",
+        btn_run_ocr: "[ RUN OCR RECOGNITION ]",
+        btn_running_ocr: "[ RUNNING NEURAL RECOGNITION... ]",
+        btn_jump_ocr: "[ RUN OCR RECOGNITION ON THIS DOCUMENT ➔ ]",
+        ocr_confidence: "Confidence:",
+        btn_dl_ocr_md: "Download .md"
       },
       it: {
         engine_badge: "PyMuPDF C-Engine // 100% Offline",
@@ -738,7 +894,24 @@
         note_02_body: "PyMuPDF opera a livello di albero degli oggetti PDF in C, rimuovendo ridondanze di font, stream de-flated e ricomprimendo gli stream immagine senza degradare la leggibilità del testo vettoriale.",
         note_03_title: "[ 03 // ISOLAMENTO E PRIVACY ASSOLUTA ]",
         note_03_body: "Nessun token viene inviato a server cloud terzi. Tutti i documenti transitano unicamente in RAM per il tempo strettamente necessario all'elaborazione richiesta.",
-        btn_close: "[ CHIUDI ]"
+        btn_close: "[ CHIUDI ]",
+        tab_ocr: "[ 06 // MOTORE OCR ]",
+        ocr_title: "Riconoscimento OCR Documenti & Immagini",
+        ocr_desc: "Riconoscimento neurale locale per PDF scansionati, screenshot e immagini",
+        ocr_drop_main: "Trascina qui il PDF scansionato o immagine (PNG, JPG, WEBP)",
+        ocr_drop_sub: "Motore RapidOCR ONNX • Italiano e Inglese • Nessun dato inviato al cloud",
+        ocr_specs_title: "[ SPECIFICHE OCR ]",
+        ocr_spec_engine: "Motore: RapidOCR-ONNX",
+        ocr_spec_engine_desc: "Runtime ONNX C++/Python ad alta velocità in esecuzione su CPU locale.",
+        ocr_spec_targets: "Formati Supportati",
+        ocr_spec_targets_desc: "PDF scansionati, scontrini, documenti fotografati, screenshot (.png, .jpg, .webp).",
+        ocr_spec_accuracy: "Calcolo Confidenza",
+        ocr_spec_accuracy_desc: "Misura la confidenza media di riconoscimento parole per ciascuna pagina.",
+        btn_run_ocr: "[ AVVIA RICONOSCIMENTO OCR ]",
+        btn_running_ocr: "[ RICONOSCIMENTO NEURALE IN CORSO... ]",
+        btn_jump_ocr: "[ AVVIA RICONOSCIMENTO OCR SU QUESTO DOCUMENTO ➔ ]",
+        ocr_confidence: "Confidenza:",
+        btn_dl_ocr_md: "Scarica .md"
       }
     };
 
@@ -1165,6 +1338,133 @@
         btnExecutePdfToImg.innerHTML = `<span>${dict.btn_run_img}</span>`;
         btnExecutePdfToImg.disabled = false;
       }
+    });
+
+    // =========================================================
+    // 6. OCR ENGINE (RAPIDOCR ONNX)
+    // =========================================================
+    let ocrSelectedFile = null;
+    let currentOcrMarkdown = "";
+    let currentOcrFilename = "ocr_result.md";
+
+    const dropZoneOcr = document.getElementById('dropZoneOcr');
+    const fileOcrInput = document.getElementById('fileOcrInput');
+    const ocrFileInfoBar = document.getElementById('ocrFileInfoBar');
+    const selectedOcrFileName = document.getElementById('selectedOcrFileName');
+    const selectedOcrFileSize = document.getElementById('selectedOcrFileSize');
+    const btnExecuteOcr = document.getElementById('btnExecuteOcr');
+    const ocrLoadingIndicator = document.getElementById('ocrLoadingIndicator');
+    const ocrResultSection = document.getElementById('ocrResultSection');
+    const ocrViewPreview = document.getElementById('ocrViewPreview');
+    const ocrRawMarkdownText = document.getElementById('ocrRawMarkdownText');
+
+    function handleOcrFileSelected(file) {
+      if (!file) return;
+      const validExtensions = ['.pdf', '.png', '.jpg', '.jpeg', '.webp', '.tiff'];
+      const ext = file.name.slice(file.name.lastIndexOf('.')).toLowerCase();
+      if (!validExtensions.includes(ext)) {
+        alert(currentLang === 'en' ? 'Please select a PDF or image file (.png, .jpg, .webp, .pdf)' : 'Seleziona un file PDF o immagine (.png, .jpg, .webp, .pdf)');
+        return;
+      }
+      ocrSelectedFile = file;
+      selectedOcrFileName.innerText = file.name;
+      selectedOcrFileSize.innerText = `(${formatBytes(file.size)})`;
+      ocrFileInfoBar.classList.remove('hidden');
+      document.getElementById('ocrFileLabel').innerText = `${file.name} (${formatBytes(file.size)})`;
+      document.getElementById('ocrFileLabel').classList.remove('hidden');
+    }
+
+    function jumpToOcrWithCurrentFile() {
+      if (currentFiles && currentFiles.length > 0) {
+        handleOcrFileSelected(currentFiles[0]);
+      }
+      switchTab('ocr');
+    }
+
+    dropZoneOcr.addEventListener('click', () => fileOcrInput.click());
+    fileOcrInput.addEventListener('change', (e) => {
+      if (e.target.files.length > 0) {
+        handleOcrFileSelected(e.target.files[0]);
+      }
+    });
+
+    ['dragenter', 'dragover'].forEach(ev => dropZoneOcr.addEventListener(ev, (e) => { e.preventDefault(); dropZoneOcr.classList.add('border-[#AEBA7F]'); }));
+    ['dragleave', 'drop'].forEach(ev => dropZoneOcr.addEventListener(ev, (e) => { e.preventDefault(); dropZoneOcr.classList.remove('border-[#AEBA7F]'); }));
+    dropZoneOcr.addEventListener('drop', (e) => {
+      e.preventDefault();
+      if (e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+        handleOcrFileSelected(e.dataTransfer.files[0]);
+      }
+    });
+
+    btnExecuteOcr.addEventListener('click', async () => {
+      if (!ocrSelectedFile) return;
+      const dict = translations[currentLang];
+      ocrLoadingIndicator.classList.remove('hidden');
+      ocrFileInfoBar.classList.add('hidden');
+      ocrResultSection.classList.add('hidden');
+
+      const fd = new FormData();
+      fd.append('file', ocrSelectedFile);
+
+      try {
+        const res = await fetch('/api/ocr', { method: 'POST', body: fd });
+        if (!res.ok) {
+          const err = await res.json();
+          throw new Error(err.detail || (currentLang === 'en' ? 'OCR processing failed' : 'Riconoscimento OCR non riuscito'));
+        }
+        const data = await res.json();
+        currentOcrMarkdown = data.markdown;
+        currentOcrFilename = data.md_filename || `${ocrSelectedFile.name.replace(/\.[^/.]+$/, '')}_ocr.md`;
+
+        document.getElementById('ocrStatElapsed').innerText = `${data.elapsed_ms}ms`;
+        document.getElementById('ocrStatPages').innerText = data.page_count;
+        document.getElementById('ocrStatWords').innerText = data.word_count.toLocaleString(currentLang === 'en' ? 'en-US' : 'it-IT');
+        document.getElementById('ocrStatConfidence').innerText = `${data.confidence}%`;
+
+        ocrRawMarkdownText.value = data.markdown;
+        ocrViewPreview.innerHTML = md.render(data.markdown);
+        ocrResultSection.classList.remove('hidden');
+        lucide.createIcons();
+        window.scrollTo({ top: ocrResultSection.offsetTop - 60, behavior: 'smooth' });
+      } catch (err) {
+        alert(err.message);
+      } finally {
+        ocrLoadingIndicator.classList.add('hidden');
+        ocrFileInfoBar.classList.remove('hidden');
+      }
+    });
+
+    document.getElementById('ocrTabPreview').addEventListener('click', () => {
+      document.getElementById('ocrTabPreview').className = 'px-3 py-1 text-xs font-mono rounded bg-[#AEBA7F] text-[#080907] font-bold';
+      document.getElementById('ocrTabRaw').className = 'px-3 py-1 text-xs font-mono rounded text-[#C4BEB2] hover:text-[#F2EDE3] hover:bg-[#171914]';
+      ocrViewPreview.classList.remove('hidden');
+      ocrRawMarkdownText.classList.add('hidden');
+    });
+
+    document.getElementById('ocrTabRaw').addEventListener('click', () => {
+      document.getElementById('ocrTabRaw').className = 'px-3 py-1 text-xs font-mono rounded bg-[#AEBA7F] text-[#080907] font-bold';
+      document.getElementById('ocrTabPreview').className = 'px-3 py-1 text-xs font-mono rounded text-[#C4BEB2] hover:text-[#F2EDE3] hover:bg-[#171914]';
+      ocrRawMarkdownText.classList.remove('hidden');
+      ocrViewPreview.classList.add('hidden');
+    });
+
+    document.getElementById('btnCopyOcr').addEventListener('click', () => {
+      if (!currentOcrMarkdown) return;
+      navigator.clipboard.writeText(currentOcrMarkdown);
+      const lbl = document.getElementById('copyOcrLabel');
+      const dict = translations[currentLang];
+      lbl.innerText = dict.copied_text;
+      setTimeout(() => { lbl.innerText = dict.copy_text; }, 2000);
+    });
+
+    document.getElementById('btnDownloadOcrMd').addEventListener('click', () => {
+      if (!currentOcrMarkdown) return;
+      const blob = new Blob([currentOcrMarkdown], { type: 'text/markdown;charset=utf-8' });
+      const a = document.createElement('a');
+      a.href = URL.createObjectURL(blob);
+      a.download = currentOcrFilename;
+      a.click();
     });
 
     // Tips Modal
