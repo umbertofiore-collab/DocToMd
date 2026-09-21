@@ -166,7 +166,7 @@ def test_fastapi_endpoints_suite(sample_pdf_path):
     # 2. Home page HTML
     res = client.get("/")
     assert res.status_code == 200
-    assert "DocToMD Suite" in res.text
+    assert "DocToMD" in res.text
 
     # 3. Conversione PDF in Markdown
     with open(sample_pdf_path, "rb") as f:
